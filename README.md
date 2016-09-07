@@ -1,4 +1,4 @@
-Tools for collecting media data
+# Tools for collecting media data
 
 ## Contributors
 * Matti Nelimarkka, HIIT
