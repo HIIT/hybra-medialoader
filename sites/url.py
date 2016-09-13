@@ -90,7 +90,7 @@ while a == False:
 		elif b == "hbl":
 			hbl.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "hs":
 			hs.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
@@ -110,11 +110,11 @@ while a == False:
 		elif b == "kaleva":
 			kaleva.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "karjalainen":
 			karjalainen.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "ksml":
 			keski_suomalainen.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
@@ -122,7 +122,7 @@ while a == False:
 		elif b == "lapinkansa":
 			lapinkansa.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "maaseuduntulevaisuus":
 			maaseudun_tulevaisuus.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
@@ -194,7 +194,7 @@ while a == False:
 		#elif b == "mahorkka":
 			#mahorkka.nouda(add, file(txt, 'w'))
 			#print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "suomenkuvalehti":
 			suomenkuvalehti.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
@@ -206,11 +206,11 @@ while a == False:
 		elif b == "ts":
 			ts.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "faktabaari":
 			faktabaari.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
-	
+
 		elif b == "tiedonantaja":
 			tiedonantaja.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
@@ -235,7 +235,7 @@ while a == False:
 			iltamakasiini.nouda(add, file(txt, 'w'))
 			print(b + ":\n" + "Kirjoitus onnistui")
 
-		else: 
+		else:
 			print("Error sivua ei voitu kirjoittaa tai koodi ei toimi urlin kanssa.")
 
 	elif haku_num == 2:
@@ -246,63 +246,63 @@ while a == False:
 
 		txt = raw_input('Tiedoston nimi(esim yle.txt): ')
 
-		if nimi == "aamulehti":		
+		if nimi == "aamulehti":
 
 			linkki_aamulehti.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
 
-		elif nimi == "ylilauta":		
+		elif nimi == "ylilauta":
 
 			ylilauta.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "iltasanomat":		
+		elif nimi == "iltasanomat":
 
 			linkki_iltasanomat.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "satakunnankansa":		
+		elif nimi == "satakunnankansa":
 
 			linkki_satakunnankansa.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "etelasaimaa":		
+		elif nimi == "etelasaimaa":
 
 			linkki_esaimaa.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "karjalainen":		
+		elif nimi == "karjalainen":
 
 			linkki_karjalainen.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "kouvolansanomat":		
+		elif nimi == "kouvolansanomat":
 
 			linkki_kouvolansanomat.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "talouselama":		
+		elif nimi == "talouselama":
 
 			linkki_talouselama.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
-		elif nimi == "iltamakasiini":		
+		elif nimi == "iltamakasiini":
 
 			linkki_iltamakasiini.nouda(file(txt, 'w'))
 
 			print(nimi + ":\n" + "Kirjoitus onnistui")
 
 
-		else: 
+		else:
 			print("Error linkkei ei voitu kirjoittaa tai koodi ei toimi urlin kanssa.")
 
 	elif haku_num == 0:
@@ -311,5 +311,3 @@ while a == False:
 
 	else:
 		print ("Error")
-
-	
