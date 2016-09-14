@@ -30,6 +30,8 @@ class TestParser:
 
 def load_module(link):
     protocol,domain,path = link.split(".")
+    if (domain == 'blogit'): # The special case of Iltalehti blogs
+        domain = 'blogit_iltalehti'
     return importlib.import_module('sites.' + domain)
 
 def initialise_file(module, link):
