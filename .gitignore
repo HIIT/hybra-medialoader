@@ -4,4 +4,4 @@
 ## .pyc files
 *.pyc
 
-.cache/*
+/cache
