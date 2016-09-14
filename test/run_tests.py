@@ -7,7 +7,7 @@ path = os.path.abspath('..')
 sys.path.append(path)
 
 out = 'test_file.txt'
-url_list = 'test_urls.txt'
+url_list = 'urls.txt'
 
 def run_parser_tests():
     urls = open(url_list, 'r')
