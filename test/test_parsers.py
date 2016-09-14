@@ -32,15 +32,13 @@ class TestParser:
         urls = open(url_list, 'r')
         for url in urls:
             domain = get_domain(url)
-            module = importlib.import_module('sites.' + domain)
+            module = importlib.import_module('sites.' + domain + '.txt')
             initialise_file(module, url)
-            assert filecmp.cmp(out, 'test_contents/' + domain + '.txt')
+            assert filecmp.cmp(out, 'test_contents/' + domain)
         urls.close()
 
 def get_domain(url):
-    protocol,domain,path = url.split(".")
-    if (domain == 'blogit'): # The special case of Iltalehti blogs
-        domain = 'blogit_iltalehti'
+    protocol,domain,path = url.split(".") # Tämä ei toimi vielä
     return domain
 
 def initialise_file(module, url):
