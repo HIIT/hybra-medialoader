@@ -1,13 +1,16 @@
 import sys
-import unittest
+import os
 
-sys.path.append("/Users/paakkoj6/Documents/python/mediacollection")
+path = os.path.abspath('..')
+sys.path.append(path)
 
 from sites import aamulehti
 
-url = "http://www.aamulehti.fi/kotimaa/hulppea-yli-34-miljoonan-euron-huoneisto-tampereen-huipulla-on-nyt-varattu/"
+url = "http://www.aamulehti.fi/kotimaa/vanhemmat-uhmaavat-tamperelaisen-koulun-ohjetta-odotetaan-sita-paivaa-etta-joku-jaa-auton-alle/"
 
-class AamulehtiTest(unittest.TestCase):
+def test_file_exists():
+    aamulehti.parse(url,file('test.txt', 'w'))
+    assert os.path.isfile("test.txt") == True
 
-    def setUp(self):
-        
+def test_contents_match():
+    

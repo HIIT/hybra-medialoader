@@ -2,11 +2,11 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup(r.text, "lxml")
 
 	teksti = soup.find_all( class_='Teksti' )
 
@@ -15,4 +15,4 @@ def nouda( url , out ):
 
 if __name__ == '__main__':
 
-	nouda("http://www.aamulehti.fi/Kotimaa/1194944556756/artikkeli/vapaavuori+fortum+turvaa+fennovoiman+kotimaisuuden.html", file('aamulehti.txt', 'w'))
+	parse("http://www.aamulehti.fi/kotimaa/vanhemmat-uhmaavat-tamperelaisen-koulun-ohjetta-odotetaan-sita-paivaa-etta-joku-jaa-auton-alle/", file('aamulehti.txt', 'w'))
