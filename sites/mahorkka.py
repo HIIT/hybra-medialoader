@@ -15,5 +15,4 @@ def parse( url , out ):
 	        		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
 	parse("http://www.mahorkka.com/pavel-astahov-sai-lahtea-mutta-kuka-on-venajan-uusi-lapsiasiamies/", file('mahorkka.txt', 'w'))

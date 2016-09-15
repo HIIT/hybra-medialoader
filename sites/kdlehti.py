@@ -19,5 +19,4 @@ def parse( url , out ):
 	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
-	nouda("http://www.kdlehti.fi/2015/03/15/paivi-rasanen-internetin-terrorismisisaltoon-puututtava-tehokkaammin/", file('kdlehti.txt', 'w'))
+	parse("http://www.kdlehti.fi/2015/03/15/paivi-rasanen-internetin-terrorismisisaltoon-puututtava-tehokkaammin/", file('kdlehti.txt', 'w'))

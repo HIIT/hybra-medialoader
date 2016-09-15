@@ -15,5 +15,4 @@ def parse( url , out ):
 	        		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
 	parse("http://www.talouselama.fi/vaalit/vaalitebatti/murtuuko+suurten+puolueiden+valta++vaaliraati+vastaa/a2301513", file('talouselama.txt', 'w'))

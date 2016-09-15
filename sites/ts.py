@@ -13,5 +13,4 @@ def parse( url , out ):
         		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
 	parse("http://www.ts.fi/eduskuntavaalit/750980/Start+up+yrittaja+kuplii+innostusta", file('ts.txt', 'w'))

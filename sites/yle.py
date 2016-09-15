@@ -18,5 +18,4 @@ def parse( url , out ):
 	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
-	nouda("http://yle.fi/uutiset/nordea_synkkyys_jatkuu/7663512", file('yle.txt', 'w'))
+	parse("http://yle.fi/uutiset/nordea_synkkyys_jatkuu/7663512", file('yle.txt', 'w'))

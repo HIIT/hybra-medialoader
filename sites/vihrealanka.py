@@ -15,5 +15,4 @@ def parse( url , out ):
 	        		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
-	nouda("http://www.vihrealanka.fi/blogi-eno-vastaa/onko-tonnikalassa-myrkkyj%C3%A4", file('vihrealanka.txt', 'w'))
+	parse("http://www.vihrealanka.fi/blogi-eno-vastaa/onko-tonnikalassa-myrkkyj%C3%A4", file('vihrealanka.txt', 'w'))

@@ -14,5 +14,4 @@ def parse( url , out ):
 	        out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
 	parse("http://www.ksml.fi/uutiset/ulkomaat/kalifornian-ennatyskuivuus-paattyi-rankkasateisiin/1944276", file('keski.txt', 'w'))

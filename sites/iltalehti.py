@@ -18,4 +18,4 @@ def parse( url , out ):
 
 if __name__ == '__main__':
 
-	nouda("http://www.iltalehti.fi/uutiset/2014120218885176_uu.shtml", file('iltalehti.txt', 'w'))
+	parse("http://www.iltalehti.fi/uutiset/2014120218885176_uu.shtml", file('iltalehti.txt', 'w'))

@@ -15,5 +15,4 @@ def parse( url , out ):
 	        		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
-
-	nouda("https://www.suomenuutiset.fi/perussuomalaiset-hurjassa-nosteessa-puoluesihteeri-ei-yllattynyt/", file('suomenuutiset.txt', 'w'))
+	parse("https://www.suomenuutiset.fi/perussuomalaiset-hurjassa-nosteessa-puoluesihteeri-ei-yllattynyt/", file('suomenuutiset.txt', 'w'))
