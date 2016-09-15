@@ -3,11 +3,11 @@ import requests
 from bs4 import BeautifulSoup
 import bs4
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
 	teksti = soup.find_all( class_ = "lead-paragraph" )
 	for e in teksti[0].stripped_strings:

@@ -2,7 +2,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 
@@ -10,7 +10,7 @@ def nouda( url , out ):
 		return
 
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
 	teksti = soup.find_all( class_='text' )
 

@@ -2,11 +2,11 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
 	for teksti in soup.find_all( id='main_text' ):
 		for p in teksti.find_all( 'p' ):

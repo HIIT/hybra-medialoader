@@ -2,11 +2,13 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+# Lapin kansa on nykyään maksullinen lehti
+
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
 	teksti = soup.find_all( class_ = 'news-excerpt' )
 
@@ -15,4 +17,4 @@ def nouda( url , out ):
 
 if __name__ == '__main__':
 
-	nouda("http://www.lapinkansa.fi/Lappi/1194944697007/artikkeli/kaunis+tykky+voi+olla+kavala+puille.html", file('lapinkansa.txt', 'w'))
+	parse("http://www.lapinkansa.fi/Lappi/1194944697007/artikkeli/kaunis+tykky+voi+olla+kavala+puille.html", file('lapinkansa.txt', 'w'))

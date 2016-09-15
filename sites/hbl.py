@@ -2,11 +2,11 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
 	teksti = soup.find_all( id ='nodebody' )
 
@@ -14,5 +14,5 @@ def nouda( url , out ):
 	        out.write(repr(string))
 
 if __name__ == '__main__':
-	
+
 	nouda("http://hbl.fi/nyheter/2014-12-03/690266/hawking-ai-kan-vara-slutet-oss", file('hbl.txt', 'w'))

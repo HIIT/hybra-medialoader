@@ -2,13 +2,13 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
-	for teksti in soup.find_all( class_='entry-content' ):
+	for teksti in soup.find_all( class_='post-body' ):
 		for p in teksti.find_all( 'p' ):
 
 			for string in p.stripped_strings:
@@ -16,4 +16,4 @@ def nouda( url , out ):
 
 if __name__ == '__main__':
 
-	nouda("http://www.mahorkka.com/viikonlopun-huhumylly-putin-koomassa-henkivartija-tapettu-ja-valta-kaapattu", file('mahorkka.txt', 'w'))
+	parse("http://www.mahorkka.com/pavel-astahov-sai-lahtea-mutta-kuka-on-venajan-uusi-lapsiasiamies/", file('mahorkka.txt', 'w'))

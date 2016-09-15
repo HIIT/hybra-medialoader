@@ -2,18 +2,16 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text )
+	soup = BeautifulSoup( r.text, "lxml" )
 
-	for teksti in soup.find_all( class_='containerJuttu' ):
-		for p in teksti.find_all( 'p' ):
-
-			for string in p.stripped_strings:
-	        		out.write( string.encode('utf8') + ' ' )
+	for p in soup.find_all( class_='teksti' ):
+		for string in p.stripped_strings:
+	    		out.write( string.encode('utf8') + ' ' )
 
 if __name__ == '__main__':
 
-	nouda("http://www.suomenmaa.fi/etusivu/7399391.html", file('suomenmaa.txt', 'w'))
+	parse("http://www.suomenmaa.fi/etusivu/7399391.html", file('suomenmaa.txt', 'w'))

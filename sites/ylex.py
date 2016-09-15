@@ -2,7 +2,7 @@ import requests
 
 from bs4 import BeautifulSoup
 
-def nouda( url , out ):
+def parse( url , out ):
 
     ## ylex seems to be JS single page application; this approach can't handle it. just return here
 
