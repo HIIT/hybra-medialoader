@@ -7,4 +7,6 @@
 ## .cache files
 lastfailed
 
+## files written out by parsers
+sites/*.txt
 test_file.txt
