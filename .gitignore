@@ -10,3 +10,6 @@ lastfailed
 ## files written out by parsers
 sites/*.txt
 test_file.txt
+
+## difference logs
+test/difference_logs/*
