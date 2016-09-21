@@ -17,7 +17,7 @@ def run_parser_tests():
         domain,url = line.split(",")
         module = importlib.import_module('sites.' + domain)
         initialise_file(module, url.strip())
-        print_log(domain, url.strip(), i)
+        print create_log(domain, url.strip(), i)
         pytest.main(['-q', '--domain=' + domain])
         i += 1
     urls.close()
@@ -28,7 +28,7 @@ def initialise_file(module, url):
         os.remove(out)
     module.parse(url, file(out, 'w'))
 
-def print_log(domain, url, test_no):
+def create_log(domain, url, test_no):
     log_content = "\n**************"
     log_content += "\nTest run no. " + str(test_no)
     log_content += "\n**************\n"
@@ -36,7 +36,7 @@ def print_log(domain, url, test_no):
     log_content += "\nURL: " + url
     log_content += "\nTest content file path: test_contents/" + domain + ".txt"
     log_content += "\nParser output file path: test_file.txt" + "\n"
-    print log_content
+    return log_content
 
 def print_not_tested():
     not_tested = open('not_tested.txt', 'r')
