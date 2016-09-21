@@ -6,7 +6,7 @@ def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text, "lxml" )
+	soup = BeautifulSoup( r.text, "html.parser" )
 
 	for p in soup.find_all( class_='teksti' ):
 		for string in p.stripped_strings:

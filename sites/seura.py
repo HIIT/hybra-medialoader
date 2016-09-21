@@ -6,7 +6,7 @@ def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup( r.text, "lxml" )
+	soup = BeautifulSoup( r.text, "html.parser" )
 
 	teksti = soup.find_all( class_='article-body' )
 
