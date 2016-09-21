@@ -8,6 +8,7 @@ sys.path.append(path)
 
 out = 'parser_out.txt'
 url_list = 'urls.txt'
+#url_list = 'single_url.txt'
 
 def run_parser_tests():
     urls = open(url_list, 'r')
@@ -20,6 +21,7 @@ def run_parser_tests():
         print create_log(domain, url.strip(), i)
         pytest.main(['-q', '--domain=' + domain])
         i += 1
+
     urls.close()
     print_not_tested()
 
@@ -35,7 +37,8 @@ def create_log(domain, url, test_no):
     log_content += "\nParser: " + domain
     log_content += "\nURL: " + url
     log_content += "\nTest content file path: test_contents/" + domain + ".txt"
-    log_content += "\nParser output file path: parser_out.txt" + "\n"
+    log_content += "\nParser output file path: parser_out.txt"
+    log_content += "\nDifference log file path: difference_logs/" + domain + "_diff.txt" + "\n"
     return log_content
 
 def print_not_tested():
