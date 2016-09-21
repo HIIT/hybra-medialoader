@@ -6,7 +6,7 @@ import pytest
 path = os.path.abspath('..')
 sys.path.append(path)
 
-out = 'test_file.txt'
+out = 'parser_out.txt'
 url_list = 'urls.txt'
 
 def run_parser_tests():
@@ -35,7 +35,7 @@ def create_log(domain, url, test_no):
     log_content += "\nParser: " + domain
     log_content += "\nURL: " + url
     log_content += "\nTest content file path: test_contents/" + domain + ".txt"
-    log_content += "\nParser output file path: test_file.txt" + "\n"
+    log_content += "\nParser output file path: parser_out.txt" + "\n"
     return log_content
 
 def print_not_tested():
