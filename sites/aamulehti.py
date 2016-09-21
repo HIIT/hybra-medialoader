@@ -6,12 +6,21 @@ def parse( url , out ):
 
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
-	soup = BeautifulSoup(r.text, "html.parser")
+	soup = BeautifulSoup( r.text, "html.parser" )
 
-	teksti = soup.find_all( class_='Teksti' )
+	for div in soup.find_all( 'div', {'class' : 'kuvavaraus-wrapper'} ):
+		div.decompose()
 
-	for string in teksti[0].stripped_strings:
-	        out.write( string.encode('utf8') + ' ' )
+	text = soup.find_all( class_ = 'Teksti' )
+	content = text[0].get_text(' ', strip=True)
+	content = process(content)
+
+	out.write( content.encode('utf8') )
+
+def process(content):
+	content = content.replace(' .', '.')
+	content = content.replace(' ,', ',')
+	return content
 
 if __name__ == '__main__':
 
