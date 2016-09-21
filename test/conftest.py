@@ -6,3 +6,4 @@ def pytest_generate_tests(metafunc):
     if 'domain' in metafunc.fixturenames:
         metafunc.parametrize("domain",
                              metafunc.config.option.domain)
+                             
