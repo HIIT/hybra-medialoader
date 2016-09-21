@@ -11,7 +11,7 @@ hs,http://www.hs.fi/paakirjoitukset/a1473738016148
 hyvaterveys,http://www.hyvaterveys.fi/blogit/paljain-jaloin-pariisissa/merci-ja-au-revoir
 ilkka,http://www.ilkka.fi/uutiset/kotimaa/juncker-lupasi-jokaiselle-jotakin-taistelu-populismia-vastaan-nousi-k%C3%A4rkeen-1.2123289
 iltalehti,http://www.iltalehti.fi/ulkomaat/2016091422313441_ul.shtml
-iltamakasiini,http://www.iltamakasiini.fi/artikkeli/433738-yolo-ja-clickbait-loytyvat-nyt-sanakirjasta
+iltamakasiini,http://www.iltamakasiini.fi/artikkeli/436377-tulli-paljasti-500-kiloa-nuuskaa-tuotiin-laittomasti-suomeen
 iltasanomat,http://www.iltasanomat.fi/ulkomaat/art-2000001260798.html
 kainuunsanomat,http://www.kainuunsanomat.fi/kainuun-sanomat/kotimaa/onnettomuustutkintakeskus-aloittaa-tutkinnan-raahen-tulipalosta/
 kaleva,http://www.kaleva.fi/uutiset/kotimaa/poliisi-raahen-rivitalopalo-sai-alkunsa-todennakoisesti-keittiosta/738244/
