@@ -1,10 +1,6 @@
-import sys
 import os
 import filecmp
 import difflib
-
-path = os.path.abspath('..')
-sys.path.append(path)
 
 out = 'parser_out.txt'
 
