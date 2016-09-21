@@ -43,6 +43,7 @@ def print_not_tested():
     print "\nParsers that were not tested:"
     for parser in not_tested:
         print parser.strip()
+    print "\n"
 
 if __name__ == '__main__':
     run_parser_tests()
