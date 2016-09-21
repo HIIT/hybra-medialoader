@@ -1,6 +1,6 @@
 import requests
-
 from bs4 import BeautifulSoup
+import processor
 
 def parse( url , out ):
 
@@ -8,13 +8,20 @@ def parse( url , out ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	teksti = soup.find_all( class_= "body" )
-	#teksti[0].find( class_ = 'side-ads' ).decompose()
+	ingress = soup.find_all( class_='ingress')
+	text = soup.find_all( class_='body' )
 
-	#map( lambda x: x.extract() , teksti[0].find_all('script')  )
+	for script in text[0].find_all('script'):
+		script.decompose()
 
-	for string in teksti[0].stripped_strings:
-	        out.write( string.encode('utf8') + ' ' )
+	for url in text[0].find_all('span', {'class' : 'print-url'}):
+		url.decompose()
+
+	content = ingress[0].get_text(' ', strip=True)
+	content += ' ' + text[0].get_text(' ', strip=True)
+	content = processor.process(content)
+
+	out.write( content.encode('utf8') )
 
 if __name__ == '__main__':
 	parse("http://www.iltasanomat.fi/ulkomaat/art-1288789081654.html", file('iltasa.txt', 'w'))

@@ -1,20 +1,23 @@
 import requests
-
+import processor
 from bs4 import BeautifulSoup
-import bs4
 
 def parse( url , out ):
 
 	r = requests.get( url )
-	r.encoding = 'UTF-8'
+	r.encoding = 'iso-8859-1'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	teksti = soup.find_all( 'isense' )
+	text = soup.find_all( 'isense' )
 
-	for e in teksti[0]:
-		if isinstance( e, bs4.element.Tag):
-			if not e.get('id') and e.string and not e.get('type'): ## hack, fixme
-				out.write( e.string.encode('utf8') + ' ' )
+	text[0].find('div', {'class' : 'kainalo'}).decompose()
+	text[0].find('div', {'class' : 'author'}).decompose()
+	text[0].find('div', {'class' : 'kp-share-area'}).decompose()
+
+	content = text[0].get_text(' ', strip=True)
+	content = processor.process(content)
+
+	out.write( content.encode('utf8') )
 
 if __name__ == '__main__':
 

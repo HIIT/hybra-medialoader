@@ -1,7 +1,6 @@
 import requests
-
 from bs4 import BeautifulSoup
-import bs4
+import processor
 
 def parse( url , out ):
 
@@ -9,12 +8,15 @@ def parse( url , out ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	teksti = soup.find_all( class_ ="article-text-content" )
+	text = soup.find_all( class_ = "article-text-content" )
 
-	for e in teksti[0]:
-		if isinstance( e, bs4.element.Tag):
-			if not e.get('class') and e.string:
-				out.write( e.string.encode('utf8') + ' ' )
+	for div in text[0].find_all( 'div'):
+		div.decompose()
+
+	content = text[0].get_text(' ', strip=True)
+	content = processor.process(content)
+
+	out.write( content.encode('utf8') )
 
 if __name__ == '__main__':
 

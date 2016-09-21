@@ -1,6 +1,6 @@
 import requests
-
 from bs4 import BeautifulSoup
+import processor
 
 def parse( url , out ):
 
@@ -8,19 +8,15 @@ def parse( url , out ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	for div in soup.find_all( 'div', {'class' : 'kuvavaraus-wrapper'} ):
+	text = soup.find_all( class_ = 'Teksti' )
+
+	for div in text[0].find_all( 'div', {'class' : 'kuvavaraus-wrapper'} ):
 		div.decompose()
 
-	text = soup.find_all( class_ = 'Teksti' )
 	content = text[0].get_text(' ', strip=True)
-	content = process(content)
+	content = processor.process(content)
 
 	out.write( content.encode('utf8') )
-
-def process(content):
-	content = content.replace(' .', '.')
-	content = content.replace(' ,', ',')
-	return content
 
 if __name__ == '__main__':
 
