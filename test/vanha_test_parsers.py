@@ -46,3 +46,4 @@ def initialise_file(module, url):
     if ( os.path.isfile(out) ):
         os.remove(out)
     module.parse(url, file(out, 'w'))
+    
