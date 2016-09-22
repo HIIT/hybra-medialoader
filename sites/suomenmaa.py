@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 
 def parse( url , out ):
 
+	# Somethin weird is going on with this site; check later
+
+
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )

@@ -1,7 +1,6 @@
 import requests
-
 from bs4 import BeautifulSoup
-import bs4
+import processor
 
 def parse( url , out ):
 
@@ -9,15 +8,17 @@ def parse( url , out ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	teksti = soup.find_all( class_ = "lead-paragraph" )
-	for e in teksti[0].stripped_strings:
-		out.write( e.encode('utf8') + ' ' )
+	lead = soup.find_all( class_ = 'lead-paragraph' )
+	text = soup.find_all( class_ = 'editorial' )
 
-	teksti = soup.find_all( class_ = "editorial" )
-	teksti[0].find( class_ = 'banner').decompose()
+	for ad in text[0].find_all( class_ = 'ad' ):
+		ad.decompose()
 
-	for e in teksti[0].stripped_strings:
-		out.write( e.encode('utf8') + ' ' )
+	content = lead[0].get_text(' ', strip = True)
+	content += ' ' + text[0].get_text(' ', strip = True)
+	content = processor.process(content)
+
+	out.write( content.encode('utf8') )
 
 if __name__ == '__main__':
 	parse("http://www.mtv.fi/uutiset/kotimaa/artikkeli/jarjesto-sipilaan-kohdistuneesta-uhkailusta-iltapaivalehdissa-lausunto-hammastyttaa/4918590", file('mtv.txt', 'w'))
