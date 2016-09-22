@@ -19,7 +19,7 @@ kansanuutiset,http://www.kansanuutiset.fi/artikkeli/3599725-veroparatiisien-tode
 karjalainen,http://www.karjalainen.fi/uutiset/uutis-alueet/kotimaa/item/116683-metsastajaliitto-asettaa-susiasiamiehia-maakuntiin-erityisen-vaikea-tilanne-idassa
 kdlehti,http://www.kdlehti.fi/2016/09/14/lahden-kristillisdemokraatit-vanhusten-hoitajamitoitus-sailytettava-nykyisella-tasolla/
 kokemaenjokilaakso,http://www.kokemaenjokilaakso.fi/2016/09/13/vammalan-aluesairaalan-tulevaisuutta-kasitellaan-talousarvion-yhteydessa/
-kouvolansanomat,http://www.kouvolansanomat.fi/Online/2016/09/14/Kouvolan%20ja%20Kotkan%20v%C3%A4liselle%20valtatie%2015%3Alle%20tulee%20ohituskaistoja%20%E2%80%94%20rakentaminen%20alkaa%20aikaisintaan%20vuonna%202019/2016221263473/4
+kouvolansanomat,http://www.kouvolansanomat.fi/Online/2016/09/22/Taksiala%20toivoo%20omaa%20Onnibus-ilmi%C3%B6t%C3%A4/2016221291757/4
 ksml,http://www.ksml.fi/ulkomaat/Brexit-Britannia-riitelee-passinsa-v%C3%A4rist%C3%A4/835855
 kymensanomat,http://www.kymensanomat.fi/Online/2016/09/14/Carean%20yhtym%C3%A4kokous%20hyv%C3%A4ksyi%20keskussairaalan%20remontin%20ja%20laajennuksen%20%E2%80%94%20kouvolalaiset%20vastustivat/2016521265354/4
 maaseuduntulevaisuus,http://www.maaseuduntulevaisuus.fi/maatalous/eu-s%C3%A4%C3%A4st%C3%A4%C3%A4-suorista-tuista-1-37-prosenttia-kriisien-varalle-1.161757
@@ -28,8 +28,7 @@ mtv,http://www.mtv.fi/uutiset/kotimaa/artikkeli/ek-n-hakamies-palkkamallin-raken
 satakunnankansa,http://www.satakunnankansa.fi/satakunta/patologinen-nettipetostehtailija-passitettiin-vankilaan-talla-kertaa-vuosi-ja-8-kuukautta/
 savonsanomat,http://www.savonsanomat.fi/kotimaa/Ty%C3%B6ryhm%C3%A4-esitt%C3%A4%C3%A4-Ylemm%C3%A4n-AMK-tutkinnon-nimikkeeksi-maisteri/835879
 seura,http://seura.fi/puheenaihe/ajankohtaista/vasemmisto-kehuu-kokoomusta-harjoittavat-rehellisesti-politiikkaa-joka-on-ajanut-suomen-lamaan/?shared=43026-ad87bd06-500
-suomenkuvalehti,http://suomenkuvalehti.fi/jutut/kotimaa/nain-kittila-yritti-ostaa-rangaistusvaatimukset-pois-tyooikeuden-professori-tahditti-neuvotteluja/
-suomenmaa,http://www.suomenmaa.fi/?app=NeoDirect&com=6/3/154252/53886c5a9e
+suomenkuvalehti,http://suomenkuvalehti.fi/jutut/kotimaa/politiikka/timo-soini-aikoo-olla-puheenjohtaja-viela-vuoden-2019-vaaleissa/?shared=74287-e5d264da-500
 suomenuutiset,https://www.suomenuutiset.fi/kiinan-puhemies-ensimmaista-kertaa-vierailulle-suomeen-maria-lohelan-kutsumana/
 talouselama,http://www.talouselama.fi/uutiset/rovion-ex-pomo-peter-vesterbacka-siirtyy-opetuspelifirmaan-6582615
 taloussanomat,http://www.taloussanomat.fi/porssi/2016/09/14/neste-aikoo-jakaa-aiempaa-avokatisempia-osinkoja/20169550/170?n=1
