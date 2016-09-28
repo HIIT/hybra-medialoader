@@ -3,7 +3,7 @@ import os
 import importlib
 import pytest
 
-path = os.path.abspath('..')
+path = os.path.abspath( '..' )
 sys.path.append(path)
 
 out = 'parser_out.txt'
@@ -11,24 +11,24 @@ url_list = 'urls.txt'
 #url_list = 'single_url.txt'
 
 def run_parser_tests():
-    urls = open(url_list, 'r')
+    urls = open( url_list, 'r' )
 
     i = 1
     for line in urls:
-        domain,url = line.split(",")
-        module = importlib.import_module('sites.' + domain)
-        initialise_file(module, url.strip())
-        print create_log(domain, url.strip(), i)
-        pytest.main(['-q', '--domain=' + domain])
+        domain,url = line.split( "," )
+        module = importlib.import_module( 'sites.' + domain ) # Would be good to move
+        content_dictionary = module.parse( url.strip() )      # these lines to a test setup method.
+        initialise_file( module, content_dictionary )         # First, however find out how to parameterize setup methods
+        print create_log( domain, url.strip(), i )
+        pytest.main( ['-q', '--domain=' + domain, '--url=' + url.strip()] )
         i += 1
 
     urls.close()
-    print_not_tested()
 
-def initialise_file(module, url):
+def initialise_file(module, content_dictionary):
     if ( os.path.isfile(out) ):
         os.remove(out)
-    module.parse(url, file(out, 'w'))
+    module.write_file( file(out, 'w'), content_dictionary )
 
 def create_log(domain, url, test_no):
     log_content = "\n**************"
@@ -42,7 +42,7 @@ def create_log(domain, url, test_no):
     return log_content
 
 def print_not_tested():
-    not_tested = open('not_tested.txt', 'r')
+    not_tested = open(  'not_tested.txt', 'r')
     print "\nParsers that were not tested:"
     for parser in not_tested:
         print parser.strip()
