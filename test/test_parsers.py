@@ -1,6 +1,11 @@
+import sys
 import os
 import filecmp
 import difflib
+import importlib
+
+path = os.path.abspath('..')
+sys.path.append(path)
 
 out = 'parser_out.txt'
 
@@ -14,8 +19,47 @@ class TestParser:
 
     def test_file_contents_match(self, domain):
         test_content_path = 'test_contents/' + domain + '.txt'
-        write_difference_log(domain, test_content_path)
-        assert filecmp.cmp(test_content_path, out)
+        write_difference_log( domain, test_content_path )
+        assert filecmp.cmp( test_content_path, out )
+
+    def test_dictionary_created(self, domain, url):
+        module = importlib.import_module('sites.' + domain)
+        assert bool( module.parse(url) )
+
+    def test_dictionary_contains_right_keys(self, domain, url):
+        module = importlib.import_module('sites.' + domain)
+        d = module.parse( url )
+        keys = ['url', 'http', 'category', 'date', 'time', 'title', 'ingress', 'text', 'images', 'captions']
+        for key in keys:
+            assert key in d
+
+    def test_dictionary_values_correct_type(self, domain, url):
+        module = importlib.import_module('sites.' + domain)
+        d = module.parse( url )
+
+        assert type( d['url'] ) is str
+        assert type( d['http'] ) is str
+        assert type( d['category'] ) is str
+
+        assert type( d['date'] ) is list
+        for date in d['date']:
+            assert type( date ) is str
+
+        assert type( d['time'] ) is list
+        for time in d['time']:
+            assert type( time ) is str
+
+        assert type( d['title'] ) is str
+        assert type( d['ingress'] ) is str
+        assert type( d['text'] ) is str
+
+        assert type( d['images'] ) is list
+        for img in d['images']:
+            assert type( img ) is str
+
+        assert type( d['captions'] ) is list
+        for caption in d['captions']:
+            assert type( caption ) is str
 
 
 def write_difference_log(domain, test_content_path):
