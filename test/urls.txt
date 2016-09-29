@@ -9,7 +9,7 @@ hbl,http://gamla.hbl.fi/nyheter/2014-12-03/690266/hawking-ai-kan-vara-slutet-oss
 helsinginuutiset,http://www.helsinginuutiset.fi/artikkeli/433833-arvio-15-000-ihmista-saa-tana-vuonna-tyopaikan-kunnasta-tarvetta-etenkin
 hs,http://www.hs.fi/paakirjoitukset/a1473738016148
 hyvaterveys,http://www.hyvaterveys.fi/blogit/paljain-jaloin-pariisissa/merci-ja-au-revoir
-ilkka,http://www.ilkka.fi/uutiset/kotimaa/juncker-lupasi-jokaiselle-jotakin-taistelu-populismia-vastaan-nousi-k%C3%A4rkeen-1.2123289
+ilkka,http://www.ilkka.fi/uutiset/kotimaa/suomen-yritt%C3%A4jilt%C3%A4-oma-ty%C3%B6llisyysohjelma-1.2133128
 iltalehti,http://www.iltalehti.fi/ulkomaat/2016091422313441_ul.shtml
 iltamakasiini,http://www.iltamakasiini.fi/artikkeli/436377-tulli-paljasti-500-kiloa-nuuskaa-tuotiin-laittomasti-suomeen
 iltasanomat,http://www.iltasanomat.fi/ulkomaat/art-2000001260798.html
