@@ -30,26 +30,5 @@ def parse( url ):
 					  'captions' : [''] }
 	return media_content
 
-def write_file( out, content ):
-	file_content = content['url'].encode('utf8') + "\n"
-	file_content += content['http'] + "\n"
-	file_content += content['category'].encode('utf8') + "\n"
-
-	for date in content['date']:
-		file_content += date.encode('utf8') + "\n"
-	for time in content['time']:
-		file_content += time.encode('utf8') + "\n"
-
-	file_content += content['title'] + "\n"
-	file_content += content['ingress'].encode('utf8') + "\n"
-	file_content += content['text'] + "\n"
-
-	for img in content['images']:
-		file_content += img.encode('utf8') + "\n"
-	for caption in content['captions']:
-		file_content += caption + "\n"
-
-	out.write( file_content.strip() )
-
 if __name__ == '__main__':
 	parse("http://www.maaseuduntulevaisuus.fi/maatalous/nurmipelloille-voi-tulla-k%C3%A4ytt%C3%B6rajoituksia-1.76216", file('maaseudun.txt', 'w'))

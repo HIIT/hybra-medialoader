@@ -67,28 +67,6 @@ def parse( url ):
 					  'captions' : captions_text }
 	return media_content
 
-
-def write_file( out, content ):
-	file_content = content['url']+ "\n"
-	file_content += content['http'] + "\n"
-	file_content += content['category']+ "\n"
-
-	for date in content['date']:
-		file_content += date + "\n"
-	for time in content['time']:
-		file_content += time + "\n"
-
-	file_content += content['title'] + "\n"
-	file_content += content['ingress'] + "\n"
-	file_content += content['text'] + "\n"
-
-	for img in content['images']:
-		file_content += img + "\n"
-	for caption in content['captions']:
-		file_content += caption + "\n"
-
-	out.write( file_content.strip() )
-
 if __name__ == '__main__':
 
 	parse("http://www.aamuset.fi/naista-puhutaan/politiikka/yrttiaho-kanteli-oikeuskanslerille-nato-sopimuksesta", file('aamuset.txt', 'w'))
