@@ -7,8 +7,8 @@ path = os.path.abspath( '..' )
 sys.path.append(path)
 
 out = 'parser_out.txt'
-#url_list = 'urls.txt'
-url_list = 'single_url.txt'
+url_list = 'urls.txt'
+#url_list = 'single_url.txt'
 
 def run_parser_tests():
     urls = open( url_list, 'r' )
@@ -31,25 +31,27 @@ def initialise_file(module, content_dictionary):
     write_file( file(out, 'w'), content_dictionary )
 
 def write_file( out, content ):
-	file_content = content['url']+ "\n"
-	file_content += content['http'] + "\n"
-	file_content += content['category']+ "\n"
+    file_content = content['url'] + "\n"
+    file_content += content['http'] + "\n"
+    file_content += content['category'] + "\n"
 
-	for date in content['date']:
-		file_content += date + "\n"
-	for time in content['time']:
-		file_content += time + "\n"
+    for date in content['date']:
+        file_content += date + "\n"
+    for time in content['time']:
+        file_content += time + "\n"
 
-	file_content += content['title'] + "\n"
-	file_content += content['ingress'] + "\n"
-	file_content += content['text'] + "\n"
+    file_content += content['author'] + "\n"
+    file_content += content['title'] + "\n"
+    file_content += content['ingress'] + "\n"
+    file_content += content['text'] + "\n"
 
-	for img in content['images']:
-		file_content += img + "\n"
-	for caption in content['captions']:
-		file_content += caption + "\n"
+    for img in content['images']:
+        file_content += img + "\n"
+    for caption in content['captions']:
+        file_content += caption + "\n"
 
-	out.write( file_content.strip() )
+    out.write( file_content.strip() )
+
 
 def create_log(domain, url, test_no):
     log_content = "\n**************"
