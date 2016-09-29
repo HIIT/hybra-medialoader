@@ -39,17 +39,7 @@ def parse( url ):
 		image_src[i] = str( src.encode('utf8') )
 		i += 1
 
-	media_content = { 'url' : str( url.encode('utf8') ),
-					  'http' : str( http_status ).encode('utf8'),
-					  'category' : str( category.encode('utf8') ),
-					  'date' : date,
-					  'time' : time,
-					  'title' : str( title.encode('utf8') ),
-					  'ingress' : str( ''.encode('utf8') ),
-					  'text' : str( text.encode('utf8') ),
-					  'images' : image_src,
-					  'captions' : [''] }
-	return media_content
+	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, [''])
 
 if __name__ == '__main__':
 

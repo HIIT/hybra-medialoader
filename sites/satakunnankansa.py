@@ -14,21 +14,10 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	text = soup.find_all( class_='Teksti' )
+	text = text[0].get_text(' ', strip = True)
+	text = processor.process(text)
 
-	content = text[0].get_text(' ', strip = True)
-	content = processor.process(content)
-
-	media_content = { 'url' : str( ''.encode('utf8') ),
-					  'http' : str( http_status ).encode('utf8'),
-					  'category' : str( ''.encode('utf8') ),
-					  'date' : [''],
-					  'time' : [''],
-					  'title' : str( ''.encode('utf8') ),
-					  'ingress' : str( ''.encode('utf8') ),
-					  'text' : str( ''.encode('utf8') ),
-					  'images' : [''],
-					  'captions' : [''] }
-	return media_content
+	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
 
 if __name__ == '__main__':
 	parse("http://www.satakunnankansa.fi/Satakunta/1194972499877/artikkeli/myrsky+runteli+myos+vaalimainoksia.html", file('satakunnankansa.txt', 'w'))

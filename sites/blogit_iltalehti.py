@@ -21,17 +21,7 @@ def parse( url ):
 	text = text[0].get_text(' ', strip = True)
 	text = processor.process(text)
 
-	media_content = { 'url' : str( url.encode('utf8') ),
-					  'http' : str( http_status ).encode('utf8'),
-					  'category' : str( ''.encode('utf8') ),
-					  'date' : date,
-					  'time' : [''],
-					  'title' : str( title.encode('utf8') ),
-					  'ingress' : str( ''.encode('utf8') ),
-					  'text' : str( text.encode('utf8') ),
-					  'images' : [''],
-					  'captions' : [''] }
-	return media_content
+	return processor.create_dictionary(url, http_status, '', date, [''], '', title, '', text, [''], [''])
 
 if __name__ == '__main__':
 

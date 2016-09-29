@@ -54,17 +54,7 @@ def parse( url ):
 	text = text.get_text(' ', strip = True)
 	text = processor.process(text)
 
-	media_content = { 'url' : str( url.encode('utf8') ),
-					  'http' : str( http_status ).encode('utf8'),
-					  'category' : str( category.encode('utf8') ),
-					  'date' : date,
-					  'time' : time,
-					  'title' : str( title.encode('utf8') ),
-					  'ingress' : str( '' ).encode('utf8'),
-					  'text' : str( text.encode("utf8") ),
-					  'images' : image_src,
-					  'captions' : captions_text }
-	return media_content
+	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, captions_text)
 
 if __name__ == '__main__':
 

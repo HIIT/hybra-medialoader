@@ -15,24 +15,12 @@ def parse( url ):
 
 	lead = soup.find_all( class_='lead')
 	text = soup.find_all( class_='articleBody' )
-
 	text[0]('p')[-1].decompose()
-
 	content = lead[0].get_text(' ', strip=True)
 	content += ' ' + text[0].get_text(' ', strip=True)
-	content = processor.process(content)
+	text = processor.process(content)
 
-	media_content = { 'url' : str( ''.encode('utf8') ),
-					  'http' : str( http_status ).encode('utf8'),
-					  'category' : str( ''.encode('utf8') ),
-					  'date' : [''],
-					  'time' : [''],
-					  'title' : str( ''.encode('utf8') ),
-					  'ingress' : str( ''.encode('utf8') ),
-					  'text' : str( ''.encode('utf8') ),
-					  'images' : [''],
-					  'captions' : [''] }
-	return media_content
+	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
 
 if __name__ == '__main__':
 
