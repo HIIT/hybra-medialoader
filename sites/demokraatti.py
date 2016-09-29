@@ -13,27 +13,41 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	text = soup.find_all( class_='post-content' )
-
-	text[0].find('ul', {'class' : 'single-post-date'}).decompose()
-	text[0].find('div', {'class' : 'keywords-block'}).decompose()
-	for div in text[0].find_all( 'div', {'class' : 'share-buttons-block'} ):
+	article = soup.find('article')
+	article.find('div', {'class' : 'keywords-block'}).decompose()
+	for div in article.find_all( 'div', {'class' : 'share-buttons-block'} ):
 		div.decompose()
-	text[0]('p')[-1].decompose()
-	text[0].footer.decompose()
+	article('p')[-1].decompose()
+	article.footer.decompose()
+	article.find( class_ = 'post-author' ).decompose()
 
-	content = text[0].get_text(' ', strip=True)
-	content = processor.process(content)
+	title = article.find( class_ = 'entry-title' ).get_text().strip()
+	category = article.find( class_ = 'category' ).get_text().strip()
+	date = [ str( article.find( class_ = 'date' ).get_text().strip().encode('utf8') ) ]
+	time = [ str( article.find( class_ = 'time' ).get_text().strip().encode('utf8') ) ]
 
-	media_content = { 'url' : str( ''.encode('utf8') ),
+	text = article.find_all( class_='post-content' )
+	text[0].find('ul', {'class' : 'single-post-date'}).decompose()
+	text = text[0].get_text(' ', strip=True)
+	text = processor.process(text)
+
+	images = article.find_all( 'img' )
+	image_src = [None] * len( images )
+	i = 0
+	for img in images:
+		src = "https://demokraatti.fi" + img['src']
+		image_src[i] = str( src.encode('utf8') )
+		i += 1
+
+	media_content = { 'url' : str( url.encode('utf8') ),
 					  'http' : str( http_status ).encode('utf8'),
-					  'category' : str( ''.encode('utf8') ),
-					  'date' : [''],
-					  'time' : [''],
-					  'title' : str( ''.encode('utf8') ),
+					  'category' : str( category.encode('utf8') ),
+					  'date' : date,
+					  'time' : time,
+					  'title' : str( title.encode('utf8') ),
 					  'ingress' : str( ''.encode('utf8') ),
-					  'text' : str( ''.encode('utf8') ),
-					  'images' : [''],
+					  'text' : str( text.encode('utf8') ),
+					  'images' : image_src,
 					  'captions' : [''] }
 	return media_content
 

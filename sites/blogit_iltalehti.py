@@ -14,16 +14,14 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-
 	title = article.find( class_ = 'entry-title' ).get_text().strip()
-
 	date = [ str( article.find( class_ = 'postmeta-date' ).get_text(' ', strip = True).encode('utf8') ) ]
 
 	text = article.find_all( class_= 'entry-content' )
 	text = text[0].get_text(' ', strip = True)
 	text = processor.process(text)
 
-	media_content = { 'url' : str( ''.encode('utf8') ),
+	media_content = { 'url' : str( url.encode('utf8') ),
 					  'http' : str( http_status ).encode('utf8'),
 					  'category' : str( ''.encode('utf8') ),
 					  'date' : date,
