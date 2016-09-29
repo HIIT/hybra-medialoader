@@ -5,6 +5,11 @@ import processor
 def parse( url ):
 
 	r = requests.get( url )
+
+	http_status = r.status_code
+	if r.status_code == 404:
+		return
+
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
@@ -52,8 +57,6 @@ def parse( url ):
 	text = text.get_text(' ', strip = True)
 	text = processor.process(text)
 
-	http_status = get_http_status( url )
-
 	media_content = { 'url' : str( url.encode('utf8') ),
 					  'http' : str( http_status ).encode('utf8'),
 					  'category' : str( category.encode('utf8') ),
@@ -65,10 +68,6 @@ def parse( url ):
 					  'images' : image_src,
 					  'captions' : captions_text }
 	return media_content
-
-def get_http_status( url ):
-	r = requests.head( url )
-	return r.status_code
 
 def write_file( out, content ):
 	file_content = content['url'] + "\n"

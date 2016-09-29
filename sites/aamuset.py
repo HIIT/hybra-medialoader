@@ -4,9 +4,12 @@ import processor
 
 def parse( url ):
 
-	http_status = get_http_status( url )
-
 	r = requests.get( url )
+
+	http_status = r.status_code
+	if r.status_code == 404:
+		return
+
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
@@ -58,15 +61,12 @@ def parse( url ):
 					  'date' : date,
 					  'time' : time,
 					  'title' : str( title.encode('utf8') ),
-					  'ingress' : '',
+					  'ingress' : str( ''.encode('utf8') ),
 					  'text' : str( text.encode('utf8') ),
 					  'images' : image_src,
 					  'captions' : captions_text }
 	return media_content
 
-def get_http_status( url ):
-	r = requests.head( url )
-	return r.status_code
 
 def write_file( out, content ):
 	file_content = content['url']+ "\n"
