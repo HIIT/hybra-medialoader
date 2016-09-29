@@ -4,8 +4,6 @@ import processor
 
 def parse( url ):
 
-	http_status = get_http_status( url )
-
 	r = requests.get( url )
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
@@ -50,8 +48,9 @@ def parse( url ):
 	text = processor.process(text)
 	text = str( text.encode('utf8') )
 
-	media_content = { 'url' : url, 'http' : str(http_status), 'category' : category, 'date' : date, 'time' : time, 'title' : title, 'ingress' : '', 'text' : text, 'images' : image_src, 'captions' : captions_text}
+	http_status = get_http_status( url )
 
+	media_content = { 'url' : url, 'http' : str(http_status), 'category' : category, 'date' : date, 'time' : time, 'title' : title, 'ingress' : '', 'text' : text, 'images' : image_src, 'captions' : captions_text}
 	return media_content
 
 def get_http_status( url ):
