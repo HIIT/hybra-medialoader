@@ -11,27 +11,32 @@ def parse( url ):
 	article = soup.find( class_ = 'article-content')
 	article.find( class_ = 'related-articles-container' ).decompose()
 
-	title = str( article.find( class_ = 'Otsikko' ).get_text().strip().encode('utf8') )
+	title = article.find( class_ = 'Otsikko' ).get_text().strip()
 
-	category = str( article.find( class_ = 'category' ).get_text().strip() )
+	category = article.find( class_ = 'category' ).get_text().strip()
 
-	meta = article.find( class_ = 'post-meta' )
-	meta.find( class_ = 'category' ).decompose()
-	meta.find( class_ = 'updated' ).decompose()
+	datetime = article.find( class_ = 'post-meta' )
+	datetime.find( class_ = 'category' ).decompose()
+	datetime.find( class_ = 'updated' ).decompose()
 
-	meta_list = [None] * 4
+	datetime_list = [None] * 4
 	i = 0
-	for string in meta.stripped_strings:
-		meta_list[i] = string
+	for string in datetime.stripped_strings:
+		datetime_list[i] = string
 		i += 1
-	date = [str( meta_list[2] ), str( meta_list[0] )]
-	time = [str( meta_list[3] ), str( meta_list[1] )]
+
+	if i > 1:
+		date = [str( datetime_list[2].encode('utf8') ), str( datetime_list[0].encode('utf8') )]
+		time = [str( datetime_list[3].encode('utf8') ), str( datetime_list[1].encode('utf8') )]
+	else:
+		date = [str( datetime_list[0].encode('utf8') )]
+		time = [str( datetime_list[1].encode('utf8') )]
 
 	images = article.find_all( 'img' )
 	image_src = [None] * len(images)
 	i = 0
 	for img in images:
-		image_src[i] = str( img['src'] )
+		image_src[i] = str( img['src'].encode('utf8') )
 		i += 1
 
 	captions = article.find_all( class_ = 'caption' )
@@ -46,11 +51,19 @@ def parse( url ):
 		div.decompose()
 	text = text.get_text(' ', strip = True)
 	text = processor.process(text)
-	text = str( text.encode('utf8') )
 
 	http_status = get_http_status( url )
 
-	media_content = { 'url' : url, 'http' : str(http_status), 'category' : category, 'date' : date, 'time' : time, 'title' : title, 'ingress' : '', 'text' : text, 'images' : image_src, 'captions' : captions_text}
+	media_content = { 'url' : str( url.encode('utf8') ),
+					  'http' : str( http_status ).encode('utf8'),
+					  'category' : str( category.encode('utf8') ),
+					  'date' : date,
+					  'time' : time,
+					  'title' : str( title.encode('utf8') ),
+					  'ingress' : str( '' ).encode('utf8'),
+					  'text' : str( text.encode("utf8") ),
+					  'images' : image_src,
+					  'captions' : captions_text }
 	return media_content
 
 def get_http_status( url ):
@@ -58,21 +71,21 @@ def get_http_status( url ):
 	return r.status_code
 
 def write_file( out, content ):
-	file_content = content['url'].encode('utf8') + "\n"
+	file_content = content['url'] + "\n"
 	file_content += content['http'] + "\n"
-	file_content += content['category'].encode('utf8') + "\n"
+	file_content += content['category'] + "\n"
 
 	for date in content['date']:
-		file_content += date.encode('utf8') + "\n"
+		file_content += date + "\n"
 	for time in content['time']:
-		file_content += time.encode('utf8') + "\n"
+		file_content += time + "\n"
 
 	file_content += content['title'] + "\n"
-	file_content += content['ingress'].encode('utf8') + "\n"
+	file_content += content['ingress'] + "\n"
 	file_content += content['text'] + "\n"
 
 	for img in content['images']:
-		file_content += img.encode('utf8') + "\n"
+		file_content += img + "\n"
 	for caption in content['captions']:
 		file_content += caption + "\n"
 
