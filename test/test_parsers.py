@@ -3,6 +3,7 @@ import os
 import filecmp
 import difflib
 import importlib
+import datetime
 
 path = os.path.abspath('..')
 sys.path.append(path)
@@ -29,7 +30,7 @@ class TestParser:
     def test_dictionary_contains_right_keys(self, domain, url):
         module = importlib.import_module('sites.' + domain)
         d = module.parse( url )
-        keys = ['url', 'http', 'category', 'date', 'time', 'title', 'ingress', 'text', 'images', 'captions']
+        keys = ['url', 'http', 'categories', 'datetime_list', 'author', 'title', 'ingress', 'text', 'images', 'captions']
         for key in keys:
             assert key in d
 
@@ -39,16 +40,16 @@ class TestParser:
 
         assert type( d['url'] ) is str
         assert type( d['http'] ) is str
-        assert type( d['category'] ) is str
 
-        assert type( d['date'] ) is list
-        for date in d['date']:
-            assert type( date ) is str
+        assert type( d['categories'] ) is list
+        for category in d['categories']:
+            type( category ) is str
 
-        assert type( d['time'] ) is list
-        for time in d['time']:
-            assert type( time ) is str
+        assert type( d['datetime_list'] ) is list
+        for datetime_object in d['datetime_list']:
+            assert type( datetime_object ) is datetime.datetime
 
+        assert type( d['author'] ) is str
         assert type( d['title'] ) is str
         assert type( d['ingress'] ) is str
         assert type( d['text'] ) is str

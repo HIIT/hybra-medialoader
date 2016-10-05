@@ -7,8 +7,8 @@ path = os.path.abspath( '..' )
 sys.path.append(path)
 
 out = 'parser_out.txt'
-url_list = 'urls.txt'
-#url_list = 'single_url.txt'
+#url_list = 'urls.txt'
+url_list = 'single_url.txt'
 
 def run_parser_tests():
     urls = open( url_list, 'r' )
@@ -33,12 +33,12 @@ def initialise_file(module, content_dictionary):
 def write_file( out, content ):
     file_content = content['url'] + "\n"
     file_content += content['http'] + "\n"
-    file_content += content['category'] + "\n"
 
-    for date in content['date']:
-        file_content += date + "\n"
-    for time in content['time']:
-        file_content += time + "\n"
+    for category in content['categories']:
+        file_content += category + "\n"
+
+    for datetime_object in content['datetime_list']:
+        file_content += str( datetime_object ) + "\n"
 
     file_content += content['author'] + "\n"
     file_content += content['title'] + "\n"

@@ -5,7 +5,7 @@ demokraatti,https://demokraatti.fi/finavia-sotkua-setvittiin-taas-farssi/
 esaimaa,http://www.esaimaa.fi/Mielipide---Kolumni/2016/09/14/Kolumni%3A%20Kehityksen%20ratas/2016121262013/67
 ess,http://www.ess.fi/uutiset/talous/art2301924
 faktabaari,http://faktabaari.fi/fakta/yle-dublin-asetuksen-turvapaikanhakijan-pitaa-rekisteroitya-hanen-asiansa-kasitella-siina-eu-maassa-han-saapuu-ensimmaisena/
-hbl,http://gamla.hbl.fi/nyheter/2014-12-03/690266/hawking-ai-kan-vara-slutet-oss
+hbl,https://www.hbl.fi/artikel/helsingfors-bygger-for-framtiden/
 helsinginuutiset,http://www.helsinginuutiset.fi/artikkeli/433833-arvio-15-000-ihmista-saa-tana-vuonna-tyopaikan-kunnasta-tarvetta-etenkin
 hs,http://www.hs.fi/paakirjoitukset/a1473738016148
 hyvaterveys,http://www.hyvaterveys.fi/blogit/paljain-jaloin-pariisissa/merci-ja-au-revoir
