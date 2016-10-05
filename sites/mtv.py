@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
@@ -21,7 +22,7 @@ def parse( url ):
 	content += ' ' + text[0].get_text(' ', strip = True)
 	text = processor.process(content)
 
-	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
+	return processor.create_dictionary(url, http_status, [''], [''], '', '', '', text, [''], [''])
 
 if __name__ == '__main__':
 	parse("http://www.mtv.fi/uutiset/kotimaa/artikkeli/jarjesto-sipilaan-kohdistuneesta-uhkailusta-iltapaivalehdissa-lausunto-hammastyttaa/4918590", file('mtv.txt', 'w'))

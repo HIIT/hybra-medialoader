@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
@@ -22,7 +23,7 @@ def parse( url ):
 	article.find( class_ = 'post-author' ).decompose()
 
 	title = article.find( class_ = 'entry-title' ).get_text().strip()
-	category = article.find( class_ = 'category' ).get_text().strip()
+	categories = [str( article.find( class_ = 'category' ).get_text().strip().encode('utf8') )]
 	date = [ str( article.find( class_ = 'date' ).get_text().strip().encode('utf8') ) ]
 	time = [ str( article.find( class_ = 'time' ).get_text().strip().encode('utf8') ) ]
 
@@ -39,7 +40,7 @@ def parse( url ):
 		image_src[i] = str( src.encode('utf8') )
 		i += 1
 
-	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, [''])
+	return processor.create_dictionary(url, http_status, categories, [''], '', title, '', text, image_src, [''])
 
 if __name__ == '__main__':
 

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
@@ -14,6 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
+
 	title = article.find( class_ = 'entry-title' ).get_text().strip()
 	date = [ str( article.find( class_ = 'postmeta-date' ).get_text(' ', strip = True).encode('utf8') ) ]
 
@@ -21,7 +23,7 @@ def parse( url ):
 	text = text[0].get_text(' ', strip = True)
 	text = processor.process(text)
 
-	return processor.create_dictionary(url, http_status, '', date, [''], '', title, '', text, [''], [''])
+	return processor.create_dictionary(url, http_status, [''], [''], '', title, '', text, [''], [''])
 
 if __name__ == '__main__':
 

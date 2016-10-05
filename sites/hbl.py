@@ -25,7 +25,7 @@ def parse( url ):
 	text = text[0].get_text(' ', strip=True)
 	text = processor.process(text)
 
-	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
+	return processor.create_dictionary(url, http_status, [''], [''], '', '', '', text, [''], [''])
 
 if __name__ == '__main__':
 

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
@@ -16,23 +17,27 @@ def parse( url ):
 	article = soup.find( class_ = 'article-content')
 	article.find( class_ = 'related-articles-container' ).decompose()
 
-	title = article.find( class_ = 'Otsikko' ).get_text().strip()
-	category = article.find( class_ = 'category' ).get_text().strip()
+	categories = [str( article.find( class_ = 'category' ).get_text().strip().encode('utf8') )]
 
-	datetime = article.find( class_ = 'post-meta' )
-	datetime.find( class_ = 'category' ).decompose()
-	datetime.find( class_ = 'updated' ).decompose()
-	datetime_list = [None] * 4
+	datetime_data = article.find( class_ = 'post-meta' )
+	datetime_data.find( class_ = 'category' ).decompose()
+	datetime_data.find( class_ = 'updated' ).decompose()
+	datetime_data = datetime_data.get_text(' ', strip = True).split(' ')
+	datetime_list = [None]
 	i = 0
-	for string in datetime.stripped_strings:
-		datetime_list[i] = string
-		i += 1
-	if i > 1:
-		date = [str( datetime_list[2].encode('utf8') ), str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[3].encode('utf8') ), str( datetime_list[1].encode('utf8') )]
-	else:
-		date = [str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[1].encode('utf8') )]
+	while i < len(datetime_data) - 1:
+		date_string = datetime_data[i]
+		time_string = datetime_data[i + 1]
+		if len(date_string) < 6:
+			date_string = date_string + '2016'
+		datetime_object = datetime.strptime( date_string + ' ' + time_string, "%d.%m.%Y %H.%M" )
+		datetime_list.append(datetime_object)
+		i += 2
+	datetime_list.pop(0)
+
+	author = article.find( class_ = 'Kirjoittaja').get_text().strip()
+
+	title = article.find( class_ = 'Otsikko' ).get_text().strip()
 
 	images = article.find_all( 'img' )
 	image_src = [None] * len(images)
@@ -54,7 +59,7 @@ def parse( url ):
 	text = text.get_text(' ', strip = True)
 	text = processor.process(text)
 
-	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
 
 if __name__ == '__main__':
 

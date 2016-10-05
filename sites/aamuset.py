@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
@@ -14,23 +15,27 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'view-news-item')
-	title = article.find( class_ = 'views-field-title' ).get_text().strip()
-	category = article.find( class_ = 'views-field-field-aamuset-category').get_text().strip()
 
-	datetime = article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3]
-	datetime = datetime.get_text().strip()
-	datetime = datetime.split(' ')
-	datetime_list = [None] * len(datetime)
+	categories = [str( article.find( class_ = 'views-field-field-aamuset-category').get_text().strip() ).encode('utf8')]
+
+	datetime_data = article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3]
+	datetime_data = datetime_data.get_text(' ', strip = True)
+	datetime_data = datetime_data.replace(')', '').split(' ')
+	if len( datetime_data ) > 2:
+		datetime_data.pop(2)
+	datetime_list = [None]
 	i = 0
-	for string in datetime:
-		datetime_list[i] = string
-		i += 1
-	if ( len(datetime_list) > 2 ):
-		date = [str( datetime_list[3].encode('utf8') ), str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[4].replace(')','').encode('utf8') ), str( datetime_list[1].encode('utf8') )]
-	else:
-		date = [str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[1].encode('utf8') )]
+	while i < len(datetime_data) - 1:
+		date_string = datetime_data[i]
+		time_string = datetime_data[i + 1]
+		datetime_object = datetime.strptime( date_string + ' ' + time_string, "%d.%m.%Y %H:%M" )
+		datetime_list.append(datetime_object)
+		i += 2
+	datetime_list.pop(0)
+
+	author = article.find( class_  = 'views-field-field-visiting-journalist' ).get_text().strip()
+
+	title = article.find( class_ = 'views-field-title' ).get_text().strip()
 
 	text = article.find_all( class_='views-field views-field-body' )
 	text = text[0].get_text(' ', strip=True)
@@ -51,7 +56,7 @@ def parse( url ):
 		captions_text[i] = str( caption.get_text().strip().encode('utf8') )
 		i += 1
 
-	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
 
 if __name__ == '__main__':
 
