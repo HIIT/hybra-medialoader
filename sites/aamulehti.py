@@ -34,6 +34,7 @@ def parse( url ):
 		datetime_list.append(datetime_object)
 		i += 2
 	datetime_list.pop(0)
+	datetime_list.reverse()
 
 	author = article.find( class_ = 'Kirjoittaja').get_text().strip()
 
