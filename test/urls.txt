@@ -39,6 +39,6 @@ tiedonantaja,http://www.tiedonantaja.fi/artikkelit/tarinoita-v-kivallasta
 ts,http://www.ts.fi/uutiset/talous/2780163/Rauman+telakka+rakentaa+nelja+alusta+Puolustusvoimille
 uusisuomi,https://www.uusisuomi.fi/kotimaa/203792-nainen-kuoli-bakteeritartuntaan-sairaalahoidon-jalkeen-poliisi-tutkii
 verkkouutiset,http://www.verkkouutiset.fi/talous/ollirehn_balticconnector-55105
-vihrealanka,http://www.vihrealanka.fi/blogi-kolumni/perustulo-on-en%C3%A4%C3%A4-askelen-p%C3%A4%C3%A4ss%C3%A4
+vihrealanka,http://www.vihrealanka.fi/uutiset-ymp%C3%A4rist%C3%B6/sy%C3%B6mmek%C3%B6-tulevaisuudessa-ilmaa-ja-vett%C3%A4-suomalaishanke-lupaa-puolet-proteiinia
 yle,http://yle.fi/uutiset/tv-uutisten_politiikantoimittaja_timo_kuparinen_kuollut/9167149
 ylex,http://yle.fi/ylex/uutiset/kaveri_hei_ala_poraa_iphone_7_-puhelimeen_omaa_kuulokereikaa__tama_nettiohje_on_trolli/3-9195748
