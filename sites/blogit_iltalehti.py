@@ -17,13 +17,20 @@ def parse( url ):
 	article = soup.find( 'article' )
 
 	title = article.find( class_ = 'entry-title' ).get_text().strip()
-	date = [ str( article.find( class_ = 'postmeta-date' ).get_text(' ', strip = True).encode('utf8') ) ]
+
+	url_elements = url.split('/')
+	year = url_elements[4]
+	month = url_elements[5]
+	day = url_elements[6]
+	datetime_list = [datetime.date(datetime.strptime(day + '.' + month + '.' + year, "%d.%m.%Y"))]
+
+	author = article.find( class_ = 'author vcard' ).get_text().strip()
 
 	text = article.find_all( class_= 'entry-content' )
 	text = text[0].get_text(' ', strip = True)
 	text = processor.process(text)
 
-	return processor.create_dictionary(url, http_status, [''], [''], '', title, '', text, [''], [''])
+	return processor.create_dictionary(url, http_status, [''], datetime_list, author, title, '', text, [''], [''])
 
 if __name__ == '__main__':
 

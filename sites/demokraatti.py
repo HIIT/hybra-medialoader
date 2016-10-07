@@ -20,12 +20,19 @@ def parse( url ):
 		div.decompose()
 	article('p')[-1].decompose()
 	article.footer.decompose()
-	article.find( class_ = 'post-author' ).decompose()
+	article.find( class_ = 'wp-user-avatar' ).decompose()
+
+	categories = [str( article.find( class_ = 'category' ).get_text().strip().encode('utf8') )]
+
+	date = str( article.find( class_ = 'date' ).get_text().strip() )
+	time = str( article.find( class_ = 'time' ).get_text().strip() )
+	datetime_list = [datetime.strptime(date + ' ' + time, "%d.%m.%Y %H:%M")]
+
+	author = article.find( class_ = 'post-author' ).get_text(' ', strip = True)
+	author = author.split(' ')
+	author = author[0] + ' ' + author[1]
 
 	title = article.find( class_ = 'entry-title' ).get_text().strip()
-	categories = [str( article.find( class_ = 'category' ).get_text().strip().encode('utf8') )]
-	date = [ str( article.find( class_ = 'date' ).get_text().strip().encode('utf8') ) ]
-	time = [ str( article.find( class_ = 'time' ).get_text().strip().encode('utf8') ) ]
 
 	text = article.find_all( class_='post-content' )
 	text[0].find('ul', {'class' : 'single-post-date'}).decompose()
@@ -40,7 +47,7 @@ def parse( url ):
 		image_src[i] = str( src.encode('utf8') )
 		i += 1
 
-	return processor.create_dictionary(url, http_status, categories, [''], '', title, '', text, image_src, [''])
+	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, [''])
 
 if __name__ == '__main__':
 
