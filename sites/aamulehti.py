@@ -51,7 +51,7 @@ def parse( url ):
 	captions_text = [None] * len(captions)
 	i = 0
 	for caption in captions:
-		captions_text[i] = str( caption.get_text().encode('utf8') )
+		captions_text[i] = str( caption.get_text(strip = True).encode('utf8') )
 		i += 1
 
 	text = article.find( class_ = 'Teksti' )

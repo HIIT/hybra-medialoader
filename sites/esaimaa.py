@@ -14,13 +14,34 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	text = soup.find_all( id='main_text' )
+	menu = soup.find( id = 'menu2' )
+	category = menu.find( class_ = 'selected' ).get_text(strip = True)
+	categories = [str( category.encode('utf8') )]
+
+	article = soup.find( class_ = 'news-item')
+
+	author = soup.find_all( class_ = 'lahde' )
+	author = author[0].get_text(' ', strip = True) + ' ' + author[1].get_text(' ', strip = True)
+
+	datetime_data = article.find( class_ = 'date').get_text(' ', strip = True)
+	datetime_list = [datetime.strptime( datetime_data, "%d.%m.%Y %H:%M" )]
+
+	title = article.find('h1').get_text(strip = True)
+
+	text = article.find_all( id='main_text' )
 	for div in text[0].find_all( 'div', {'class' : 'lahde'} ):
 		div.decompose()
 	text = text[0].get_text(' ', strip=True)
 	text = processor.process(text)
 
-	return processor.create_dictionary(url, http_status, [''], [''], '', '', '', text, [''], [''])
+	images = article.find_all( 'img' )
+	image_src = [None] * len(images)
+	i = 0
+	for img in images:
+		image_src[i] = str( "http://www.esaimaa.fi" + img['src'].encode('utf8') )
+		i += 1
+
+	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, [''])
 
 if __name__ == '__main__':
 

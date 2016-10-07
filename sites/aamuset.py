@@ -54,7 +54,7 @@ def parse( url ):
 	captions_text = [None] * len(imageframes)
 	i = 0
 	for caption in captions:
-		captions_text[i] = str( caption.get_text().strip().encode('utf8') )
+		captions_text[i] = str( caption.get_text(strip = True).encode('utf8') )
 		i += 1
 
 	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
