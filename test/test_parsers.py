@@ -47,7 +47,7 @@ class TestParser:
 
         assert type( d['datetime_list'] ) is list
         for datetime_object in d['datetime_list']:
-            assert type( datetime_object ) is datetime.datetime
+            assert type( datetime_object ) is datetime.datetime or datetime.date
 
         assert type( d['author'] ) is str
         assert type( d['title'] ) is str
