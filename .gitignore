@@ -9,6 +9,7 @@ lastfailed
 
 ## files written out by parsers
 sites/*.txt
+
 /test/parser_out.txt
 
 ## Difference logs
