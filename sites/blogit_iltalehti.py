@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
@@ -15,6 +17,8 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
+	for script in article.find_all( 'script' ):
+		script.decompose()
 
 	title = article.find( class_ = 'entry-title' ).get_text().strip()
 

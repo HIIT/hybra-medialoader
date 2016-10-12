@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
@@ -15,6 +17,8 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'mainArticle-content-wrapper' )
+	for script in article.find_all( 'script' ):
+		script.decompose()
 	header = article.find( id = 'main-article-header' )
 
 	category = header.find( class_ = 'section' ).get_text( strip = True )
@@ -37,18 +41,16 @@ def parse( url ):
 
 	article.find( class_ = 'authorPicture' ).decompose()
 	images = article.find_all( 'img' )
-	image_src = [None] * len(images)
-	i = 0
+	image_src = [None]
 	for img in images:
-		image_src[i] = str( img['src'].encode('utf8') )
-		i += 1
+		image_src.append( str( img['src'].encode('utf8') ) )
+	image_src.pop(0)
 
 	captions = article.find_all( class_ = 'main-media-caption' )
-	captions_text = [None] * len(captions)
-	i = 0
+	captions_text = [None]
 	for caption in captions:
-		captions_text[i] = str( caption.get_text(strip = True).encode('utf8') )
-		i += 1
+		captions_text.append( str( caption.get_text(strip = True).encode('utf8') ) )
+	captions_text.pop(0)
 
 	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
 

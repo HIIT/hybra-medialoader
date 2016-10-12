@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
@@ -15,6 +17,8 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find('article')
+	for script in article.find_all( 'script' ):
+		script.decompose()
 	article.find('div', {'class' : 'keywords-block'}).decompose()
 	for div in article.find_all( 'div', {'class' : 'share-buttons-block'} ):
 		div.decompose()
@@ -40,12 +44,11 @@ def parse( url ):
 	text = processor.process(text)
 
 	images = article.find_all( 'img' )
-	image_src = [None] * len( images )
-	i = 0
+	image_src = [None]
 	for img in images:
 		src = "https://demokraatti.fi" + img['src']
-		image_src[i] = str( src.encode('utf8') )
-		i += 1
+		image_src.append( str( src.encode('utf8') ) )
+	image_src.pop(0)
 
 	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, [''])
 

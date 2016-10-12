@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
@@ -13,19 +16,42 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	#text = soup.find_all( 'article' )
-	#text[0].find( id = 'articleimages' ).decompose()
-	#text[0]('p')[-1].decompose()
-	#text[0].find( id = 'nodefooter' ).decompose()
-	#text[0].find( id = 'page-title' ).decompose()
-	#text[0].find( id = 'publishedinfo' ).decompose()
-	#text[0].find( id = 'article-controls' ).decompose()
-	#for script in text[0].find_all('script'):
-	#	script.decompose()
-	#text = text[0].get_text(' ', strip=True)
-	#text = processor.process(text)
+	article = soup.find( class_ = 'article-body' )
+	for script in article.find_all( 'script' ):
+		script.decompose()
 
-	return processor.create_dictionary(url, http_status, [''], [''], '', '', '', '', [''], [''])
+	categories = [None]
+	categories_data = article.find( class_ = 'departments' )
+	for category in categories_data.find_all( 'a' ):
+		categories.append( str( category.get_text( ' ', strip = True ).encode('utf8') ) )
+	categories.pop(0)
+
+	datetime_data = article.find( 'time' ).get_text().strip().replace(':', '.')
+	datetime_object = datetime.strptime( datetime_data, "%d.%m.%Y %H.%M" )
+	datetime_list = [datetime_object]
+
+	author = article.find( class_ = 'author' ).get_text( strip = True )
+
+	title = article.find( 'h1' ).get_text( strip = True )
+
+	ingress = article.find( class_ = 'ingress' ).get_text( strip = True )
+
+	text = article.find( class_ = 'text' ).get_text( ' ', strip = True ) # Does not get the text. Possibly because HBL demands sign in?
+	text = processor.process(text)
+
+	images = article.find_all( 'img' )
+	image_src = [None]
+	for img in images:
+		image_src.append( str( img['src'].encode('utf8') ) )
+	image_src.pop(0)
+
+	captions = article.find_all( class_ = 'ksf-image-meta' )
+	captions_text = [None]
+	for caption in captions:
+		captions_text.append( str( caption.get_text( ' ', strip = True).encode('utf8') ) )
+	captions_text.pop(0)
+
+	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, image_src, captions_text)
 
 if __name__ == '__main__':
 

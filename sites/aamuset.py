@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
@@ -15,6 +17,8 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'view-news-item')
+	for script in article.find_all( 'script' ):
+		script.decompose()
 
 	categories = [str( article.find( class_ = 'views-field-field-aamuset-category').get_text().strip() ).encode('utf8')]
 
@@ -43,19 +47,17 @@ def parse( url ):
 	text = processor.process(text)
 
 	imageframes = article.find_all(class_ = 'views-field-field-aamuset-images')
-	image_src = [None] * len(imageframes)
-	i = 0
+	image_src = [None]
 	for frame in imageframes:
 		img = frame.find('img')
-		image_src[i] = str( img['src'].encode('utf8') )
-		i += 1
+		image_src.append( str( img['src'].encode('utf8') ) )
+	image_src.pop(0)
 
 	captions = article.find_all( class_ = 'views-field-field-aamuset-caption-1')
-	captions_text = [None] * len(imageframes)
-	i = 0
+	captions_text = [None]
 	for caption in captions:
-		captions_text[i] = str( caption.get_text(strip = True).encode('utf8') )
-		i += 1
+		captions_text.append( str( caption.get_text(strip = True).encode('utf8') ) )
+	captions_text.pop(0)
 
 	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
 

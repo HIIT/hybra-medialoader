@@ -22,7 +22,7 @@ def create_dictionary(url, http_status, categories, datetime_list, author, title
 					  'datetime_list' : datetime_list,
 					  'author' : str( author.encode('utf8') ),
 					  'title' : str( title.encode('utf8') ),
-					  'ingress' : str( ingress ).encode('utf8'),
+					  'ingress' : str( ingress.encode('utf8') ),
 					  'text' : str( text.encode("utf8") ),
 					  'images' : images,
 					  'captions' : captions }
