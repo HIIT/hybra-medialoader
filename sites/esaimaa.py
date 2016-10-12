@@ -8,43 +8,32 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
+	article = soup.find( class_ = 'news-item')
+	processor.decompose_scripts( article )
+
 	menu = soup.find( id = 'menu2' )
 	category = menu.find( class_ = 'selected' ).get_text(strip = True)
 	categories = [str( category.encode('utf8') )]
 
-	article = soup.find( class_ = 'news-item')
-	for script in article.find_all( 'script' ):
-		script.decompose()
-
-	author = soup.find_all( class_ = 'lahde' )
-	author = author[0].get_text(' ', strip = True) + ' ' + author[1].get_text(' ', strip = True)
-
 	datetime_data = article.find( class_ = 'date').get_text(' ', strip = True)
 	datetime_list = [datetime.strptime( datetime_data, "%d.%m.%Y %H:%M" )]
 
-	title = article.find('h1').get_text(strip = True)
-
-	text = article.find_all( id='main_text' )
-	for div in text[0].find_all( 'div', {'class' : 'lahde'} ):
+	author = article.find_all( class_ = 'lahde' )
+	author = author[0].get_text(' ', strip = True) + ' ' + author[1].get_text(' ', strip = True)
+	for div in article.find_all( 'div', {'class' : 'lahde'} ):
 		div.decompose()
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
 
-	images = article.find_all( 'img' )
-	image_src = [None]
-	for img in images:
-		image_src.append( str( "http://www.esaimaa.fi" + img['src'].encode('utf8') ) )
-	image_src.pop(0)
+	title = article.find('h1').get_text(strip = True)
+	text = processor.collect_text( article, 'id', 'main_text' )
+	images = processor.collect_images( article, 'http://www.esaimaa.fi' )
 
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, [''])
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 
 if __name__ == '__main__':
 

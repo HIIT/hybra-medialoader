@@ -8,8 +8,6 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
@@ -17,12 +15,10 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'mainArticle-content-wrapper' )
-	for script in article.find_all( 'script' ):
-		script.decompose()
-	header = article.find( id = 'main-article-header' )
+	processor.decompose_scripts( article )
 
-	category = header.find( class_ = 'section' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	header = article.find( id = 'main-article-header' )
+	categories = [str( header.find( class_ = 'section' ).get_text( strip = True ).encode('utf8') )]
 
 	published = header.find( class_ = 'publish-date' ).get_text( strip = True )
 	updated = header.find( class_ = 'updated-date' )
@@ -32,27 +28,15 @@ def parse( url ):
 	datetime_list = [datetime.date(datetime.strptime(updated[1], "%d.%m.%Y")), datetime.date(datetime.strptime(published, "%d.%m.%Y"))]
 
 	author = article.find( class_ = 'authorName' ).get_text( strip = True )
-
 	title = article.find( class_ = 'main-article-header' ).get_text( strip = True )
-
-	text = soup.find_all( class_='body' )
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
+	text = processor.collect_text( article, 'class', 'body')
 
 	article.find( class_ = 'authorPicture' ).decompose()
-	images = article.find_all( 'img' )
-	image_src = [None]
-	for img in images:
-		image_src.append( str( img['src'].encode('utf8') ) )
-	image_src.pop(0)
 
-	captions = article.find_all( class_ = 'main-media-caption' )
-	captions_text = [None]
-	for caption in captions:
-		captions_text.append( str( caption.get_text(strip = True).encode('utf8') ) )
-	captions_text.pop(0)
+	images = processor.collect_images( article, '' )
+	captions = processor.collect_image_captions( article, 'main-media-caption' )
 
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 

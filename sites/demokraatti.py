@@ -8,8 +8,6 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
@@ -17,8 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find('article')
-	for script in article.find_all( 'script' ):
-		script.decompose()
+	processor.decompose_scripts( article )
 	article.find('div', {'class' : 'keywords-block'}).decompose()
 	for div in article.find_all( 'div', {'class' : 'share-buttons-block'} ):
 		div.decompose()
@@ -32,25 +29,14 @@ def parse( url ):
 	time = str( article.find( class_ = 'time' ).get_text().strip() )
 	datetime_list = [datetime.strptime(date + ' ' + time, "%d.%m.%Y %H:%M")]
 
-	author = article.find( class_ = 'post-author' ).get_text(' ', strip = True)
-	author = author.split(' ')
-	author = author[0] + ' ' + author[1]
+	article.find('ul', {'class' : 'single-post-date'}).decompose()
 
-	title = article.find( class_ = 'entry-title' ).get_text().strip()
+	author = article.find( class_ = 'post-author' ).find( 'li' ).get_text(' ', strip = True)
+	title = article.find( class_ = 'entry-title' ).get_text( strip = True )
+	text = processor.collect_text( article, 'class', 'post-content' )
+	images = processor.collect_images( article, 'https://demokraatti.fi' )
 
-	text = article.find_all( class_='post-content' )
-	text[0].find('ul', {'class' : 'single-post-date'}).decompose()
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
-
-	images = article.find_all( 'img' )
-	image_src = [None]
-	for img in images:
-		src = "https://demokraatti.fi" + img['src']
-		image_src.append( str( src.encode('utf8') ) )
-	image_src.pop(0)
-
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, [''])
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 
 if __name__ == '__main__':
 

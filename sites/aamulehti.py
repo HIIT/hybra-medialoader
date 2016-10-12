@@ -8,8 +8,6 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
@@ -17,8 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article-content')
-	for script in article.find_all( 'script' ):
-		script.decompose()
+	processor.decompose_scripts( article )
 	article.find( class_ = 'related-articles-container' ).decompose()
 
 	categories = [str( article.find( class_ = 'category' ).get_text().strip().encode('utf8') )]
@@ -41,28 +38,16 @@ def parse( url ):
 	datetime_list.reverse()
 
 	author = article.find( class_ = 'Kirjoittaja').get_text().strip()
-
 	title = article.find( class_ = 'Otsikko' ).get_text().strip()
+	images = processor.collect_images( article, '' )
+	captions = processor.collect_image_captions( article, 'caption' )
 
-	images = article.find_all( 'img' )
-	image_src = [None]
-	for img in images:
-		image_src.append( str( img['src'].encode('utf8') ) )
-	image_src.pop(0)
-
-	captions = article.find_all( class_ = 'caption' )
-	captions_text = [None]
-	for caption in captions:
-		captions_text.append( str( caption.get_text(strip = True).encode('utf8') ) )
-	captions_text.pop(0)
-
-	text = article.find( class_ = 'Teksti' )
-	for div in text.find_all( class_ = 'kuvavaraus-wrapper' ):
+	for div in article.find_all( class_ = 'kuvavaraus-wrapper' ):
 		div.decompose()
-	text = text.get_text(' ', strip = True)
-	text = processor.process(text)
 
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
+	text = processor.collect_text( article, 'class', 'Teksti' )
+
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 

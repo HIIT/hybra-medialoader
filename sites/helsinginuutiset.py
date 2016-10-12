@@ -8,8 +8,6 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
@@ -17,8 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	for script in article.find_all( 'script' ):
-		script.decompose()
+	processor.decompose_scripts( article )
 
 	categories = [None]
 	categories_data = article.find( class_ = 'field-name-field-department-tref' )
@@ -36,26 +33,18 @@ def parse( url ):
 
 	title = article.find( 'h1' ).get_text( strip = True )
 
-	text = soup.find_all( class_='field field-name-body' )
-	for script in text[0].find_all('script'):
-		script.decompose()
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
+	text = processor.collect_text( article, 'class', 'field field-name-body' )
 
 	images = article.find_all( class_ = 'img' )
 	image_src = [None]
 	for img in images:
 		image_link = img.find('a')
-		image_src.append( str( image_link['href'].encode('utf8') ) )
+		image_src.append( '' + str( image_link['href'].encode('utf8') ) )
 	image_src.pop(0)
 
-	captions = article.find_all( class_ = 'caption' )
-	captions_text = [None]
-	for caption in captions:
-		captions_text.append( str( caption.get_text( ' ', strip = True).encode('utf8') ) )
-	captions_text.pop(0)
+	captions = processor.collect_image_captions( article, 'caption' )
 
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, image_src, captions)
 
 if __name__ == '__main__':
 

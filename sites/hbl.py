@@ -8,8 +8,6 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
@@ -17,8 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article-body' )
-	for script in article.find_all( 'script' ):
-		script.decompose()
+	processor.decompose_scripts( article )
 
 	categories = [None]
 	categories_data = article.find( class_ = 'departments' )
@@ -31,27 +28,13 @@ def parse( url ):
 	datetime_list = [datetime_object]
 
 	author = article.find( class_ = 'author' ).get_text( strip = True )
-
 	title = article.find( 'h1' ).get_text( strip = True )
-
 	ingress = article.find( class_ = 'ingress' ).get_text( strip = True )
+	text = processor.collect_text( article, 'class', 'text') # Does not get the text because HBL demands registration
+	images = processor.collect_images( article, '' )
+	captions = processor.collect_image_captions( article, 'ksf-image-meta' )
 
-	text = article.find( class_ = 'text' ).get_text( ' ', strip = True ) # Does not get the text. Possibly because HBL demands sign in?
-	text = processor.process(text)
-
-	images = article.find_all( 'img' )
-	image_src = [None]
-	for img in images:
-		image_src.append( str( img['src'].encode('utf8') ) )
-	image_src.pop(0)
-
-	captions = article.find_all( class_ = 'ksf-image-meta' )
-	captions_text = [None]
-	for caption in captions:
-		captions_text.append( str( caption.get_text( ' ', strip = True).encode('utf8') ) )
-	captions_text.pop(0)
-
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, image_src, captions_text)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 

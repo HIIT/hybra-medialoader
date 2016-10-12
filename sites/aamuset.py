@@ -8,8 +8,6 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
 		return
 
@@ -17,8 +15,9 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'view-news-item')
-	for script in article.find_all( 'script' ):
-		script.decompose()
+	processor.decompose_scripts( article )
+	for img in article.find_all( class_ = 'views-field-field-aamuset-related-images' ):
+		img.decompose()
 
 	categories = [str( article.find( class_ = 'views-field-field-aamuset-category').get_text().strip() ).encode('utf8')]
 
@@ -39,27 +38,12 @@ def parse( url ):
 	datetime_list.reverse()
 
 	author = article.find( class_  = 'views-field-field-visiting-journalist' ).get_text().strip()
-
 	title = article.find( class_ = 'views-field-title' ).get_text().strip()
+	text = processor.collect_text( article, 'class', 'views-field views-field-body' )
+	images = processor.collect_images( article, '' )
+	captions = processor.collect_image_captions( article, 'views-field-field-aamuset-caption-1' )
 
-	text = article.find_all( class_='views-field views-field-body' )
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
-
-	imageframes = article.find_all(class_ = 'views-field-field-aamuset-images')
-	image_src = [None]
-	for frame in imageframes:
-		img = frame.find('img')
-		image_src.append( str( img['src'].encode('utf8') ) )
-	image_src.pop(0)
-
-	captions = article.find_all( class_ = 'views-field-field-aamuset-caption-1')
-	captions_text = [None]
-	for caption in captions:
-		captions_text.append( str( caption.get_text(strip = True).encode('utf8') ) )
-	captions_text.pop(0)
-
-	return processor.create_dictionary(url, http_status, categories, datetime_list, author, title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 
