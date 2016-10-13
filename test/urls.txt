@@ -13,13 +13,13 @@ ilkka,http://www.ilkka.fi/uutiset/kotimaa/eu-maat-v%C3%A4%C3%A4nt%C3%A4v%C3%A4t-
 iltalehti,http://www.iltalehti.fi/ulkomaat/2016101322454951_ul.shtml
 iltamakasiini,http://www.iltamakasiini.fi/artikkeli/436377-tulli-paljasti-500-kiloa-nuuskaa-tuotiin-laittomasti-suomeen
 iltasanomat,http://www.iltasanomat.fi/ulkomaat/art-2000001260798.html
-kainuunsanomat,http://www.kainuunsanomat.fi/kainuun-sanomat/kotimaa/onnettomuustutkintakeskus-aloittaa-tutkinnan-raahen-tulipalosta/
+kainuunsanomat,http://www.kainuunsanomat.fi/kainuun-sanomat/kotimaa/valtion-raha-yritysten-aurinkovoimabuumin-takana/
 kaleva,http://www.kaleva.fi/uutiset/kotimaa/poliisi-raahen-rivitalopalo-sai-alkunsa-todennakoisesti-keittiosta/738244/
 kansanuutiset,http://www.kansanuutiset.fi/artikkeli/3599725-veroparatiisien-todellisuus-lienee-tarua-ihmeellisempaa
 karjalainen,http://www.karjalainen.fi/uutiset/uutis-alueet/kotimaa/item/116683-metsastajaliitto-asettaa-susiasiamiehia-maakuntiin-erityisen-vaikea-tilanne-idassa
 kauppalehti,http://www.kauppalehti.fi/uutiset/suomessa-kehitettiin-kosketukseton-kosketusnaytto-aidosti-hygieeninen-ratkaisu/TYDAcDKc
 kdlehti,http://www.kdlehti.fi/2016/09/14/lahden-kristillisdemokraatit-vanhusten-hoitajamitoitus-sailytettava-nykyisella-tasolla/
-kokemaenjokilaakso,http://www.kokemaenjokilaakso.fi/2016/09/13/vammalan-aluesairaalan-tulevaisuutta-kasitellaan-talousarvion-yhteydessa/
+kokemaenjokilaakso,http://www.kokemaenjokilaakso.fi/2016/10/12/tatulle-ja-patulle-suunnitellaan-elamyskohdetta-vammalaan/
 kouvolansanomat,http://www.kouvolansanomat.fi/Online/2016/09/22/Taksiala%20toivoo%20omaa%20Onnibus-ilmi%C3%B6t%C3%A4/2016221291757/4
 ksml,http://www.ksml.fi/ulkomaat/Brexit-Britannia-riitelee-passinsa-v%C3%A4rist%C3%A4/835855
 kymensanomat,http://www.kymensanomat.fi/Online/2016/09/14/Carean%20yhtym%C3%A4kokous%20hyv%C3%A4ksyi%20keskussairaalan%20remontin%20ja%20laajennuksen%20%E2%80%94%20kouvolalaiset%20vastustivat/2016521265354/4
