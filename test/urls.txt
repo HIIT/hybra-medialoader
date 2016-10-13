@@ -9,8 +9,8 @@ hbl,https://www.hbl.fi/artikel/helsingfors-bygger-for-framtiden/
 helsinginuutiset,http://www.helsinginuutiset.fi/artikkeli/433833-arvio-15-000-ihmista-saa-tana-vuonna-tyopaikan-kunnasta-tarvetta-etenkin
 hs,http://www.hs.fi/paakirjoitukset/a1473738016148
 hyvaterveys,http://www.hyvaterveys.fi/artikkeli/terveys/kauhea-kutina-mika-ihmeen-nokkosrokko
-ilkka,http://www.ilkka.fi/uutiset/kotimaa/suomen-yritt%C3%A4jilt%C3%A4-oma-ty%C3%B6llisyysohjelma-1.2133128
-iltalehti,http://www.iltalehti.fi/ulkomaat/2016091422313441_ul.shtml
+ilkka,http://www.ilkka.fi/uutiset/kotimaa/eu-maat-v%C3%A4%C3%A4nt%C3%A4v%C3%A4t-k%C3%A4tt%C3%A4-pakolaiskriisin-hallinnasta-1.2141845
+iltalehti,http://www.iltalehti.fi/ulkomaat/2016101322454951_ul.shtml
 iltamakasiini,http://www.iltamakasiini.fi/artikkeli/436377-tulli-paljasti-500-kiloa-nuuskaa-tuotiin-laittomasti-suomeen
 iltasanomat,http://www.iltasanomat.fi/ulkomaat/art-2000001260798.html
 kainuunsanomat,http://www.kainuunsanomat.fi/kainuun-sanomat/kotimaa/onnettomuustutkintakeskus-aloittaa-tutkinnan-raahen-tulipalosta/
