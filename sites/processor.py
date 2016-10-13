@@ -12,6 +12,8 @@ def process(content):
     content = content.replace(' ;', ';')
     content = content.replace(' ]', ']')
     content = content.replace('[ ', '[')
+    content = content.replace('    ', '')
+    content = content.replace('\n', ' ')
     content = content.replace(' '.decode('utf8'), ' ')
     content = content.replace('  '.decode('utf8'), '')
     return content
@@ -38,6 +40,8 @@ def collect_text( soup, search_attribute, attribute_value ):
         text = soup.find( id = attribute_value )
     elif search_attribute == 'class':
         text = soup.find( class_ = attribute_value )
+    elif search_attribute == 'itemprop':
+        text = soup.find( itemprop = attribute_value )
     elif attribute_value == '':
         text = soup.find( search_attribute )
 
