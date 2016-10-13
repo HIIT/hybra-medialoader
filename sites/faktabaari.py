@@ -24,7 +24,7 @@ def parse( url ):
 	author = article.find( class_ = 'author' ).get_text( strip = True )
 	title = article.find( 'h1' ).get_text( strip = True )
 	text = processor.collect_text( article, 'class', 'entry-content' )
-	images = processor.collect_images( article, '' )
+	images = processor.collect_images( article, '', '' )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, [''])
 

@@ -32,19 +32,11 @@ def parse( url ):
 	author = author.find( 'h3' ).get_text( strip = True )
 
 	title = article.find( 'h1' ).get_text( strip = True )
-
 	text = processor.collect_text( article, 'class', 'field field-name-body' )
+	images = processor.collect_images( article, 'img', '')
+	captions = processor.collect_image_captions( article, 'class', 'caption' )
 
-	images = article.find_all( class_ = 'img' )
-	image_src = [None]
-	for img in images:
-		image_link = img.find('a')
-		image_src.append( '' + str( image_link['href'].encode('utf8') ) )
-	image_src.pop(0)
-
-	captions = processor.collect_image_captions( article, 'caption' )
-
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, image_src, captions)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 

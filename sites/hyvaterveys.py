@@ -30,8 +30,8 @@ def parse( url ):
 	title = article.find( 'h1' ).get_text( strip = True )
 	ingress = article.find( class_ = 'field-name-field-summary' ).get_text( strip = True )
 	text = processor.collect_text( article, 'class', 'field-name-field-body' )
-	images = processor.collect_images( article, '')
-	captions = processor.collect_image_captions( article, 'file-image-description-caption' )
+	images = processor.collect_images( article, '', '')
+	captions = processor.collect_image_captions( article, 'class', 'file-image-description-caption' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

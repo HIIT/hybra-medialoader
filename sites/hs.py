@@ -34,8 +34,8 @@ def parse( url ):
 	author = article.find( itemprop = 'author creator editor' ).get_text( strip = True )
 	title = article.find( 'h1' ).get_text( strip = True )
 	ingress = article.find( class_ = 'sub-header' ).get_text( strip = True )
-	images = processor.collect_images( article, '' )
-	captions = processor.collect_image_captions( article, 'caption' )
+	images = processor.collect_images( article, '', '' )
+	captions = processor.collect_image_captions( article, 'class', 'caption' )
 
 	for div in article.find_all( class_ = 'embedded-image' ):
 		div.decompose()

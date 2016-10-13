@@ -39,8 +39,8 @@ def parse( url ):
 
 	author = article.find( class_ = 'Kirjoittaja').get_text().strip()
 	title = article.find( class_ = 'Otsikko' ).get_text().strip()
-	images = processor.collect_images( article, '' )
-	captions = processor.collect_image_captions( article, 'caption' )
+	images = processor.collect_images( article, '', '' )
+	captions = processor.collect_image_captions( article, 'class', 'caption' )
 
 	for div in article.find_all( class_ = 'kuvavaraus-wrapper' ):
 		div.decompose()

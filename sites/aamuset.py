@@ -40,8 +40,8 @@ def parse( url ):
 	author = article.find( class_  = 'views-field-field-visiting-journalist' ).get_text().strip()
 	title = article.find( class_ = 'views-field-title' ).get_text().strip()
 	text = processor.collect_text( article, 'class', 'views-field views-field-body' )
-	images = processor.collect_images( article, '' )
-	captions = processor.collect_image_captions( article, 'views-field-field-aamuset-caption-1' )
+	images = processor.collect_images( article, '', '' )
+	captions = processor.collect_image_captions( article, 'class', 'views-field-field-aamuset-caption-1' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
