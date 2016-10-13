@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
@@ -6,10 +8,8 @@ from datetime import datetime
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'ISO-8859-1'
 	soup = BeautifulSoup( r.text, "html.parser" )
