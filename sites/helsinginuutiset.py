@@ -33,7 +33,7 @@ def parse( url ):
 
 	title = article.find( 'h1' ).get_text( strip = True )
 	text = processor.collect_text( article, 'class', 'field field-name-body' )
-	images = processor.collect_images( article, 'img', '')
+	images = processor.collect_images_by_parent( article, 'img', '')
 	captions = processor.collect_image_captions( article, 'class', 'caption' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)

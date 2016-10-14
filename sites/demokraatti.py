@@ -34,7 +34,7 @@ def parse( url ):
 	author = article.find( class_ = 'post-author' ).find( 'li' ).get_text(' ', strip = True)
 	title = article.find( class_ = 'entry-title' ).get_text( strip = True )
 	text = processor.collect_text( article, 'class', 'post-content' )
-	images = processor.collect_images( article, '', 'https://demokraatti.fi' )
+	images = processor.collect_images( article, '', '', 'https://demokraatti.fi' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 

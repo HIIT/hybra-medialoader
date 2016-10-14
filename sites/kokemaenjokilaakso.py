@@ -30,7 +30,7 @@ def parse( url ):
 
 	author = article.find( rel = 'author' ).get_text( strip = True )
 	title = article.find( itemprop = 'headline' ).get_text( strip = True )
-	images = processor.collect_images( article, '', '')
+	images = processor.collect_images( article, '', '', '')
 	captions = processor.collect_image_captions( article, 'class', 'sopuli-image-caption' )
 
 	for media in article.find_all( itemprop = 'associatedMedia' ):

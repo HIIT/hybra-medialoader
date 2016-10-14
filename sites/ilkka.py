@@ -16,6 +16,7 @@ def parse( url ):
 
 	article = soup.find( class_ = 'article' )
 	processor.decompose_scripts( article )
+	article.find( class_ = 'listingNewsBox' ).decompose()
 
 	categories = processor.collect_categories_nav( soup, 'active' )
 
@@ -32,7 +33,7 @@ def parse( url ):
 	title = article.find( class_ = 'newsHeadline' ).get_text( ' ', strip = True )
 	ingress = article.find( class_ = 'lead').get_text( ' ', strip = True )
 	text = processor.collect_text( article, 'class', 'articleBody' )
-	images = processor.collect_images( article, '', 'http://www.ilkka.fi' )
+	images = processor.collect_images( article, '', '', 'http://www.ilkka.fi' )
 	captions = processor.collect_image_captions( article, 'class', 'newsImgText' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, '', title, ingress, text, images, captions)

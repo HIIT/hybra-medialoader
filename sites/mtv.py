@@ -14,15 +14,27 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	lead = soup.find_all( class_ = 'lead-paragraph' )
-	text = soup.find_all( class_ = 'editorial' )
-	for ad in text[0].find_all( class_ = 'ad' ):
+	article = soup.find( class_ = 'content' )
+	processor.decompose_scripts( article )
+	for ad in article.find_all( class_ = 'ad' ):
 		ad.decompose()
-	content = lead[0].get_text(' ', strip = True)
-	content += ' ' + text[0].get_text(' ', strip = True)
-	text = processor.process(content)
+	article.find( id = 'fullWidthBottom' ).decompose()
 
-	return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', text, [''], [''])
+	category = article.find( class_ = 'article-category' ).get_text( strip = True )
+	categories = [str( category.encode('utf8') )]
+
+	datetime_object = article.find( 'time' )['datetime'].replace( 'T' , ' ' )
+	datetime_object = datetime_object.split( '.' )[0]
+	datetime_list = [datetime_object]
+
+	author = article.find( class_ = 'author-name' ).get_text( strip = True )
+	title = article.find( class_ = 'article-title' ).get_text( ' ', strip = True )
+	ingress = article.find( class_ = 'lead-paragraph' ).get_text( ' ', strip = True )
+	text = processor.collect_text( article, 'class', 'editorial' )
+	images = processor.collect_images( article, '', '', 'http:' )
+	captions = processor.collect_image_captions( article, 'class', 'figcaption' )
+
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.mtv.fi/uutiset/kotimaa/artikkeli/jarjesto-sipilaan-kohdistuneesta-uhkailusta-iltapaivalehdissa-lausunto-hammastyttaa/4918590", file('mtv.txt', 'w'))

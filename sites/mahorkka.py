@@ -14,13 +14,28 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	text = soup.find_all( class_='post-body' )
-	for quote in text[0].find_all( 'blockquote' ):
+	article = soup.find( class_ = 'post' )
+	processor.decompose_scripts( article )
+	for quote in article.find_all( 'blockquote' ):
 		quote.decompose()
-	text = text[0].get_text(' ', strip = True)
-	text = processor.process(text)
+	article.find( class_ = 'author-avatar' ).decompose()
+	article.find( id = 'after-single-post-widget-zone-single-post' ).decompose()
+	article.find( id = 'sidebar' ).decompose()
 
-	return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', text, [''], [''])
+	category = article.find( class_ = 'articleSection category' ).get_text( strip = True )
+	categories = [str( category.encode('utf8') )]
+
+	datetime_object = article.find( 'time' )['datetime'].replace( 'T' , ' ' )
+	datetime_object = datetime_object.split( '+' )[0]
+	datetime_list = [datetime_object]
+
+	author = article.find( class_ = 'author' ).get_text( strip = True )
+	title = article.find( class_ = ' xt-post-title' ).get_text( strip = True )
+	text = processor.collect_text( article, 'class', 'post-body' )
+	images = processor.collect_images( article, '', '', '' )
+	captions = processor.collect_image_captions( article, '', 'figcaption' )
+
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.mahorkka.com/pavel-astahov-sai-lahtea-mutta-kuka-on-venajan-uusi-lapsiasiamies/", file('mahorkka.txt', 'w'))

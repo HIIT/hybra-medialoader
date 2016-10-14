@@ -43,7 +43,7 @@ def parse( url ):
 	ingress_tag.decompose()
 
 	text = processor.collect_text( article, 'class', 'cb-entry-content')
-	images = processor.collect_images( article, '', '' )
+	images = processor.collect_images( article, '', '', '' )
 	captions = processor.collect_image_captions( article, 'class', 'caption' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)

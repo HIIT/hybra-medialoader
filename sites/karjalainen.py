@@ -29,7 +29,7 @@ def parse( url ):
 	author = article.find( class_ = 'author_credits' ).get_text( strip = True )
 	title = article.find( 'h1' ).get_text( strip = True )
 	text = processor.collect_text( article, 'class', 'itemFullText')
-	images = processor.collect_images( article, '', 'http://www.karjalainen.fi' )
+	images = processor.collect_images( article, '', '', 'http://www.karjalainen.fi' )
 	captions = processor.collect_image_captions( article, 'class', 'itemImageCaption' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)

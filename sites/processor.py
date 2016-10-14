@@ -18,6 +18,10 @@ def process(content):
     content = content.replace('  '.decode('utf8'), '')
     return content
 
+def convert_month(month):
+    conversions = { 'syyskuu' : '09' }
+    return month.replace( month, conversions[month] )
+
 def create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
     media_content = { 'url' : str( url.encode('utf8') ),
 					  'http' : str( http_status ).encode('utf8'),
@@ -35,6 +39,10 @@ def decompose_scripts( soup ):
     for script in soup.find_all( 'script' ):
 		script.decompose()
 
+def decompose_noscripts( soup ):
+    for script in soup.find_all( 'noscript' ):
+		script.decompose()
+
 def collect_text( soup, search_attribute, attribute_value ):
     if search_attribute == 'id':
         text = soup.find( id = attribute_value )
@@ -49,11 +57,12 @@ def collect_text( soup, search_attribute, attribute_value ):
     text = process(text)
     return text
 
-def collect_images( soup, parent_element_class, url_base ):
-    if ( parent_element_class != '' ):
-        return collect_images_by_parent( soup, parent_element_class, url_base )
+def collect_images( soup, attribute, value, url_base ):
+    if attribute == 'class':
+        images = soup.find_all( class_ = value )
+    else:
+        images = soup.find_all( 'img' )
 
-    images = soup.find_all( 'img' )
     image_src = [None]
     for img in images:
         image_src.append( '' + str( url_base + img['src'].encode('utf8') ) )
@@ -74,8 +83,8 @@ def collect_image_captions( soup, search_attribute, attribute_value ):
         captions = soup.find_all( class_ = attribute_value )
     elif search_attribute == 'itemprop':
         captions = soup.find_all( itemprop = attribute_value )
-    elif attribute_value == '':
-        captions = soup.find_all( search_attribute )
+    else:
+        captions = soup.find_all( attribute_value )
 
     captions_text = [None]
     for caption in captions:

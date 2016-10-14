@@ -20,7 +20,7 @@ def parse( url ):
 	#	for string in p.stripped_strings:
 	#    		out.write( string.encode('utf8') + ' ' )
 
-	return processor.create_dictionary(url, r.status, [''], [''], '', '', '', '', [''], [''])
+	return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 if __name__ == '__main__':
 	parse("http://www.suomenmaa.fi/etusivu/7399391.html", file('suomenmaa.txt', 'w'))

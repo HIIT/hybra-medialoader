@@ -34,7 +34,7 @@ def parse( url ):
 	author_div.decompose()
 
 	title = article.find( 'h1' ).get_text( ' ', strip = True )
-	images = processor.collect_images( article, '', 'http://www.kouvolansanomat.fi' )
+	images = processor.collect_images( article, '', '', 'http://www.kouvolansanomat.fi' )
 	captions = processor.collect_image_captions( article, 'class', 'caption' )
 
 	for img_frame in article.find_all( class_ = 'img_wrapper' ):

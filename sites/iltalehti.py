@@ -35,7 +35,7 @@ def parse( url ):
 	ingress = ingress_tag.get_text( ' ', strip = True )
 	ingress_tag.decompose()
 
-	images = processor.collect_images( article, '', '' )
+	images = processor.collect_images( article, '', '', '' )
 	captions = processor.collect_image_captions( article, 'class', 'kuvateksti' )
 	for img in article.find_all( class_ = 'kuvamiddle' ):
 		img.decompose()

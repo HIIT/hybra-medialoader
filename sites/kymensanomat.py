@@ -33,7 +33,7 @@ def parse( url ):
 
 	author = article.find( class_ = 'author' ).get_text( strip = True )
 	title = article.find( 'h1' ).get_text( strip = True )
-	images = processor.collect_images( article, '', 'http://www.kymensanomat.fi' )
+	images = processor.collect_images( article, '', '', 'http://www.kymensanomat.fi' )
 	captions = processor.collect_image_captions( article, 'class', 'caption')
 
 	for img_frame in article.find_all( class_ = 'img_wrapper' ):

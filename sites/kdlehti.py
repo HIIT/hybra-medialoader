@@ -36,7 +36,7 @@ def parse( url ):
 	ingress_tag.decompose()
 
 	text = processor.collect_text( article, 'class', 'content' )
-	images = processor.collect_images( article, '', 'http:' )
+	images = processor.collect_images( article, '', '', 'http:' )
 
 	captions = [None]
 	for img_frame in article.find_all( class_ = 'featured-image' ):

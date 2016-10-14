@@ -33,7 +33,7 @@ def parse( url ):
 
 	article.find( class_ = 'authorPicture' ).decompose()
 
-	images = processor.collect_images( article, '', '' )
+	images = processor.collect_images( article, '', '', '' )
 	captions = processor.collect_image_captions( article, 'class', 'main-media-caption' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
