@@ -34,7 +34,7 @@ suomenkuvalehti,http://suomenkuvalehti.fi/jutut/kotimaa/politiikka/timo-soini-ai
 suomenmaa,http://www.suomenmaa.fi/?app=NeoDirect&com=6/3/158528/89d1e24e14
 suomenuutiset,https://www.suomenuutiset.fi/kiinan-puhemies-ensimmaista-kertaa-vierailulle-suomeen-maria-lohelan-kutsumana/
 talouselama,http://www.talouselama.fi/uutiset/rovion-ex-pomo-peter-vesterbacka-siirtyy-opetuspelifirmaan-6582615
-taloussanomat,http://www.taloussanomat.fi/porssi/2016/09/14/neste-aikoo-jakaa-aiempaa-avokatisempia-osinkoja/20169550/170?n=1
+taloussanomat,http://www.iltasanomat.fi/taloussanomat/porssiuutiset/art-2000001922018.html?n=1
 tiedonantaja,http://www.tiedonantaja.fi/artikkelit/tarinoita-v-kivallasta
 ts,http://www.ts.fi/uutiset/talous/2780163/Rauman+telakka+rakentaa+nelja+alusta+Puolustusvoimille
 uusisuomi,https://www.uusisuomi.fi/kotimaa/203792-nainen-kuoli-bakteeritartuntaan-sairaalahoidon-jalkeen-poliisi-tutkii
