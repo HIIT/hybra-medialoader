@@ -18,7 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	header = article.find( id = 'main-article-header' )
-	categories = [str( header.find( class_ = 'section' ).get_text( strip = True ).encode('utf8') )]
+	categories = [processor.collect_text( header.find( class_ = 'section' ) )]
 
 	published = header.find( class_ = 'publish-date' ).get_text( strip = True )
 	updated = header.find( class_ = 'updated-date' )
@@ -27,14 +27,14 @@ def parse( url ):
 		updated = updated.split(' ')
 	datetime_list = [datetime.date(datetime.strptime(updated[1], "%d.%m.%Y")), datetime.date(datetime.strptime(published, "%d.%m.%Y"))]
 
-	author = article.find( class_ = 'authorName' ).get_text( strip = True )
-	title = article.find( class_ = 'main-article-header' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'body')
+	author = processor.collect_text( article.find( class_ = 'authorName' ) )
+	title = processor.collect_text( article.find( class_ = 'main-article-header' ) )
+	text = processor.collect_text( article.find( class_ = 'body' ) )
 
-	article.find( class_ = 'authorPicture' ).decompose()
+	processor.decompose( article.find( class_ = 'authorPicture' ) )
 
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'main-media-caption' )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'main-media-caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

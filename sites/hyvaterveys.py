@@ -15,10 +15,11 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'region bottom' ).decompose()
 
-	categories = [str( article.find( class_ = 'field-name-field-category' ).get_text( strip = True ) )]
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose( article.find( class_ = 'region bottom' ) )
+
+	categories = [processor.collect_text( article.find( class_ = 'field-name-field-category' ) )]
 
 	datetime_string = article.find( class_ = 'field-name-post-date' ).get_text( strip = True )
 	datetime_string = datetime_string.replace( 'klo ', '').replace( ' | ', ' ' ).replace( ':', '.' )
@@ -26,12 +27,12 @@ def parse( url ):
 	datetime_object = datetime.strptime( datetime_data[1] + ' ' + datetime_data[0], "%d.%m.%Y %H.%M" )
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'field-name-field-author' ).get_text( strip = True )
-	title = article.find( 'h1' ).get_text( strip = True )
-	ingress = article.find( class_ = 'field-name-field-summary' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'field-name-field-body' )
-	images = processor.collect_images( article, '', '', '')
-	captions = processor.collect_image_captions( article, 'class', 'file-image-description-caption' )
+	author = processor.collect_text( article.find( class_ = 'field-name-field-author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	ingress = processor.collect_text( article.find( class_ = 'field-name-field-summary' ) )
+	text = processor.collect_text( article.find( class_ = 'field-name-field-body' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '')
+	captions = processor.collect_image_captions( article.find_all( class_ = 'file-image-description-caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

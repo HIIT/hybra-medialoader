@@ -16,13 +16,11 @@ def parse( url ):
 
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	for noscript in article.find_all('noscript'):
-		noscript.decompose()
-	article.find( class_ = 'share-buttons' ).decompose()
-	article.find( class_ = 'subscribe-newsletter' ).decompose()
+	processor.decompose_all( article.find_all('noscript') )
+	processor.decompose( article.find( class_ = 'share-buttons' ) )
+	processor.decompose( article.find( class_ = 'subscribe-newsletter' ) )
 
-	category = article.find( class_ = 'kicker' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'kicker' ) )]
 
 	date, time = article.find( class_ = 'timestamp' ).get_text( strip = True ).split( ' ' )
 	if len( date ) < 7:
@@ -30,11 +28,11 @@ def parse( url ):
 	datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H:%M')
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'author' ).get_text( strip = True )
-	title = article.find( class_ = 'title' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'article-body' )
-	images = processor.collect_images( article, '', '', '')
-	captions = processor.collect_image_captions( article, '', 'figcaption' )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( class_ = 'title' ) )
+	text = processor.collect_text( article.find( class_ = 'article-body' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '')
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

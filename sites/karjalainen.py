@@ -19,18 +19,17 @@ def parse( url ):
 
 	meta = article.find( class_ = 'category_date' )
 
-	category = meta.find( 'a' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( meta.find( 'a' ) )]
 
 	datetime_string = meta.find( 'time' ).get_text( strip = True )
 	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'author_credits' ).get_text( strip = True )
-	title = article.find( 'h1' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'itemFullText')
-	images = processor.collect_images( article, '', '', 'http://www.karjalainen.fi' )
-	captions = processor.collect_image_captions( article, 'class', 'itemImageCaption' )
+	author = processor.collect_text( article.find( class_ = 'author_credits' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	text = processor.collect_text( article.find( class_ = 'itemFullText' ) )
+	images = processor.collect_images( article.find_all( 'img' ), 'http://www.karjalainen.fi' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'itemImageCaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

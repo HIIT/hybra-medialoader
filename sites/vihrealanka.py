@@ -16,13 +16,12 @@ def parse( url ):
 
 	article = soup.find( class_ = 'node-wrap' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'kredIso' ).decompose()
-	for div in article.find_all(class_ = 'tyrkkyBox'):
-		div.decompose()
-	article.find( class_ = 'avainsanat' ).decompose()
-	article.find( class_ = 'twitter-share-button' ).decompose()
-	article.find( class_ = 'fb-like' ).decompose()
-	article('h4')[-1].decompose()
+	processor.decompose( article.find( class_ = 'kredIso' ) )
+	processor.decompose_all( article.find_all(class_ = 'tyrkkyBox') )
+	processor.decompose( article.find( class_ = 'avainsanat' ) )
+	processor.decompose( article.find( class_ = 'twitter-share-button' ) )
+	processor.decompose( article.find( class_ = 'fb-like' ) )
+	processor.decompose( article('h4')[-1] )
 
 	meta = article.find( class_ = 'juttutiedot' )
 
@@ -30,21 +29,19 @@ def parse( url ):
 	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H.%M')
 	datetime_list = [datetime_object]
 
-	author = meta.find( class_ = 'author' ).get_text( strip = True )
+	author = processor.collect_text( meta.find( class_ = 'author' ) )
 	meta.decompose()
 
 	title_div = article.find( 'h2' )
-	title = title_div.get_text( ' ', strip = True )
+	title = processor.collect_text( title_div )
 	title_div.decompose()
 
-	images = processor.collect_images( article, '', '', '')
-	captions = processor.collect_image_captions( article, 'class', 'kuvaTekstiIso' )
+	images = processor.collect_images( article.find_all( 'img' ), '')
+	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
-	for caption in article.find_all( class_ = 'kuvaTekstiIso' ):
-		caption.decompose()
+	processor.decompose_all( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
-	text = article.get_text( ' ', strip = True )
-	text = processor.process( text )
+	text = processor.collect_text( article )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, captions)
 

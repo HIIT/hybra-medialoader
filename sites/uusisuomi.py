@@ -17,22 +17,21 @@ def parse( url ):
 	article = soup.find( class_ = 'region-content-inner' )
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( 'noscript' ) )
-	article.find( id = 'comments' ).decompose()
-	article.find( class_ = 'contributor' ).decompose()
-	article.find( class_ = 'field-name-field-author-image' ).decompose()
+	processor.decompose( article.find( id = 'comments' ) )
+	processor.decompose( article.find( class_ = 'contributor' ) )
+	processor.decompose( article.find( class_ = 'field-name-field-author-image' ) )
 
-	category = article.find( class_ = 'field-name-field-category' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'field-name-field-category' ) )]
 
 	datetime_object = article.find( class_ = 'date-display-single' )['content']
 	datetime_object = datetime_object.replace( 'T', ' ' ).split( '+' )[0]
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'author-name' ).get_text( strip = True )
-	title = article.find( id = 'page-title' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'field-name-body' )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'field-name-field-image-description' )
+	author = processor.collect_text( article.find( class_ = 'author-name' ) )
+	title = processor.collect_text( article.find( id = 'page-title' ) )
+	text = processor.collect_text( article.find( class_ = 'field-name-body' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'field-name-field-image-description' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

@@ -16,21 +16,20 @@ def parse( url ):
 
 	article = soup.find( 'main' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	for quote in article.find_all( class_ = 'nosto' ):
-		quote.decompose()
+	processor.decompose_all( article.find_all( class_ = 'nosto' ) )
 
 	categories = [None]
 	for category in article.find( class_ = 'links' ).find_all( 'li' ):
-		categories.append( str( category.get_text( strip = True ).encode('utf8') ) )
+		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
 	datetime_object = article.find( class_ = 'date-display-single' )['content']
 	datetime_object = datetime_object.replace( 'T', ' ' ).split( '+' )[0]
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'tekija' ).get_text( strip = True )
-	title = article.find( id = 'page-title' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'body' )
+	author = processor.collect_text( article.find( class_ = 'tekija' ) )
+	title = processor.collect_text( article.find( id = 'page-title' ) )
+	text = processor.collect_text( article.find( class_ = 'body' ) )
 
 	images = ['']
 	image = article.find( class_ = 'views-field-field-op-main-image' ).find('img')

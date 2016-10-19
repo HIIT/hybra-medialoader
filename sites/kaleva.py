@@ -16,10 +16,10 @@ def parse( url ):
 
 	article = soup.find( class_ = 'article-container' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'article__related' ).decompose()
+	processor.decompose( article.find( class_ = 'article__related' ) )
 
-	meta = processor.process( article.find( class_ = 'news__meta' ).get_text( ' ', strip = True ) )
-	meta = meta.replace( ' | Päivitetty '.decode('utf8'), ',' )
+	meta = processor.collect_text( article.find( class_ = 'news__meta' ) )
+	meta = meta.replace( ' | Päivitetty ', ',' )
 
 	meta = meta.split( ' ', 1 )
 	categories = [str( meta[0].encode('utf8') )]
@@ -34,11 +34,10 @@ def parse( url ):
 	datetime_list.reverse()
 
 	author = meta[1]
-	title = article.find( 'h1' ).get_text( strip = True )
-
-	text = processor.collect_text( article, 'class', 'article__text' )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'image__caption' )
+	title = processor.collect_text( article.find( 'h1' ) )
+	text = processor.collect_text( article.find( class_ = 'article__text' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'image__caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

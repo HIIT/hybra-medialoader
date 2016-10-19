@@ -16,15 +16,15 @@ def parse( url ):
 
 	article = soup.find( id = 'main-content' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'reviewpic' ).decompose()
+	processor.decompose( article.find( class_ = 'reviewpic' ) )
 
 	date = article.find( class_ = 'published').get_text( strip = True )
 	datetime_list = [datetime.date( datetime.strptime( date, "%d.%m.%Y" ) )]
 
-	author = article.find( class_ = 'author' ).get_text( strip = True )
-	title = article.find( 'h1' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'entry-content' )
-	images = processor.collect_images( article, '', '', '' )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, [''])
 

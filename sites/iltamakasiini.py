@@ -16,19 +16,19 @@ def parse( url ):
 
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'author' ).find( class_ = 'img' ).decompose()
+	processor.decompose( article.find( class_ = 'author' ).find( class_ = 'img' ) )
 
-	categories = [str( article.find( class_ = 'field-name-field-department-tref' ).get_text( strip = True ).encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'field-name-field-department-tref' ) )]
 
 	datetime_string = article.find( class_ = 'field-name-post-date' ).get_text( strip = True ).replace(' - ', ' ')
 	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H.%M' )
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'author' ).find( 'h3' ).get_text( ' ', strip = True )
-	title = article.find( class_ = 'field-name-title' ).get_text( ' ', strip = True )
-	text = processor.collect_text( article, 'class', 'field field-name-body' )
-	images = processor.collect_images_by_parent( article, 'img', '' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	author = processor.collect_text( article.find( class_ = 'author' ).find( 'h3' ) )
+	title = processor.collect_text( article.find( class_ = 'field-name-title' ) )
+	text = processor.collect_text( article.find( class_ = 'field field-name-body' ) )
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

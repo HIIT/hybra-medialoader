@@ -37,16 +37,24 @@ def create_dictionary(url, http_status, categories, datetime_list, author, title
     return media_content
 
 def decompose( html_element ):
-    html_element.decompose()
-
+    if html_element != None:
+        html_element.decompose()
+    else:
+        return
 
 def decompose_all( html_elements ):
     for element in html_elements:
-        element.decompose()
+        if element != None:
+            element.decompose()
+        else:
+            continue
 
 def collect_text( html_element ):
-    text = html_element.get_text( ' ', strip=True )
-    text = process(text)
+    if html_element != None:
+        text = html_element.get_text( ' ', strip=True )
+        text = process(text)
+    else:
+        text = ''
     return text
 
 def collect_images( images, url_base ):
@@ -67,13 +75,19 @@ def collect_images_by_parent( html_elements, url_base ):
 def collect_image_captions( captions ):
     captions_text = [None]
     for caption in captions:
-        captions_text.append( '' + process( caption.get_text( ' ', strip = True ) ) )
+        if caption != None:
+            captions_text.append( '' + process( caption.get_text( ' ', strip = True ) ) )
+        else:
+            continue
     captions_text.pop(0)
     return captions_text
 
 def collect_categories_nav( html_elements ):
     categories = [None]
     for category in html_elements:
-        categories.append( process( category.get_text( strip = True ) ) )
+        if category != None:
+            categories.append( process( category.get_text( strip = True ) ) )
+        else:
+            continue
     categories.pop(0)
     return categories

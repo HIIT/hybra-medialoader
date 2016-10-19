@@ -15,12 +15,12 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'single-article' )
+
 	processor.decompose_all( article.find_all( 'script' ) )
-	for print_url in article.find_all( class_ = 'print-url' ):
-		print_url.decompose()
+	processor.decompose_all( article.find_all( class_ = 'print-url' ) )
 
 	category = url.split('/')[3]
-	categories = [str( category.capitalize().encode('utf8') )]
+	categories = [category.capitalize().encode('utf8')]
 
 	datetime_string = article.find( itemprop = 'datePublished' ).get_text( strip = True ).replace('Julkaistu:', '')
 	datetime_data = datetime_string.split( ' ' )
@@ -29,12 +29,12 @@ def parse( url ):
 	datetime_object = datetime.strptime( datetime_data[0] + ' ' + datetime_data[1], '%d.%m.%Y %H:%M')
 	datetime_list = [datetime_object]
 
-	author = article.find( itemprop = 'author' ).get_text( strip = True )
-	title = article.find( 'h1' ).get_text( ' ', strip = True )
-	ingress = article.find( class_ = 'ingress' ).get_text(' ', strip = True)
-	text = processor.collect_text( article, 'class', 'body' )
-	images = processor.collect_images( article, '', '', '')
-	captions = processor.collect_image_captions( article, 'itemprop', 'caption' )
+	author = processor.collect_text( article.find( itemprop = 'author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
+	text = processor.collect_text( article.find( class_ = 'body' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '')
+	captions = processor.collect_image_captions( article.find_all( itemprop = 'caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

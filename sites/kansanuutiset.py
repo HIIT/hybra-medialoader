@@ -16,15 +16,13 @@ def parse( url ):
 
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( 'footer' ).decompose()
-	for ad in article.find_all( class_ = 'cb-module-title' ):
-		ad.decompose()
-	for quote in article.find_all( 'blockquote' ):
-		quote.decompose()
+	processor.decompose( article.find( 'footer' ) )
+	processor.decompose_all( article.find_all( class_ = 'cb-module-title' ) )
+	processor.decompose_all( article.find_all( 'blockquote' ) )
 
 	categories =  [None]
 	for category in article.find_all( class_ = 'cb-category' ):
-		categories.append( str( category.get_text( strip = True ).encode('utf8') ) )
+		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
 	datetime_list = [None]
@@ -35,16 +33,16 @@ def parse( url ):
 	datetime_list.pop(0)
 	datetime_list.reverse()
 
-	author = article.find( class_ = 'cb-author' ).get_text( strip = True )
-	title = article.find( class_ = 'entry-title' ).get_text( strip = True )
+	author = processor.collect_text( article.find( class_ = 'cb-author' ) )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
 
 	ingress_tag = article.find( class_ = 'cb-entry-content' ).find( 'h4' )
-	ingress = ingress_tag.get_text( strip = True )
+	ingress = processor.collect_text( ingress_tag )
 	ingress_tag.decompose()
 
-	text = processor.collect_text( article, 'class', 'cb-entry-content')
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	text = processor.collect_text( article.find( class_ = 'cb-entry-content' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

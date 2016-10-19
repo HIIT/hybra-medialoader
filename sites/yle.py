@@ -16,10 +16,9 @@ def parse( url ):
 
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'yle__articlePage__article__author__figure' ).decompose()
+	processor.decompose( article.find( class_ = 'yle__articlePage__article__author__figure' ) )
 
-	category = article.find( class_ = 'yle__subject' ).get_text( strip = True ).capitalize()
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'yle__subject' ) ).capitalize()]
 
 	datetime_data = article.find( class_ = 'yle__article__date' )
 	datetime_list = [None]
@@ -31,18 +30,18 @@ def parse( url ):
 	datetime_list.pop(0)
 	datetime_list.reverse()
 
-	author = article.find( class_ = 'yle__articlePage__article__author__name' ).get_text( strip = True )
+	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name' ) )
 
 	title_div = article.find( class_ = 'yle__article__header__content' )
-	title = title_div.find( 'h1' ).get_text( ' ', strip = True )
-	ingress = title_div.find( 'p' ).get_text( ' ', strip = True )
-	images = processor.collect_images( article, '', '', 'http:')
-	captions = processor.collect_image_captions( article, '', 'figcaption' )
+	title = processor.collect_text( title_div.find( 'h1' ) )
+	ingress = processor.collect_text( title_div.find( 'p' ) )
 
-	for caption in article.find_all( 'figcaption' ):
-		caption.decompose()
+	images = processor.collect_images( article.find_all( 'img' ), 'http:')
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	text = processor.collect_text( article, 'class', 'yle__article__content' )
+	processor.decompose_all( article.find_all( 'figcaption' ) )
+
+	text = processor.collect_text( article.find( class_ = 'yle__article__content' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

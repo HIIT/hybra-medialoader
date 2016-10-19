@@ -16,24 +16,22 @@ def parse( url ):
 
 	article = soup.find( class_ = 'post' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	for quote in article.find_all( 'blockquote' ):
-		quote.decompose()
-	article.find( class_ = 'author-avatar' ).decompose()
-	article.find( id = 'after-single-post-widget-zone-single-post' ).decompose()
-	article.find( id = 'sidebar' ).decompose()
+	processor.decompose_all( article.find_all( 'blockquote' ) )
+	processor.decompose( article.find( class_ = 'author-avatar' ) )
+	processor.decompose( article.find( id = 'after-single-post-widget-zone-single-post' ) )
+	processor.decompose( article.find( id = 'sidebar' ) )
 
-	category = article.find( class_ = 'articleSection category' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'articleSection category' ) )]
 
 	datetime_object = article.find( 'time' )['datetime'].replace( 'T' , ' ' )
 	datetime_object = datetime_object.split( '+' )[0]
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'author' ).get_text( strip = True )
-	title = article.find( class_ = ' xt-post-title' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'post-body' )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, '', 'figcaption' )
+	author = processor.collect_text( article.find( itemprop = 'name' ) )
+	title = processor.collect_text( article.find( class_ = ' xt-post-title' ) )
+	text = processor.collect_text( article.find( class_ = 'post-body' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

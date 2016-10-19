@@ -20,9 +20,8 @@ def parse( url ):
 	meta = article.find( class_ = 'post-meta' )
 
 	category_tag = meta.find( class_ = 'category' )
-	category = category_tag.get_text( strip = True )
-	category_tag.decompose()
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( category_tag )]
+	processor.decompose( category_tag )
 
 	datetime_string = meta.get_text( ' ', strip = True )
 	datetime_string = datetime_string.replace( ' Päivitetty '.decode('utf8'), ',' )
@@ -40,16 +39,15 @@ def parse( url ):
 	datetime_list.pop(0)
 	datetime_list.reverse()
 
-	author = article.find( class_ = 'Kirjoittaja' ).get_text( strip = True )
-	title = article.find( class_ = 'Otsikko' ).get_text( strip = True )
-	ingress= article.find( class_ = 'Alaotsikko' ).get_text( strip = True )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ) )
+	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
+	ingress= processor.collect_text( article.find( class_ = 'Alaotsikko' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	for img_frame in article.find_all( class_ = 'kuvavaraus-wrapper' ):
-		img_frame.decompose()
+	processor.decompose_all( article.find_all( class_ = 'kuvavaraus-wrapper' ) )
 
-	text = processor.collect_text( article, 'class', 'Teksti')
+	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

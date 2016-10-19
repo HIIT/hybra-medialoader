@@ -17,8 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'full-article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	category = article.find( class_ = 'meta-category' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'meta-category' ) )]
 
 	datetime_list = [None]
 	for datetime_string in article.find_all( 'time' ):
@@ -30,21 +29,20 @@ def parse( url ):
 	datetime_list.pop(0)
 	datetime_list.reverse()
 
-	author = article.find( itemprop = 'author' ).get_text( strip = True )
-	title = article.find( itemprop = 'name headline' ).get_text( ' ', strip = True )
-	ingress = article.find( class_ = 'ingress' ).get_text( ' ', strip = True )
+	author = processor.collect_text( article.find( itemprop = 'author' ) )
+	title = processor.collect_text( article.find( itemprop = 'name headline' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
 
 	images = [None]
 	for img in article.find_all( 'img' ):
 		images.append( '' + str( img['data-src'].encode('utf8') ) )
 	images.pop(0)
 
-	captions = processor.collect_image_captions( article, '', 'figcaption' )
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	for slides in article.find_all( class_ ='flexslider'):
-		slides.decompose()
+	processor.decompose_all( article.find_all( class_ ='flexslider') )
 
-	text = processor.collect_text( article, 'class', 'articlepart-1' )
+	text = processor.collect_text( article.find( class_ = 'articlepart-1' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

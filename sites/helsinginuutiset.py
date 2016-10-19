@@ -29,12 +29,12 @@ def parse( url ):
 
 	author = article.find( class_ = 'author' )
 	author.find( class_ = 'img' ).decompose()
-	author = author.find( 'h3' ).get_text( strip = True )
+	author = processor.collect_text( author.find( 'h3' ) )
 
-	title = article.find( 'h1' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'field field-name-body' )
-	images = processor.collect_images_by_parent( article, 'img', '')
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	title = processor.collect_text( article.find( 'h1' ) )
+	text = processor.collect_text( article.find( class_ = 'field field-name-body' ) )
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'img' ), '')
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

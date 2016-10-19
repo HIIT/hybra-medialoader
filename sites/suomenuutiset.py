@@ -16,12 +16,10 @@ def parse( url ):
 
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	for div in article.find_all( class_ = 'somebar' ):
-		div.decompose()
-	article.find( class_ = 'tags' ).decompose()
+	processor.decompose_all( article.find_all( class_ = 'somebar' ) )
+	processor.decompose( article.find( class_ = 'tags' ) )
 
-	category = article.find( class_ = 'post-category' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'post-category' ) )]
 
 	date_string = article.find( class_ = 'date' ).get_text( strip = True )
 	date_string = date_string.replace( ', ', '-' ).replace( ' ', '-' )
@@ -32,13 +30,13 @@ def parse( url ):
 	datetime_list = [datetime_object]
 
 	author_div = article.find( class_ = 'article-page-writer' )
-	author = author_div.get_text( strip = True )
+	author = processor.collect_text( author_div )
 	author_div.decompose()
 
-	title = article.find( class_ = 'post-title' ).get_text( ' ', strip = True )
-	text = processor.collect_text( article, 'class', 'post-content' )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, '', 'figcaption')
+	title = processor.collect_text( article.find( class_ = 'post-title' ) )
+	text = processor.collect_text( article.find( class_ = 'post-content' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

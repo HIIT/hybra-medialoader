@@ -18,8 +18,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	category = article.find( class_ = 'article-release-info__section' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'article-release-info__section' ) )]
 
 	datetime_string = article.find( class_ = 'article-release-info__time' ).get_text( strip = True )
 	if len( datetime_string ) > 5:
@@ -29,15 +28,15 @@ def parse( url ):
 		datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
 	datetime_list = [datetime_object]
 
-	author = article.find( itemprop = 'author' ).get_text( strip = True )
+	author = processor.collect_text( article.find( itemprop = 'author' ) )
 
 	title_div = article.find( class_ = 'article-single-heading' )
-	title = title_div.find( 'h1' ).get_text( ' ', strip = True )
-	ingress = title_div.find( 'p' ).get_text( ' ', strip = True )
+	title = processor.collect_text( title_div.find( 'h1' ) )
+	ingress = processor.collect_text( title_div.find( 'p' ) )
 
-	text = processor.collect_text( article, 'class', 'article-single-section__content' )
-	images = processor.collect_images( article, '', '', 'http://www.maaseuduntulevaisuus.fi' )
-	captions = processor.collect_image_captions( article, '', 'figcaption' )
+	text = processor.collect_text( article.find( class_ = 'article-single-section__content' ) )
+	images = processor.collect_images( article.find_all( 'img' ), 'http://www.maaseuduntulevaisuus.fi' )
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

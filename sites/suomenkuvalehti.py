@@ -20,23 +20,23 @@ def parse( url ):
 	category_div = article.find( class_ = 'article-category' )
 	categories = [None]
 	for category in category_div.find_all( 'a' ):
-		categories.append( str( category.get_text( strip = True ).encode('utf8') ) )
+		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
 	datetime_string = article.find( class_ = 'date' ).get_text( strip = True )
 	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M')
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'article-credits' ).get_text( strip = True )
-	title = article.find( class_ = 'article-title' ).get_text( ' ', strip = True )
-	ingress = article.find( class_ = 'article-ingress' ).get_text( ' ', strip = True )
-	text = processor.collect_text( article, 'class', 'article-body' )
-	images = processor.collect_images_by_parent( article, 'fotorama head', '')
+	author = processor.collect_text( article.find( class_ = 'article-credits' ) )
+	title = processor.collect_text( article.find( class_ = 'article-title' ) )
+	ingress = processor.collect_text( article.find( class_ = 'article-ingress' ) )
+	text = processor.collect_text( article.find( class_ = 'article-body' ) )
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'fotorama head' ), '')
 
 	captions = [None]
 	for caption_div in article.find_all( class_ = 'fotorama head' ):
 		caption = BeautifulSoup( caption_div.find( 'a' )['data-caption'], "html.parser" )
-		captions.append( str( caption.get_text( ' ', strip = True ).encode('utf8') ) )
+		captions.append( processor.collect_text( caption ) )
 	captions.pop(0)
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)

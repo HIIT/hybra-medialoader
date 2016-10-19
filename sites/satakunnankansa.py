@@ -20,8 +20,7 @@ def parse( url ):
 	meta = article.find( class_ = 'post-meta' )
 
 	category_tag = meta.find( class_ = 'category' )
-	category = category_tag.get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( category_tag )]
 	category_tag.decompose()
 
 	date, time = meta.get_text( ' ', strip = True ).split( ' ' )
@@ -30,11 +29,11 @@ def parse( url ):
 	datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H.%M')
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'Kirjoittaja' ).get_text( strip = True )
-	title = article.find( class_ = 'Otsikko' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'Teksti')
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ) )
+	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

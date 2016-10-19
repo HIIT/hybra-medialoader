@@ -16,13 +16,12 @@ def parse( url ):
 
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	for img in article.find_all( class_ = 'attImage' ):
-		img.decompose()
+	processor.decompose_all( article.find_all( class_ = 'attImage' ) )
 
 	meta = article.find( 'time' )
 
 	category = meta.find( 'b' )
-	categories = [str( category.get_text( strip = True ).encode('utf8') )]
+	categories = [processor.collect_text( category )]
 	category.decompose()
 
 	datetime_string = meta.get_text( strip = True ).replace( 'Julkaistu ', '' ).replace( 'klo ', '' )
@@ -31,14 +30,14 @@ def parse( url ):
 	datetime_list = [datetime_object]
 
 	author_tag = article.find( class_ = 'Kirjoittaja' )
-	author = author_tag.get_text( strip = True )
+	author = processor.collect_text( author_tag )
 	author_tag.decompose()
 
-	title = article.find( 'h1' ).get_text( ' ', strip = True )
-	ingress = article.find( class_ = 'Alaotsikko' ).get_text( ' ', strip = True )
-	text = processor.collect_text( article, 'class', 'Teksti')
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'featuredCaption' )
+	title = processor.collect_text( article.find( 'h1' ) )
+	ingress = processor.collect_text( article.find( class_ = 'Alaotsikko' ) )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'featuredCaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

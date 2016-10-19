@@ -17,8 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'news-item' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	category = soup.find( id = 'menu2' ).find( class_ = 'selected' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( soup.find( id = 'menu2' ).find( class_ = 'selected' ) )]
 
 	datetime_string = article.find( class_ = 'date' ).get_text( strip = True ).replace( ' |Päivitetty: '.decode('utf8'), ',' )
 	datetime_data = datetime_string.split( ',' )
@@ -30,16 +29,16 @@ def parse( url ):
 	datetime_list.reverse()
 
 	author_div = article.find( class_ = 'author' )
-	author = author_div.get_text( strip = True )
+	author = processor.collect_text( author_div )
 	author_div.decompose()
 
-	title = article.find( 'h1' ).get_text( ' ', strip = True )
-	images = processor.collect_images( article, '', '', 'http://www.kouvolansanomat.fi' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	title = processor.collect_text( article.find( 'h1' ) )
+	images = processor.collect_images( article.find_all( 'img' ), 'http://www.kouvolansanomat.fi' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	for img_frame in article.find_all( class_ = 'img_wrapper' ):
-		img_frame.decompose()
-	text = processor.collect_text( article, 'id', 'main_text' )
+	processor.decompose_all( article.find_all( class_ = 'img_wrapper' ) )
+
+	text = processor.collect_text( article.find( id = 'main_text' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

@@ -17,19 +17,18 @@ def parse( url ):
 	article = soup.find( role = 'main' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	category = article.find( class_ = 'article__section' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( class_ = 'article__section' ) )]
 
 	datetime_string = article.find( class_ = 'article__published' ).get_text( strip = True )
 	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'article__author' ).get_text( strip = True )
-	title = article.find( class_ = 'article__title' ).get_text( strip = True )
-	ingress = article.find( class_ = 'article__summary' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'article__body' )
-	images = processor.collect_images_by_parent( article, 'article__images', '' )
-	captions = processor.collect_image_captions( article, 'itemprop', 'caption description' )
+	author = processor.collect_text( article.find( class_ = 'article__author' ) )
+	title = processor.collect_text( article.find( class_ = 'article__title' ) )
+	ingress = processor.collect_text( article.find( class_ = 'article__summary' ) )
+	text = processor.collect_text( article.find( class_ = 'article__body' ) )
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'article__images' ), '' )
+	captions = processor.collect_image_captions( article.find_all( itemprop = 'caption description' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

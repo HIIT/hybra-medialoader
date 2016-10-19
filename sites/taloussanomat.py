@@ -23,13 +23,12 @@ def parse( url ):
 	datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H:%M')
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'byline' ).get_text( strip = True )
-
-	title = article.find( itemprop = 'headline name' ).get_text( ' ', strip = True )
-	ingress = article.find( class_ = 'ingress' ).get_text( ' ', strip = True )
-	text = processor.collect_text( article, 'class', 'body' )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, '', 'figcaption' )
+	author = processor.collect_text( article.find( class_ = 'byline' ) )
+	title = processor.collect_text( article.find( itemprop = 'headline name' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
+	text = processor.collect_text( article.find( class_ = 'body' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, ingress, text, images, captions)
 

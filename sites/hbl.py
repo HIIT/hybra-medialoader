@@ -20,19 +20,19 @@ def parse( url ):
 	categories = [None]
 	categories_data = article.find( class_ = 'departments' )
 	for category in categories_data.find_all( 'a' ):
-		categories.append( str( category.get_text( ' ', strip = True ).encode('utf8') ) )
+		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
 	datetime_data = article.find( 'time' ).get_text().strip().replace(':', '.')
 	datetime_object = datetime.strptime( datetime_data, "%d.%m.%Y %H.%M" )
 	datetime_list = [datetime_object]
 
-	author = article.find( class_ = 'author' ).get_text( strip = True )
-	title = article.find( 'h1' ).get_text( strip = True )
-	ingress = article.find( class_ = 'ingress' ).get_text( strip = True )
-	text = processor.collect_text( article, 'class', 'text') # Does not get the text because HBL demands registration
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'ksf-image-meta' )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
+	text = processor.collect_text( article.find( class_ = 'text' ) ) # Does not get the text because HBL demands registration
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'ksf-image-meta' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

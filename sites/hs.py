@@ -15,12 +15,12 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( id = 'main-content' )
-	processor.decompose_all( article.find_all( 'script' ) )
-	for photographer in article.find_all( class_ = 'photographer' ):
-		photographer.decompose()
-	article.find( class_ = 'linked-articles' ).decompose()
 
-	categories = [str( article.find( class_ = 'article-category' ).get_text().strip().encode('utf8') )]
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose_all( article.find_all( class_ = 'photographer' ) )
+	processor.decompose( article.find( class_ = 'linked-articles' ) )
+
+	categories = [processor.collect_text( article.find( class_ = 'article-category' ) )]
 
 	datetime_list = [None]
 	datetime_data = article.find_all( 'time' )
@@ -31,16 +31,15 @@ def parse( url ):
 	datetime_list.pop(0)
 	datetime_list.reverse()
 
-	author = article.find( itemprop = 'author creator editor' ).get_text( strip = True )
-	title = article.find( 'h1' ).get_text( strip = True )
-	ingress = article.find( class_ = 'sub-header' ).get_text( strip = True )
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	author = processor.collect_text( article.find( itemprop = 'author creator editor' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	ingress = processor.collect_text( article.find( class_ = 'sub-header' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	for div in article.find_all( class_ = 'embedded-image' ):
-		div.decompose()
+	processor.decompose_all( article.find_all( class_ = 'embedded-image' ) )
 
-	text = processor.collect_text( article, 'class', 'article-text-content' )
+	text = processor.collect_text( article.find( class_ = 'article-text-content' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

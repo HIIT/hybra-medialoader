@@ -16,10 +16,9 @@ def parse( url ):
 
 	article = soup.find( class_ = 'post-single' )
 	processor.decompose_all( article.find_all( 'script' ) )
-	article.find( class_ = 'avatar' ).decompose()
+	processor.decompose( article.find( class_ = 'avatar' ) )
 
-	category = article.find( itemprop = 'articleSection' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( article.find( itemprop = 'articleSection' ) )]
 
 	datetime_data = article.find( itemprop = 'dateCreated datePublished' ).get_text( strip = True ).split( ' ' )
 	if len( datetime_data[0] ) < 7:
@@ -28,14 +27,13 @@ def parse( url ):
 	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
 	datetime_list = [datetime_object]
 
-	author = article.find( rel = 'author' ).get_text( strip = True )
-	title = article.find( itemprop = 'headline' ).get_text( strip = True )
-	images = processor.collect_images( article, '', '', '')
-	captions = processor.collect_image_captions( article, 'class', 'sopuli-image-caption' )
+	author = processor.collect_text( article.find( rel = 'author' ) )
+	title = processor.collect_text( article.find( itemprop = 'headline' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '')
+	captions = processor.collect_image_captions( article.find_all( class_ = 'sopuli-image-caption' ) )
 
-	for media in article.find_all( itemprop = 'associatedMedia' ):
-		media.decompose()
-	text = processor.collect_text( article, 'itemprop', 'articleBody' )
+	processor.decompose_all( article.find_all( itemprop = 'associatedMedia' ) )
+	text = processor.collect_text( article.find( itemprop = 'articleBody' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

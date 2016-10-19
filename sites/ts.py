@@ -19,21 +19,17 @@ def parse( url ):
 
 	meta = article.find( class_ = 'tsv3-c-common-article__meta__row1' )
 
-	category = meta.find( 'a' ).get_text( strip = True )
-	categories = [str( category.encode('utf8') )]
+	categories = [processor.collect_text( meta.find( 'a' ) )]
 
 	datetime_object = meta.find( 'time' )['datetime']
 	datetime_object = datetime_object.split( '+' )[0]
 	datetime_list = [datetime_object]
 
-	author = ''
-	if article.find( class_ = 'kirjoittaja' ) != None:
-		author = author.get_text( strip = True )
-
-	title = article.find( class_ = 'otsikko' ).get_text( ' ', strip = True)
-	text = processor.collect_text( article, 'class', 'tsv3-c-common-article__textitem tsv3-c-common-article__textitem--teksti')
-	images = processor.collect_images( article, '', '', 'http://www.ts.fi' )
-	captions = processor.collect_image_captions( article, 'class', 'tsv3-c-common-article__attachment__info__caption' )
+	author = processor.collect_text( article.find( class_ = 'kirjoittaja' ) )
+	title = processor.collect_text( article.find( class_ = 'otsikko' ) )
+	text = processor.collect_text( article.find( class_ = 'tsv3-c-common-article__textitem tsv3-c-common-article__textitem--teksti' ) )
+	images = processor.collect_images( article.find_all( 'img' ), 'http://www.ts.fi' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'tsv3-c-common-article__attachment__info__caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
