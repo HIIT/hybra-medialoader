@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article-container' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	article.find( class_ = 'article__related' ).decompose()
 
 	meta = processor.process( article.find( class_ = 'news__meta' ).get_text( ' ', strip = True ) )

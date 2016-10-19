@@ -15,9 +15,9 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 
-	title = article.find( class_ = 'entry-title' ).get_text().strip()
+	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
 
 	url_elements = url.split('/')
 	year = url_elements[4]
@@ -25,8 +25,8 @@ def parse( url ):
 	day = url_elements[6]
 	datetime_list = [datetime.date(datetime.strptime(day + '.' + month + '.' + year, "%d.%m.%Y"))]
 
-	author = article.find( class_ = 'author vcard' ).get_text().strip()
-	text = processor.collect_text( article, 'class', 'entry-content' )
+	author = processor.collect_text( article.find( class_ = 'author vcard' ) )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, [''], [''])
 

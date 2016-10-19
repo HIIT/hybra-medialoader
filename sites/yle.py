@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	article.find( class_ = 'yle__articlePage__article__author__figure' ).decompose()
 
 	category = article.find( class_ = 'yle__subject' ).get_text( strip = True ).capitalize()

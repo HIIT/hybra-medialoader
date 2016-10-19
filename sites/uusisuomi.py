@@ -15,8 +15,8 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'region-content-inner' )
-	processor.decompose_scripts( article )
-	processor.decompose_noscripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose_all( article.find_all( 'noscript' ) )
 	article.find( id = 'comments' ).decompose()
 	article.find( class_ = 'contributor' ).decompose()
 	article.find( class_ = 'field-name-field-author-image' ).decompose()

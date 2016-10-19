@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( id = 'main-content' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	for photographer in article.find_all( class_ = 'photographer' ):
 		photographer.decompose()
 	article.find( class_ = 'linked-articles' ).decompose()

@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	article.find( class_ = 'listingNewsBox' ).decompose()
 
 	categories = processor.collect_categories_nav( soup, 'active' )

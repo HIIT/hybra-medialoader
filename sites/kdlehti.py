@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	for img in article.find( 'header' ).find_all( 'img' ):
 		img.decompose()
 	for quote in article.find_all( 'blockquote' ):

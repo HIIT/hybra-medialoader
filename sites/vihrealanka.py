@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'node-wrap' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	article.find( class_ = 'kredIso' ).decompose()
 	for div in article.find_all(class_ = 'tyrkkyBox'):
 		div.decompose()

@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	for noscript in article.find_all('noscript'):
 		noscript.decompose()
 	article.find( class_ = 'share-buttons' ).decompose()

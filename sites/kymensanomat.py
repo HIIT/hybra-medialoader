@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'news-item' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 
 	category = soup.find( id = 'menu2' ).find( class_ = 'selected' ).get_text( strip = True )
 	categories = [str( category.encode('utf8') )]

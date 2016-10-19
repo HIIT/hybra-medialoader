@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	for div in article.find_all( class_ = 'somebar' ):
 		div.decompose()
 	article.find( class_ = 'tags' ).decompose()

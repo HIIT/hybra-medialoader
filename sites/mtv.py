@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'content' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 	for ad in article.find_all( class_ = 'ad' ):
 		ad.decompose()
 	article.find( id = 'fullWidthBottom' ).decompose()

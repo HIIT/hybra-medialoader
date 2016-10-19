@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'mainArticle-content-wrapper' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 
 	header = article.find( id = 'main-article-header' )
 	categories = [str( header.find( class_ = 'section' ).get_text( strip = True ).encode('utf8') )]

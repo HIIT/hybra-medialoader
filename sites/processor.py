@@ -16,6 +16,7 @@ def process(content):
     content = content.replace('\n', ' ')
     content = content.replace(' '.decode('utf8'), ' ')
     content = content.replace('  '.decode('utf8'), '')
+    content = str( content.encode('utf8') )
     return content
 
 def convert_month(month):
@@ -23,79 +24,56 @@ def convert_month(month):
     return month.replace( month, conversions[month] )
 
 def create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
-    media_content = { 'url' : str( url.encode('utf8') ),
-					  'http' : str( http_status ).encode('utf8'),
+    media_content = { 'url' : url,
+					  'http' : str( http_status ),
 					  'categories' : categories,
 					  'datetime_list' : datetime_list,
-					  'author' : str( author.encode('utf8') ),
-					  'title' : str( title.encode('utf8') ),
-					  'ingress' : str( ingress.encode('utf8') ),
-					  'text' : str( text.encode("utf8") ),
+					  'author' : author,
+					  'title' : title,
+					  'ingress' : ingress,
+					  'text' : text,
 					  'images' : images,
 					  'captions' : captions }
     return media_content
 
-def decompose_scripts( soup ):
-    for script in soup.find_all( 'script' ):
-		script.decompose()
+def decompose( html_element ):
+    html_element.decompose()
 
-def decompose_noscripts( soup ):
-    for script in soup.find_all( 'noscript' ):
-		script.decompose()
 
-def collect_text( soup, search_attribute, attribute_value ):
-    if search_attribute == 'id':
-        text = soup.find( id = attribute_value )
-    elif search_attribute == 'class':
-        text = soup.find( class_ = attribute_value )
-    elif search_attribute == 'itemprop':
-        text = soup.find( itemprop = attribute_value )
-    elif attribute_value == '':
-        text = soup.find( search_attribute )
+def decompose_all( html_elements ):
+    for element in html_elements:
+        element.decompose()
 
-    text = text.get_text( ' ', strip=True )
+def collect_text( html_element ):
+    text = html_element.get_text( ' ', strip=True )
     text = process(text)
     return text
 
-def collect_images( soup, attribute, value, url_base ):
-    if attribute == 'class':
-        images = soup.find_all( class_ = value )
-    else:
-        images = soup.find_all( 'img' )
-
+def collect_images( images, url_base ):
     image_src = [None]
     for img in images:
         image_src.append( '' + str( url_base + img['src'].encode('utf8') ) )
     image_src.pop(0)
     return image_src
 
-def collect_images_by_parent( soup, parent_element_class, url_base ):
-    images = soup.find_all( class_ = parent_element_class )
+def collect_images_by_parent( html_elements, url_base ):
     image_src = [None]
-    for img in images:
-        image_link = img.find( 'a' )
+    for parent in html_elements:
+        image_link = parent.find( 'a' )
         image_src.append( '' + str( url_base + image_link['href'].encode('utf8') ) )
     image_src.pop(0)
     return image_src
 
-def collect_image_captions( soup, search_attribute, attribute_value ):
-    if search_attribute == 'class':
-        captions = soup.find_all( class_ = attribute_value )
-    elif search_attribute == 'itemprop':
-        captions = soup.find_all( itemprop = attribute_value )
-    else:
-        captions = soup.find_all( attribute_value )
-
+def collect_image_captions( captions ):
     captions_text = [None]
     for caption in captions:
-        captions_text.append( '' + str( process( caption.get_text( ' ', strip = True ) ).encode('utf8') ) )
+        captions_text.append( '' + process( caption.get_text( ' ', strip = True ) ) )
     captions_text.pop(0)
     return captions_text
 
-def collect_categories_nav( soup, category_css_class ):
+def collect_categories_nav( html_elements ):
     categories = [None]
-    categories_data = soup.find_all( class_ = category_css_class )
-    for category in categories_data:
-        categories.append( str( category.get_text( strip = True ).encode('utf8') ) )
+    for category in html_elements:
+        categories.append( process( category.get_text( strip = True ) ) )
     categories.pop(0)
     return categories

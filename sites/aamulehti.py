@@ -15,10 +15,10 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article-content')
-	processor.decompose_scripts( article )
-	article.find( class_ = 'related-articles-container' ).decompose()
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose( article.find( class_ = 'related-articles-container' ) )
 
-	categories = [str( article.find( class_ = 'category' ).get_text().strip().encode('utf8') )]
+	categories = [ processor.collect_text( article.find( class_ = 'category' ) )]
 
 	datetime_data = article.find( class_ = 'post-meta' )
 	datetime_data.find( class_ = 'category' ).decompose()
@@ -37,15 +37,14 @@ def parse( url ):
 	datetime_list.pop(0)
 	datetime_list.reverse()
 
-	author = article.find( class_ = 'Kirjoittaja').get_text().strip()
-	title = article.find( class_ = 'Otsikko' ).get_text().strip()
-	images = processor.collect_images( article, '', '', '' )
-	captions = processor.collect_image_captions( article, 'class', 'caption' )
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja') )
+	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
+	images = processor.collect_images( article.find_all( 'img' ), '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	for div in article.find_all( class_ = 'kuvavaraus-wrapper' ):
-		div.decompose()
+	processor.decompose_all( article.find_all( class_ = 'kuvavaraus-wrapper' ) )
 
-	text = processor.collect_text( article, 'class', 'Teksti' )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

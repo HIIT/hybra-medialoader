@@ -15,7 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'single-article' )
-	processor.decompose_scripts( article )
+	processor.decompose_all( article.find_all( 'script' ) )
 
 	date, time = article.find( 'time' ).get_text( strip = True ).split( ' ' )
 	if len( date ) < 7:
