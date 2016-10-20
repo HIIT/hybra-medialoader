@@ -22,10 +22,10 @@ def collect_datetime( html_element ):
     if html_element != None:
         datetime_string_list = list_datetime_strings( html_element.get_text( ' ', strip = True ) )
         for string in datetime_string_list:
-            if string == '':
-                continue
-            else:
+            if string != '':
                 datetime_list.append( create_datetime_object( string ) )
+            else:
+                continue
 
     return prepare_datetime_list( datetime_list )
 
@@ -118,22 +118,9 @@ def process(content):
     return content
 
 def list_datetime_strings( string ):
-    string = string.replace( '(', '' )
-    string = string.replace( ')', '' )
-    string = string.replace( ' - ', ',' )
-    string = string.replace( 'päivitetty:'.decode('utf8'), '' )
-    string = string.replace( 'Päivitetty:'.decode('utf8'), '' )
-    string = string.replace( '  ', ' ' )
-    string_list = string.split( ' ' )
-
-    i = 0
-    while i < len( string_list ):
-        string_list[i] = string_list[i].replace( ',', ' ' )
-        i = i + 1
-
-    if len( string_list ) > 2:
-        string_list = ' '.join(string_list[:2]), ' '.join(string_list[2:])
-
+    string = remove_update_date_string( string )
+    string = format_datetime_string( string )
+    string_list = string.split( ' ' ) # Should split on the second occurrence if ' ' occurs more than once
     return string_list
 
 def create_datetime_object( datetime_string ):
@@ -153,6 +140,18 @@ def prepare_datetime_list( datetime_list ):
     datetime_list.pop(0)
     datetime_list.reverse()
     return datetime_list
+
+def remove_update_date_string( datetime_string ):
+    datetime_string = datetime_string.replace( '(', '' )
+    datetime_string = datetime_string.replace( ')', '' )
+    datetime_string = datetime_string.replace( 'päivitetty:'.decode('utf8'), '' )
+    datetime_string = datetime_string.replace( 'Päivitetty:'.decode('utf8'), '' )
+    return datetime_string
+
+def format_datetime_string( string ):
+    string = string.replace( ' - ', ' ' )
+    string = string.replace( '  ', ' ' )
+    return string
 
 def convert_month(month):
     conversions = { 'syyskuu' : '09' }
