@@ -20,8 +20,7 @@ def parse( url ):
 	menu = soup.find( id = 'menu2' )
 	categories = [processor.collect_text( menu.find( class_ = 'selected' ) )]
 
-	datetime_data = article.find( class_ = 'date').get_text(' ', strip = True)
-	datetime_list = [datetime.strptime( datetime_data, "%d.%m.%Y %H:%M" )]
+	datetime_list = processor.collect_datetime( article.find( class_ = 'date') )
 
 	author = article.find_all( class_ = 'lahde' )
 	author = processor.process( author[0].get_text(' ', strip = True) + ' ' + author[1].get_text(' ', strip = True) )

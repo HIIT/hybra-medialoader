@@ -15,27 +15,12 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'view-news-item')
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'views-field-field-aamuset-related-images' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'views-field-field-aamuset-category') )]
-
-	datetime_data = article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3]
-	datetime_data = datetime_data.get_text(' ', strip = True)
-	datetime_data = datetime_data.replace(')', '').split(' ')
-	if len( datetime_data ) > 2:
-		datetime_data.pop(2)
-	datetime_list = [None]
-	i = 0
-	while i < len(datetime_data) - 1:
-		date_string = datetime_data[i]
-		time_string = datetime_data[i + 1]
-		datetime_object = datetime.strptime( date_string + ' ' + time_string, "%d.%m.%Y %H:%M" )
-		datetime_list.append(datetime_object)
-		i += 2
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3] )
 	author = processor.collect_text( article.find( class_  = 'views-field-field-visiting-journalist' ) )
 	title = processor.collect_text( article.find( class_ = 'views-field-title' ) )
 	text = processor.collect_text( article.find( class_ = 'views-field views-field-body' ) )

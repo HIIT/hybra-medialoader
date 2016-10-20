@@ -15,18 +15,12 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'mainArticle-content-wrapper' )
+
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	header = article.find( id = 'main-article-header' )
 	categories = [processor.collect_text( header.find( class_ = 'section' ) )]
-
-	published = header.find( class_ = 'publish-date' ).get_text( strip = True )
-	updated = header.find( class_ = 'updated-date' )
-	if ( type(updated) != None ):
-		updated = updated.get_text( strip = True )
-		updated = updated.split(' ')
-	datetime_list = [datetime.date(datetime.strptime(updated[1], "%d.%m.%Y")), datetime.date(datetime.strptime(published, "%d.%m.%Y"))]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'article-date' ) )
 	author = processor.collect_text( article.find( class_ = 'authorName' ) )
 	title = processor.collect_text( article.find( class_ = 'main-article-header' ) )
 	text = processor.collect_text( article.find( class_ = 'body' ) )

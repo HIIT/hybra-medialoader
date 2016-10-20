@@ -23,14 +23,10 @@ def parse( url ):
 		categories.append( str( category.get_text( ' ', strip = True ).encode('utf8') ) )
 	categories.pop(0)
 
-	datetime_data = article.find( class_ = 'field-name-post-date' ).get_text().strip().replace(' - ', ' ')
-	datetime_object = datetime.strptime( datetime_data, "%d.%m.%Y %H.%M" )
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ) )
 	author = article.find( class_ = 'author' )
-	author.find( class_ = 'img' ).decompose()
+	processor.decompose( author.find( class_ = 'img' ) )
 	author = processor.collect_text( author.find( 'h3' ) )
-
 	title = processor.collect_text( article.find( 'h1' ) )
 	text = processor.collect_text( article.find( class_ = 'field field-name-body' ) )
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'img' ), '')

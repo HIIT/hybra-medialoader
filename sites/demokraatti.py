@@ -15,6 +15,7 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find('article')
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'keywords-block' ) )
 	processor.decompose_all( article.find_all( class_ = 'share-buttons-block' ) )
@@ -24,9 +25,9 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'category' ) )]
 
-	date = str( article.find( class_ = 'date' ).get_text().strip() )
-	time = str( article.find( class_ = 'time' ).get_text().strip() )
-	datetime_list = [datetime.strptime(date + ' ' + time, "%d.%m.%Y %H:%M")]
+	datetime_data = article.find( class_ = 'single-post-date' )
+	processor.decompose( datetime_data.find( class_ = 'category' ) )
+	datetime_list = processor.collect_datetime( datetime_data )
 
 	processor.decompose( article.find( class_ = 'single-post-date' ) )
 
