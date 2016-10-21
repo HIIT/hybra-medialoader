@@ -2,6 +2,7 @@
 
 from bs4 import BeautifulSoup
 from datetime import datetime
+import re
 
 def decompose( html_element ):
     if html_element != None:
@@ -18,14 +19,16 @@ def decompose_all( html_elements ):
 
 def collect_datetime( html_element ):
     datetime_list = [None]
+    datetime_expression = r'([1-3][0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)[^0-9]*([0-1][1-9][.:][0-6][0-9])?'
 
     if html_element != None:
-        datetime_string_list = list_datetime_strings( html_element.get_text( ' ', strip = True ) )
-        for string in datetime_string_list:
-            if string != '':
-                datetime_list.append( create_datetime_object( string ) )
+        datetime_string = html_element.get_text( ' ' , strip = True )
+        match_list = re.findall( datetime_expression, datetime_string )
+        for match in match_list:
+            if match[1] != '':
+                datetime_list.append( create_datetime_object( match[0] + ' ' + match[1] ) )
             else:
-                continue
+                datetime_list.append( create_datetime_object( match[0] ) )
 
     return prepare_datetime_list( datetime_list )
 
@@ -117,12 +120,6 @@ def process(content):
     content = str( content.encode('utf8') )
     return content
 
-def list_datetime_strings( string ):
-    string = remove_update_date_string( string )
-    string = format_datetime_string( string )
-    string_list = string.split( ' ' ) # Should split on the second occurrence if ' ' occurs more than once
-    return string_list
-
 def create_datetime_object( datetime_string ):
     datetime_parts = datetime_string.split( ' ' )
     if len( datetime_parts[0] ) < 7:
@@ -140,18 +137,6 @@ def prepare_datetime_list( datetime_list ):
     datetime_list.pop(0)
     datetime_list.reverse()
     return datetime_list
-
-def remove_update_date_string( datetime_string ):
-    datetime_string = datetime_string.replace( '(', '' )
-    datetime_string = datetime_string.replace( ')', '' )
-    datetime_string = datetime_string.replace( 'päivitetty:'.decode('utf8'), '' )
-    datetime_string = datetime_string.replace( 'Päivitetty:'.decode('utf8'), '' )
-    return datetime_string
-
-def format_datetime_string( string ):
-    string = string.replace( ' - ', ' ' )
-    string = string.replace( '  ', ' ' )
-    return string
 
 def convert_month(month):
     conversions = { 'syyskuu' : '09' }
