@@ -19,17 +19,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'listingNewsBox' ) )
 
 	categories = processor.collect_categories_nav( soup.find_all( class_ = 'active' ) )
-
-	datetime_list = [None]
-	datetime_data = article.find( class_ = 'date' ).get_text( ' ', strip = True )
-	datetime_data = datetime_data.replace( ' (Päivitetty: '.decode('utf8'), ',' ).replace( ')', '' ).replace( ':', '.' )
-	datetime_data = datetime_data.split(',')
-	for datetime_string in datetime_data:
-		datetime_object = datetime.strptime( datetime_string, "%d.%m.%Y %H.%M" )
-		datetime_list.append(datetime_object)
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 	title = processor.collect_text( article.find( class_ = 'newsHeadline' ) )
 	ingress = processor.collect_text( article.find( class_ = 'lead') )
 	text = processor.collect_text( article.find( class_ = 'articleBody' ) )

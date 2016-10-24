@@ -19,15 +19,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'article-release-info__section' ) )]
-
-	datetime_string = article.find( class_ = 'article-release-info__time' ).get_text( strip = True )
-	if len( datetime_string ) > 5:
-		datetime_object = datetime.date( datetime.strptime( datetime_string, '%d.%m.%Y' ) )
-	else:
-		datetime_string = time.strftime( '%d.%m.%Y' ) + ' ' + datetime_string
-		datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'article-release-info__time' ), '' )
 	author = processor.collect_text( article.find( itemprop = 'author' ) )
 
 	title_div = article.find( class_ = 'article-single-heading' )

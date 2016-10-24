@@ -19,17 +19,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'yle__articlePage__article__author__figure' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'yle__subject' ) ).capitalize()]
-
-	datetime_data = article.find( class_ = 'yle__article__date' )
-	datetime_list = [None]
-	for datetime_string in datetime_data.find_all( 'span' ):
-		datetime_string = datetime_string.get_text( strip = True )
-		datetime_string = datetime_string.replace( 'klo ', '' ).replace( 'päivitetty'.decode('utf8'), '' )
-		datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
-		datetime_list.append( datetime_object )
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'yle__article__date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name' ) )
 
 	title_div = article.find( class_ = 'yle__article__header__content' )

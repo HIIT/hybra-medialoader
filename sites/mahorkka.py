@@ -22,11 +22,7 @@ def parse( url ):
 	processor.decompose( article.find( id = 'sidebar' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'articleSection category' ) )]
-
-	datetime_object = article.find( 'time' )['datetime'].replace( 'T' , ' ' )
-	datetime_object = datetime_object.split( '+' )[0]
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( itemprop = 'name' ) )
 	title = processor.collect_text( article.find( class_ = ' xt-post-title' ) )
 	text = processor.collect_text( article.find( class_ = 'post-body' ) )

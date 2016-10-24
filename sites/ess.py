@@ -20,7 +20,7 @@ def parse( url ):
 
 	header = article.find( id = 'main-article-header' )
 	categories = [processor.collect_text( header.find( class_ = 'section' ) )]
-	datetime_list = processor.collect_datetime( article.find( class_ = 'article-date' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'article-date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'authorName' ) )
 	title = processor.collect_text( article.find( class_ = 'main-article-header' ) )
 	text = processor.collect_text( article.find( class_ = 'body' ) )

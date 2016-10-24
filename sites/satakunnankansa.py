@@ -23,12 +23,7 @@ def parse( url ):
 	categories = [processor.collect_text( category_tag )]
 	category_tag.decompose()
 
-	date, time = meta.get_text( ' ', strip = True ).split( ' ' )
-	if len( date ) < 7:
-		date = date + '2016'
-	datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H.%M')
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( meta, '' )
 	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ) )
 	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
 	text = processor.collect_text( article.find( class_ = 'Teksti' ) )

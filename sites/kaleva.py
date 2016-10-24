@@ -18,22 +18,11 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'article__related' ) )
 
-	meta = processor.collect_text( article.find( class_ = 'news__meta' ) )
-	meta = meta.replace( ' | Päivitetty ', ',' )
+	meta = article.find( class_ = 'news__meta' )
 
-	meta = meta.split( ' ', 1 )
-	categories = [str( meta[0].encode('utf8') )]
-
-	meta = meta[1].rsplit( ' ', 1)
-	datetime_data = meta[0].split( ',' )
-	datetime_list = [None]
-	for datetime_string in datetime_data:
-		datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
-		datetime_list.append( datetime_object )
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
-	author = meta[1]
+	categories = [ processor.collect_text( meta ).split( ' ' )[0] ]
+	datetime_list = processor.collect_datetime( meta, '' )
+	author = processor.collect_text( meta.find( class_ = 'news__source' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	text = processor.collect_text( article.find( class_ = 'article__text' ) )
 	images = processor.collect_images( article.find_all( 'img' ), '' )

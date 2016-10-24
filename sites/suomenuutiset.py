@@ -21,13 +21,9 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'post-category' ) )]
 
-	date_string = article.find( class_ = 'date' ).get_text( strip = True )
-	date_string = date_string.replace( ', ', '-' ).replace( ' ', '-' )
-	month = date_string.split( '-' )[0]
-	date_string = date_string.replace( month, processor.convert_month( month ) )
-	time_string = article.find( class_ = 'time' ).get_text( strip = True )
-	datetime_object = datetime.strptime( date_string + ' ' + time_string, '%m-%d-%Y %H:%M' )
-	datetime_list = [datetime_object]
+	datetime_string = article.find( class_ = 'timestamp' ).get_text( ' ', strip = True )
+	datetime_string = processor.convert_month( datetime_string.replace( ',', '' ) )
+	datetime_list = [datetime.strptime( datetime_string, '%m %d %Y %H:%M' )]
 
 	author_div = article.find( class_ = 'article-page-writer' )
 	author = processor.collect_text( author_div )

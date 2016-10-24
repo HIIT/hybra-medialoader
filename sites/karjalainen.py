@@ -20,11 +20,7 @@ def parse( url ):
 	meta = article.find( class_ = 'category_date' )
 
 	categories = [processor.collect_text( meta.find( 'a' ) )]
-
-	datetime_string = meta.find( 'time' ).get_text( strip = True )
-	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( class_ = 'author_credits' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	text = processor.collect_text( article.find( class_ = 'itemFullText' ) )

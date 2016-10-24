@@ -21,12 +21,7 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'field-name-field-category' ) )]
 
-	datetime_string = article.find( class_ = 'field-name-post-date' ).get_text( strip = True )
-	datetime_string = datetime_string.replace( 'klo ', '').replace( ' | ', ' ' ).replace( ':', '.' )
-	datetime_data = datetime_string.split( ' ' )
-	datetime_object = datetime.strptime( datetime_data[1] + ' ' + datetime_data[0], "%d.%m.%Y %H.%M" )
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ), 'timedate' )
 	author = processor.collect_text( article.find( class_ = 'field-name-field-author' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'field-name-field-summary' ) )

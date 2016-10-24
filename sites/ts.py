@@ -21,10 +21,7 @@ def parse( url ):
 
 	categories = [processor.collect_text( meta.find( 'a' ) )]
 
-	datetime_object = meta.find( 'time' )['datetime']
-	datetime_object = datetime_object.split( '+' )[0]
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime_objects( meta.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( class_ = 'kirjoittaja' ) )
 	title = processor.collect_text( article.find( class_ = 'otsikko' ) )
 	text = processor.collect_text( article.find( class_ = 'tsv3-c-common-article__textitem tsv3-c-common-article__textitem--teksti' ) )

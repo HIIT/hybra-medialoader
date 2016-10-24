@@ -22,13 +22,7 @@ def parse( url ):
 	category = url.split('/')[3]
 	categories = [category.capitalize().encode('utf8')]
 
-	datetime_string = article.find( itemprop = 'datePublished' ).get_text( strip = True ).replace('Julkaistu:', '')
-	datetime_data = datetime_string.split( ' ' )
-	if len( datetime_data[0] ) < 7:
-		datetime_data[0] = datetime_data[0] + '2016'
-	datetime_object = datetime.strptime( datetime_data[0] + ' ' + datetime_data[1], '%d.%m.%Y %H:%M')
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( itemprop = 'datePublished' ), '' )
 	author = processor.collect_text( article.find( itemprop = 'author' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )

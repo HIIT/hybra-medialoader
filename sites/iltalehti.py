@@ -19,11 +19,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'kp-share-area' ) )
 
 	categories = processor.collect_categories_nav( soup.find_all( class_ = 'sel' ) )
-
-	datetime_data = article.find( class_ = 'juttuaika' ).get_text( strip = True ).split( ' ' )
-	datetime_object = datetime.strptime( datetime_data[1] + ' ' + datetime_data[3], "%d.%m.%Y %H.%M" )
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'juttuaika' ), '' )
 	author_div = article.find( class_ = 'author' )
 	processor.decompose( author_div.find( 'a' ) )
 	author = processor.collect_text( author_div )

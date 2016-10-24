@@ -25,11 +25,9 @@ def parse( url ):
 
 	meta = article.find( class_ = 'juttutiedot' )
 
-	datetime_string = meta.find( class_ = 'aikaleima' ).get_text( strip = True )
-	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H.%M')
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( meta, '' )
 	author = processor.collect_text( meta.find( class_ = 'author' ) )
+
 	meta.decompose()
 
 	title_div = article.find( 'h2' )

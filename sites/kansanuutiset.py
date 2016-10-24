@@ -25,14 +25,7 @@ def parse( url ):
 		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
-	datetime_list = [None]
-	for time in article.find_all( 'time' ):
-		datetime_string = time.get_text( strip = True )
-		datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H.%M' )
-		datetime_list.append( datetime_object )
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'cb-date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'cb-author' ) )
 	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
 

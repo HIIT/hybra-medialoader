@@ -20,7 +20,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'views-field-field-aamuset-related-images' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'views-field-field-aamuset-category') )]
-	datetime_list = processor.collect_datetime( article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3] )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3], '' )
 	author = processor.collect_text( article.find( class_  = 'views-field-field-visiting-journalist' ) )
 	title = processor.collect_text( article.find( class_ = 'views-field-title' ) )
 	text = processor.collect_text( article.find( class_ = 'views-field views-field-body' ) )

@@ -23,19 +23,7 @@ def parse( url ):
 		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
-	published = article.find( class_ = 'date' ).get_text( strip = True )
-	updated = article.find( class_ = 'longerdate' )
-	datetime_data = [published]
-	if updated != None:
-		updated = updated.get_text( strip = True ).replace( 'Päivitetty'.decode('utf8'), '' )
-		datetime_data.append( updated )
-
-	datetime_list = [None]
-	for datetime_string in datetime_data:
-		datetime_list.append( datetime.date( datetime.strptime( datetime_string, '%d.%m.%Y' ) ) )
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'article-meta' ), '' )
 	author = processor.collect_text( article.find( class_ = 'article-credits' ) )
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'article-ingress' ) )

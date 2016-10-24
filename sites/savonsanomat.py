@@ -19,11 +19,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'article-author__image' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'article__section' ) )]
-
-	datetime_string = article.find( class_ = 'article__published').get_text( strip = True )
-	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M')
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'article__published'), '' )
 	author = processor.collect_text( article.find( class_ = 'article__author' ) )
 	title = processor.collect_text( article.find( class_ = 'article__title' ) )
 	text = processor.collect_text( article.find( class_ = 'article__body' ) )

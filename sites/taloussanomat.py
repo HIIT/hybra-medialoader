@@ -17,12 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'single-article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	date, time = article.find( 'time' ).get_text( strip = True ).split( ' ' )
-	if len( date ) < 7:
-		date = date + '2016'
-	datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H:%M')
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( 'time' ), '' )
 	author = processor.collect_text( article.find( class_ = 'byline' ) )
 	title = processor.collect_text( article.find( itemprop = 'headline name' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )

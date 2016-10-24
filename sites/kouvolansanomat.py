@@ -18,15 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = [processor.collect_text( soup.find( id = 'menu2' ).find( class_ = 'selected' ) )]
-
-	datetime_string = article.find( class_ = 'date' ).get_text( strip = True ).replace( ' |Päivitetty: '.decode('utf8'), ',' )
-	datetime_data = datetime_string.split( ',' )
-	datetime_list = [None]
-	for datetime_string in datetime_data:
-		datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
-		datetime_list.append( datetime_object )
-	datetime_list.pop(0)
-	datetime_list.reverse()
+	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 
 	author_div = article.find( class_ = 'author' )
 	author = processor.collect_text( author_div )

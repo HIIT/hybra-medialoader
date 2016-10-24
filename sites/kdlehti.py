@@ -21,10 +21,7 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'cat' ) )]
 
-	datetime_string = article.find( class_ = 'date' ).get_text( strip = True ).replace( 'klo ', ' ')
-	datetime_object = datetime.strptime( datetime_string, '%d.%m.%Y %H:%M' )
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )
 
@@ -34,11 +31,7 @@ def parse( url ):
 
 	text = processor.collect_text( article.find( class_ = 'content' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'http:' )
-
-	captions = [None]
-	for img_frame in article.find_all( class_ = 'featured-image' ):
-		captions.append( processor.collect_text( img_frame ) )
-	captions.pop(0)
+	captions = processor.collect_image_captions( article.find_all( class_ = 'featured-image' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

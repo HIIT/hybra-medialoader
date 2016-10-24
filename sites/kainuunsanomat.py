@@ -24,10 +24,7 @@ def parse( url ):
 	categories = [processor.collect_text( category )]
 	category.decompose()
 
-	datetime_string = meta.get_text( strip = True ).replace( 'Julkaistu ', '' ).replace( 'klo ', '' )
-	datetime_data = datetime_string.split( '\t' )
-	datetime_object = datetime.strptime( datetime_data[0], '%d.%m.%Y %H:%M' )
-	datetime_list = [datetime_object]
+	datetime_list = processor.collect_datetime( meta, '' )
 
 	author_tag = article.find( class_ = 'Kirjoittaja' )
 	author = processor.collect_text( author_tag )

@@ -21,13 +21,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'subscribe-newsletter' ) )
 
 	categories = [processor.collect_text( article.find( class_ = 'kicker' ) )]
-
-	date, time = article.find( class_ = 'timestamp' ).get_text( strip = True ).split( ' ' )
-	if len( date ) < 7:
-		date = date + '2016'
-	datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H:%M')
-	datetime_list = [datetime_object]
-
+	datetime_list = processor.collect_datetime( article.find( class_ = 'meta' ), '' )
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( class_ = 'title' ) )
 	text = processor.collect_text( article.find( class_ = 'article-body' ) )

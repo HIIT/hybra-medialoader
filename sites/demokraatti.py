@@ -27,7 +27,7 @@ def parse( url ):
 
 	datetime_data = article.find( class_ = 'single-post-date' )
 	processor.decompose( datetime_data.find( class_ = 'category' ) )
-	datetime_list = processor.collect_datetime( datetime_data )
+	datetime_list = processor.collect_datetime( datetime_data, '' )
 
 	processor.decompose( article.find( class_ = 'single-post-date' ) )
 

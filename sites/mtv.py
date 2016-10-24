@@ -21,9 +21,7 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'article-category' ) )]
 
-	datetime_object = article.find( 'time' )['datetime'].replace( 'T' , ' ' )
-	datetime_object = datetime_object.split( '.' )[0]
-	datetime_list = [datetime_object]
+	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 
 	author = processor.collect_text( article.find( class_ = 'author-name' ) )
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )

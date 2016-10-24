@@ -23,7 +23,7 @@ def parse( url ):
 		categories.append( processor.collect_text( category ) )
 	categories.pop(0)
 
-	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ) )
+	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )

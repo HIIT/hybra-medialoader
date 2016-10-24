@@ -23,22 +23,7 @@ def parse( url ):
 	categories = [processor.collect_text( category_tag )]
 	processor.decompose( category_tag )
 
-	datetime_string = meta.get_text( ' ', strip = True )
-	datetime_string = datetime_string.replace( ' Päivitetty '.decode('utf8'), ',' )
-	datetime_data = datetime_string.split( ',' )
-	datetime_list = [None]
-	if len( datetime_data ) > 1:
-		if len( datetime_data[1] ) < 6:
-			datetime_data[1] = datetime_data[0].split( ' ' )[0] + ' ' + datetime_data[1]
-	for datetime_string in datetime_data:
-		date, time = datetime_string.split( ' ' )
-		if len( date ) < 7:
-			date = date + '2016'
-		datetime_object = datetime.strptime( date + ' ' + time, '%d.%m.%Y %H.%M')
-		datetime_list.append( datetime_object )
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime( meta, 'datetime date' )
 	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ) )
 	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
 	ingress= processor.collect_text( article.find( class_ = 'Alaotsikko' ) )

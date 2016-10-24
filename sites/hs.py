@@ -22,15 +22,7 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'article-category' ) )]
 
-	datetime_list = [None]
-	datetime_data = article.find_all( 'time' )
-	for datetime_string in datetime_data:
-		datetime_string = datetime_string.get_text( strip = True ).replace( 'Päivitetty:'.decode('utf8'), '' )
-		datetime_object = datetime.strptime( datetime_string.replace(':', '.'), "%d.%m.%Y %H.%M" )
-		datetime_list.append(datetime_object)
-	datetime_list.pop(0)
-	datetime_list.reverse()
-
+	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( itemprop = 'author creator editor' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'sub-header' ) )

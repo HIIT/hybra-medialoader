@@ -23,7 +23,7 @@ def parse( url ):
 		categories.append( str( category.get_text( ' ', strip = True ).encode('utf8') ) )
 	categories.pop(0)
 
-	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ), '' )
 	author = article.find( class_ = 'author' )
 	processor.decompose( author.find( class_ = 'img' ) )
 	author = processor.collect_text( author.find( 'h3' ) )
