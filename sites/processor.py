@@ -17,27 +17,28 @@ def decompose_all( html_elements ):
         else:
             continue
 
-def collect_datetime( html_element ):
-    datetime_list = [None]
-    datetime_expression = r'([1-3][0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)[^0-9]*([0-1][1-9][.:][0-6][0-9])?'
+def collect_datetime( html_element, datetime_format ):
+    if datetime_format == 'timedate':
+        datetime_expression = r'([0-2]?[0-9][.:][0-6][0-9])[^0-9]*([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)'
+    elif datetime_format == 'datetime date':
+        datetime_expression = r'([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)?[^0-9]*([0-2]?[0-9][.:][0-6][0-9])?'
+    else:
+        datetime_expression = r'([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)[^0-9]*([0-2]?[0-9][.:][0-6][0-9])?'
 
     if html_element != None:
         datetime_string = html_element.get_text( ' ' , strip = True )
         match_list = re.findall( datetime_expression, datetime_string )
-        for match in match_list:
-            if match[1] != '':
-                datetime_list.append( create_datetime_object( match[0] + ' ' + match[1] ) )
-            else:
-                datetime_list.append( create_datetime_object( match[0] ) )
+        datetime_list = list_datetime_objects( match_list, datetime_format )
 
-    return prepare_datetime_list( datetime_list )
+    return datetime_list
 
-def collect_datetime_objects( html_elements ):
+def collect_datetime_objects( html_elements, attribute ):
     datetime_list = [None]
 
     for element in html_elements:
-        if element != None and element.has_attr( 'datetime' ):
-            datetime_object = element['datetime'].replace('T', ' ').split( '+' )[0]
+        if element != None and element.has_attr( attribute ):
+            datetime_object = element[attribute].replace('T', ' ').replace('Z', '')
+            datetime_object = datetime_object.split( '+' )[0].split('.')[0]
             datetime_list.append( datetime_object )
         else:
             continue
@@ -90,6 +91,46 @@ def collect_categories_nav( html_elements ):
     categories.pop(0)
     return categories
 
+def list_datetime_objects( match_list, datetime_format ):
+    datetime_list = [None]
+    published_date = ''
+    for match in match_list:
+        if datetime_format == 'timedate':
+            date = match[1]
+            time = match[0]
+        else:
+            date = match[0]
+            time = match[1]
+
+        if date == '' and time == '':
+            continue
+        elif date == '':
+            datetime_list.append( create_datetime_object( published_date + ' ' + time ) )
+        elif time == '':
+            datetime_list.append( create_datetime_object( date ) )
+        else:
+            datetime_list.append( create_datetime_object( date + ' ' + time ) )
+            published_date = date
+
+    return prepare_datetime_list( datetime_list )
+
+def create_datetime_object( datetime_string ):
+    datetime_parts = datetime_string.split( ' ' )
+    if len( datetime_parts[0] ) < 7 :
+        datetime_parts[0] = datetime_parts[0] + '2016'
+
+    if len( datetime_parts ) > 1:
+        datetime_parts[1] = datetime_parts[1].replace( ':', '.' )
+        datetime_object = datetime.strptime( datetime_parts[0] + ' ' + datetime_parts[1], '%d.%m.%Y %H.%M' )
+    else:
+        datetime_object = datetime.date( datetime.strptime( datetime_parts[0], '%d.%m.%Y' ) )
+    return datetime_object
+
+def prepare_datetime_list( datetime_list ):
+    datetime_list.pop(0)
+    datetime_list.reverse()
+    return datetime_list
+
 def create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
     media_content = { 'url' : url,
 					  'http' : str( http_status ),
@@ -120,24 +161,8 @@ def process(content):
     content = str( content.encode('utf8') )
     return content
 
-def create_datetime_object( datetime_string ):
-    datetime_parts = datetime_string.split( ' ' )
-    if len( datetime_parts[0] ) < 7:
-        datetime_parts[0] = datetime_parts[0] + '2016'
-
-    if len( datetime_parts ) > 1:
-        datetime_parts[1] = datetime_parts[1].replace( ':', '.' )
-        datetime_object = datetime.strptime( datetime_parts[0] + ' ' + datetime_parts[1], '%d.%m.%Y %H.%M' )
-    else:
-        datetime_object = datetime.date( datetime.strptime( datetime_parts[0], '%d.%m.%Y' ) )
-
-    return datetime_object
-
-def prepare_datetime_list( datetime_list ):
-    datetime_list.pop(0)
-    datetime_list.reverse()
-    return datetime_list
-
-def convert_month(month):
+def convert_month(datetime_string):
     conversions = { 'syyskuu' : '09' }
-    return month.replace( month, conversions[month] )
+    for conversion in conversions:
+        datetime_string = datetime_string.replace( conversion, conversions[conversion] )
+    return datetime_string
