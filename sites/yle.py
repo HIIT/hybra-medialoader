@@ -18,20 +18,20 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'yle__articlePage__article__author__figure' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'yle__subject' ) ).capitalize()]
+	categories = [processor.collect_text( article.find( class_ = 'yle__subject' ), False ).capitalize()]
 	datetime_list = processor.collect_datetime( article.find( class_ = 'yle__article__date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name' ) )
+	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name' ), False )
 
 	title_div = article.find( class_ = 'yle__article__header__content' )
-	title = processor.collect_text( title_div.find( 'h1' ) )
-	ingress = processor.collect_text( title_div.find( 'p' ) )
+	title = processor.collect_text( title_div.find( 'h1' ), False )
+	ingress = processor.collect_text( title_div.find( 'p' ), False )
 
 	images = processor.collect_images( article.find_all( 'img' ), 'http:')
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	processor.decompose_all( article.find_all( 'figcaption' ) )
 
-	text = processor.collect_text( article.find( class_ = 'yle__article__content' ) )
+	text = processor.collect_text( article.find( class_ = 'yle__article__content' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

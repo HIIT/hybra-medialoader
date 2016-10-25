@@ -17,16 +17,18 @@ def parse( url ):
 	article = soup.find( class_ = 'news-item' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ) )
+	menu = soup.find( id = 'menu2' )
+	categories = processor.collect_categories( menu.find( class_ = 'selected' ), False )
+
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'author' ) )
-	title = processor.collect_text( article.find( 'h1' ) )
+	author = processor.collect_text( article.find( class_ = 'author' ), False )
+	title = processor.collect_text( article.find( 'h1' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'http://www.kymensanomat.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ))
 
 	processor.decompose_all( article.find_all( class_ = 'img_wrapper' ) )
 
-	text = processor.collect_text( article.find( id = 'main_text' ) )
+	text = processor.collect_text( article.find( id = 'main_text' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

@@ -20,11 +20,11 @@ def parse( url ):
 
 	meta = article.find( class_ = 'news__meta' )
 
-	categories = [ processor.collect_text( meta ).split( ' ' )[0] ]
+	categories = [ processor.collect_text( meta, False ).split( ' ' )[0] ]
 	datetime_list = processor.collect_datetime( meta, '' )
-	author = processor.collect_text( meta.find( class_ = 'news__source' ) )
-	title = processor.collect_text( article.find( 'h1' ) )
-	text = processor.collect_text( article.find( class_ = 'article__text' ) )
+	author = processor.collect_text( meta.find( class_ = 'news__source' ), False )
+	title = processor.collect_text( article.find( 'h1' ), False )
+	text = processor.collect_text( article.find( class_ = 'article__text' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'image__caption' ) )
 

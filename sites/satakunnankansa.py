@@ -19,14 +19,11 @@ def parse( url ):
 
 	meta = article.find( class_ = 'post-meta' )
 
-	category_tag = meta.find( class_ = 'category' )
-	categories = [processor.collect_text( category_tag )]
-	category_tag.decompose()
-
+	categories = processor.collect_categories( meta.find_all( class_ = 'category' ), True )
 	datetime_list = processor.collect_datetime( meta, '' )
-	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ) )
-	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
-	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ), False )
+	title = processor.collect_text( article.find( class_ = 'Otsikko' ), False )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 

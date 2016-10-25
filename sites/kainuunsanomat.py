@@ -20,16 +20,13 @@ def parse( url ):
 
 	meta = article.find( 'time' )
 
-	categories = processor.collect_categories( meta.find_all( 'b' ) )
+	categories = processor.collect_categories( meta.find_all( 'b' ), False )
 	datetime_list = processor.collect_datetime( meta, '' )
 
-	author_tag = article.find( class_ = 'Kirjoittaja' )
-	author = processor.collect_text( author_tag )
-	author_tag.decompose()
-
-	title = processor.collect_text( article.find( 'h1' ) )
-	ingress = processor.collect_text( article.find( class_ = 'Alaotsikko' ) )
-	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ), True )
+	title = processor.collect_text( article.find( 'h1' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'Alaotsikko' ), False )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'featuredCaption' ) )
 

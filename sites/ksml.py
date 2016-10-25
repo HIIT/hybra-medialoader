@@ -17,12 +17,12 @@ def parse( url ):
 	article = soup.find( role = 'main' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'article__section' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'article__section' ), False )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'article__published' ), '' )
-	author = processor.collect_text( article.find( class_ = 'article__author' ) )
-	title = processor.collect_text( article.find( class_ = 'article__title' ) )
-	ingress = processor.collect_text( article.find( class_ = 'article__summary' ) )
-	text = processor.collect_text( article.find( class_ = 'article__body' ) )
+	author = processor.collect_text( article.find( class_ = 'article__author' ), False )
+	title = processor.collect_text( article.find( class_ = 'article__title' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'article__summary' ), False )
+	text = processor.collect_text( article.find( class_ = 'article__body' ), False )
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'article__images' ), '' )
 	captions = processor.collect_image_captions( article.find_all( itemprop = 'caption description' ) )
 

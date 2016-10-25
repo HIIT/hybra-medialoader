@@ -20,17 +20,17 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'photographer' ) )
 	processor.decompose( article.find( class_ = 'linked-articles' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'article-category' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'article-category' ), False )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( itemprop = 'author creator editor' ) )
-	title = processor.collect_text( article.find( 'h1' ) )
-	ingress = processor.collect_text( article.find( class_ = 'sub-header' ) )
+	author = processor.collect_text( article.find( itemprop = 'author creator editor' ), False )
+	title = processor.collect_text( article.find( 'h1' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'sub-header' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'embedded-image' ) )
 
-	text = processor.collect_text( article.find( class_ = 'article-text-content' ) )
+	text = processor.collect_text( article.find( class_ = 'article-text-content' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

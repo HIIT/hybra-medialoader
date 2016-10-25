@@ -20,9 +20,9 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'reviewpic' ) )
 
 	datetime_list = processor.collect_datetime( article.find( class_ = 'published' ), '' )
-	author = processor.collect_text( article.find( class_ = 'author' ) )
-	title = processor.collect_text( article.find( 'h1' ) )
-	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
+	author = processor.collect_text( article.find( class_ = 'author' ), False )
+	title = processor.collect_text( article.find( 'h1' ), False )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, [''])

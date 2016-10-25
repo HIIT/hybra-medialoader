@@ -18,11 +18,11 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'listingNewsBox' ) )
 
-	categories = processor.collect_categories( soup.find_all( class_ = 'active' ) )
+	categories = processor.collect_categories( soup.find_all( class_ = 'active' ), False )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
-	title = processor.collect_text( article.find( class_ = 'newsHeadline' ) )
-	ingress = processor.collect_text( article.find( class_ = 'lead') )
-	text = processor.collect_text( article.find( class_ = 'articleBody' ) )
+	title = processor.collect_text( article.find( class_ = 'newsHeadline' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'lead'), False )
+	text = processor.collect_text( article.find( class_ = 'articleBody' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'http://www.ilkka.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'newsImgText' ) )
 

@@ -17,12 +17,12 @@ def decompose_all( html_elements ):
         else:
             continue
 
-def collect_categories( html_elements ):
+def collect_categories( html_elements, decompose ):
     categories = [None]
 
     for element in html_elements:
         if element != None:
-            categories.append( collect_text( element ) )
+            categories.append( collect_text( element, decompose ) )
 
     categories.pop(0)
     return categories
@@ -55,12 +55,16 @@ def collect_datetime_objects( html_elements, attribute ):
 
     return prepare_datetime_list( datetime_list )
 
-def collect_text( html_element ):
+def collect_text( html_element, decompose ):
     if html_element != None:
         text = html_element.get_text( ' ', strip=True )
         text = process(text)
+
+        if decompose == True:
+            html_element.decompose()
     else:
         text = ''
+
     return text
 
 def collect_images( images, url_base ):
@@ -85,7 +89,7 @@ def collect_image_captions( captions ):
     captions_text = [None]
     for caption in captions:
         if caption != None:
-            captions_text.append( '' + collect_text( caption ) )
+            captions_text.append( '' + collect_text( caption, False ) )
 
     captions_text.pop(0)
     return captions_text

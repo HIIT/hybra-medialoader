@@ -19,11 +19,11 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'views-field-field-aamuset-related-images' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'views-field-field-aamuset-category') )
+	categories = processor.collect_categories( article.find_all( class_ = 'views-field-field-aamuset-category'), False )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3], '' )
-	author = processor.collect_text( article.find( class_  = 'views-field-field-visiting-journalist' ) )
-	title = processor.collect_text( article.find( class_ = 'views-field-title' ) )
-	text = processor.collect_text( article.find( class_ = 'views-field views-field-body' ) )
+	author = processor.collect_text( article.find( class_  = 'views-field-field-visiting-journalist' ), False )
+	title = processor.collect_text( article.find( class_ = 'views-field-title' ), False )
+	text = processor.collect_text( article.find( class_ = 'views-field views-field-body' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'views-field-field-aamuset-caption-1' ) )
 

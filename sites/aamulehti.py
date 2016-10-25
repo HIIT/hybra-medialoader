@@ -17,20 +17,20 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'related-articles-container' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ), False )
 
 	datetime_data = article.find( class_ = 'post-meta' )
 	processor.decompose( datetime_data.find( class_ = 'category' ) )
 	processor.decompose( datetime_data.find( class_ = 'updated' ) )
 	datetime_list = processor.collect_datetime( datetime_data, '' )
 
-	author = processor.collect_text( article.find( class_ = 'Kirjoittaja') )
-	title = processor.collect_text( article.find( class_ = 'Otsikko' ) )
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja'), False )
+	title = processor.collect_text( article.find( class_ = 'Otsikko' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvavaraus-wrapper' ) )
-	text = processor.collect_text( article.find( class_ = 'Teksti' ) )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 

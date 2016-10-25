@@ -26,20 +26,17 @@ def parse( url ):
 	meta = article.find( class_ = 'juttutiedot' )
 
 	datetime_list = processor.collect_datetime( meta, '' )
-	author = processor.collect_text( meta.find( class_ = 'author' ) )
+	author = processor.collect_text( meta.find( class_ = 'author' ), False )
 
-	meta.decompose()
+	processor.decompose( meta )
 
-	title_div = article.find( 'h2' )
-	title = processor.collect_text( title_div )
-	title_div.decompose()
-
+	title = processor.collect_text( article.find( 'h2' ), True )
 	images = processor.collect_images( article.find_all( 'img' ), '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
-	text = processor.collect_text( article )
+	text = processor.collect_text( article, False )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, captions)
 

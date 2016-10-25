@@ -18,14 +18,16 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	departments = article.find( class_ = 'field-name-field-department-tref' )
-	categories = processor.collect_categories( departments.find_all( 'a' ) )
+	categories = processor.collect_categories( departments.find_all( 'a' ), False )
 
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ), '' )
+
 	author = article.find( class_ = 'author' )
 	processor.decompose( author.find( class_ = 'img' ) )
-	author = processor.collect_text( author.find( 'h3' ) )
-	title = processor.collect_text( article.find( 'h1' ) )
-	text = processor.collect_text( article.find( class_ = 'field field-name-body' ) )
+	author = processor.collect_text( author.find( 'h3' ), False )
+
+	title = processor.collect_text( article.find( 'h1' ), False )
+	text = processor.collect_text( article.find( class_ = 'field field-name-body' ), False )
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'img' ), '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 

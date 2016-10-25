@@ -17,11 +17,11 @@ def parse( url ):
 	article = soup.find( class_ = 'full-article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ), False )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( itemprop = 'author' ) )
-	title = processor.collect_text( article.find( itemprop = 'name headline' ) )
-	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
+	author = processor.collect_text( article.find( itemprop = 'author' ), False )
+	title = processor.collect_text( article.find( itemprop = 'name headline' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ), False )
 
 	images = [None]
 	for img in article.find_all( 'img' ):
@@ -32,7 +32,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( class_ ='flexslider') )
 
-	text = processor.collect_text( article.find( class_ = 'articlepart-1' ) )
+	text = processor.collect_text( article.find( class_ = 'articlepart-1' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

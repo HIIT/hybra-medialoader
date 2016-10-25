@@ -18,7 +18,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ), False )
 
 	url_elements = url.split('/')
 	year = url_elements[4]
@@ -26,8 +26,8 @@ def parse( url ):
 	day = url_elements[6]
 	datetime_list = [datetime.date(datetime.strptime(day + '.' + month + '.' + year, "%d.%m.%Y"))]
 
-	author = processor.collect_text( article.find( class_ = 'author vcard' ) )
-	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
+	author = processor.collect_text( article.find( class_ = 'author vcard' ), False )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ), False )
 
 	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, [''], [''])
 

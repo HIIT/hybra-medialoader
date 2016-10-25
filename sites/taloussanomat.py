@@ -18,10 +18,10 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	datetime_list = processor.collect_datetime( article.find( 'time' ), '' )
-	author = processor.collect_text( article.find( class_ = 'byline' ) )
-	title = processor.collect_text( article.find( itemprop = 'headline name' ) )
-	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
-	text = processor.collect_text( article.find( class_ = 'body' ) )
+	author = processor.collect_text( article.find( class_ = 'byline' ), False )
+	title = processor.collect_text( article.find( itemprop = 'headline name' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ), False )
+	text = processor.collect_text( article.find( class_ = 'body' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

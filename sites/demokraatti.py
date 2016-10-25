@@ -23,7 +23,7 @@ def parse( url ):
 	processor.decompose( article.footer )
 	processor.decompose( article.find( class_ = 'wp-user-avatar' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ), False )
 
 	datetime_data = article.find( class_ = 'single-post-date' )
 	processor.decompose( datetime_data.find( class_ = 'category' ) )
@@ -31,9 +31,9 @@ def parse( url ):
 
 	processor.decompose( article.find( class_ = 'single-post-date' ) )
 
-	author = processor.collect_text( article.find( class_ = 'post-author' ).find( 'li' ) )
-	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
-	text = processor.collect_text( article.find( class_ = 'post-content' ) )
+	author = processor.collect_text( article.find( class_ = 'post-author' ).find( 'li' ), False )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ), False )
+	text = processor.collect_text( article.find( class_ = 'post-content' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'https://demokraatti.fi' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])

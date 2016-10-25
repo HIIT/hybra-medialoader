@@ -18,15 +18,15 @@ def parse( url ):
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'article-release-info__section' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'article-release-info__section' ), False )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'article-release-info__time' ), '' )
-	author = processor.collect_text( article.find( itemprop = 'author' ) )
+	author = processor.collect_text( article.find( itemprop = 'author' ), False )
 
 	title_div = article.find( class_ = 'article-single-heading' )
-	title = processor.collect_text( title_div.find( 'h1' ) )
-	ingress = processor.collect_text( title_div.find( 'p' ) )
+	title = processor.collect_text( title_div.find( 'h1' ), False )
+	ingress = processor.collect_text( title_div.find( 'p' ), False )
 
-	text = processor.collect_text( article.find( class_ = 'article-single-section__content' ) )
+	text = processor.collect_text( article.find( class_ = 'article-single-section__content' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'http://www.maaseuduntulevaisuus.fi' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

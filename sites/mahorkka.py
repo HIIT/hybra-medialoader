@@ -21,11 +21,11 @@ def parse( url ):
 	processor.decompose( article.find( id = 'after-single-post-widget-zone-single-post' ) )
 	processor.decompose( article.find( id = 'sidebar' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ), False )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( itemprop = 'name' ) )
-	title = processor.collect_text( article.find( class_ = ' xt-post-title' ) )
-	text = processor.collect_text( article.find( class_ = 'post-body' ) )
+	author = processor.collect_text( article.find( itemprop = 'name' ), False )
+	title = processor.collect_text( article.find( class_ = ' xt-post-title' ), False )
+	text = processor.collect_text( article.find( class_ = 'post-body' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

@@ -20,16 +20,12 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'blockquote' ) )
 	processor.decompose( article.find( class_ = "meta-sidebar" ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'cat' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'cat' ), False )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'author' ) )
-	title = processor.collect_text( article.find( class_ = 'article-title' ) )
-
-	ingress_tag = article.find( class_ = 'ingress' )
-	ingress = processor.collect_text( ingress_tag )
-	ingress_tag.decompose()
-
-	text = processor.collect_text( article.find( class_ = 'content' ) )
+	author = processor.collect_text( article.find( class_ = 'author' ), False )
+	title = processor.collect_text( article.find( class_ = 'article-title' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ), True )
+	text = processor.collect_text( article.find( class_ = 'content' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'http:' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'featured-image' ) )
 

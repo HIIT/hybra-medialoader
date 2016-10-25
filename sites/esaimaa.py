@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'news-item')
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ) )
+	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ), False )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date'), '' )
 
 	author = article.find_all( class_ = 'lahde' )
@@ -25,8 +25,8 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( class_ = 'lahde' ) )
 
-	title = processor.collect_text( article.find('h1') )
-	text = processor.collect_text( article.find( id = 'main_text' ) )
+	title = processor.collect_text( article.find('h1'), False )
+	text = processor.collect_text( article.find( id = 'main_text' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'http://www.esaimaa.fi' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])

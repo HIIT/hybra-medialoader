@@ -18,15 +18,15 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'avatar' ) )
 
-	categories = processor.collect_categories( article.find_all( itemprop = 'articleSection' ) )
+	categories = processor.collect_categories( article.find_all( itemprop = 'articleSection' ), False )
 	datetime_list = processor.collect_datetime( article.find( itemprop = 'dateCreated datePublished' ), '' )
-	author = processor.collect_text( article.find( rel = 'author' ) )
-	title = processor.collect_text( article.find( itemprop = 'headline' ) )
+	author = processor.collect_text( article.find( rel = 'author' ), False )
+	title = processor.collect_text( article.find( itemprop = 'headline' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'sopuli-image-caption' ) )
 
 	processor.decompose_all( article.find_all( itemprop = 'associatedMedia' ) )
-	text = processor.collect_text( article.find( itemprop = 'articleBody' ) )
+	text = processor.collect_text( article.find( itemprop = 'articleBody' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
