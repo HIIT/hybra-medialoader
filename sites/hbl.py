@@ -17,17 +17,15 @@ def parse( url ):
 	article = soup.find( class_ = 'article-body' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = [None]
-	categories_data = article.find( class_ = 'departments' )
-	for category in categories_data.find_all( 'a' ):
-		categories.append( processor.collect_text( category ) )
-	categories.pop(0)
-
+	categories = processor.collect_categories( article.find( class_ = 'departments' ).find_all( 'a' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
-	text = processor.collect_text( article.find( class_ = 'text' ) ) # Does not get the text because HBL demands registration
+
+	# This does not get the text because HBL demands registration
+	text = processor.collect_text( article.find( class_ = 'text' ) )
+
 	images = processor.collect_images( article.find_all( 'img' ), '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'ksf-image-meta' ) )
 

@@ -23,7 +23,7 @@ def parse( url ):
 	processor.decompose( article.footer )
 	processor.decompose( article.find( class_ = 'wp-user-avatar' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'category' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
 
 	datetime_data = article.find( class_ = 'single-post-date' )
 	processor.decompose( datetime_data.find( class_ = 'category' ) )

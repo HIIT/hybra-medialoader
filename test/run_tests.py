@@ -7,8 +7,8 @@ path = os.path.abspath( '..' )
 sys.path.append(path)
 
 out = 'parser_out.txt'
-url_list = 'urls.txt'
-#url_list = 'single_url.txt'
+#url_list = 'urls.txt'
+url_list = 'single_url.txt'
 
 def run_parser_tests():
     urls = open( url_list, 'r' )

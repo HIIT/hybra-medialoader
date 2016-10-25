@@ -17,11 +17,8 @@ def parse( url ):
 	article = soup.find( 'article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = [None]
-	categories_data = article.find( class_ = 'field-name-field-department-tref' )
-	for category in categories_data.find_all( 'a' ):
-		categories.append( str( category.get_text( ' ', strip = True ).encode('utf8') ) )
-	categories.pop(0)
+	departments = article.find( class_ = 'field-name-field-department-tref' )
+	categories = processor.collect_categories( departments.find_all( 'a' ) )
 
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ), '' )
 	author = article.find( class_ = 'author' )

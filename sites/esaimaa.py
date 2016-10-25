@@ -17,9 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'news-item')
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	menu = soup.find( id = 'menu2' )
-	categories = [processor.collect_text( menu.find( class_ = 'selected' ) )]
-
+	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date'), '' )
 
 	author = article.find_all( class_ = 'lahde' )

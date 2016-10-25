@@ -18,7 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'kp-share-area' ) )
 
-	categories = processor.collect_categories_nav( soup.find_all( class_ = 'sel' ) )
+	categories = processor.collect_categories( soup.find_all( class_ = 'sel' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'juttuaika' ), '' )
 	author_div = article.find( class_ = 'author' )
 	processor.decompose( author_div.find( 'a' ) )

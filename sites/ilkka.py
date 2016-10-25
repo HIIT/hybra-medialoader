@@ -18,7 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'listingNewsBox' ) )
 
-	categories = processor.collect_categories_nav( soup.find_all( class_ = 'active' ) )
+	categories = processor.collect_categories( soup.find_all( class_ = 'active' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 	title = processor.collect_text( article.find( class_ = 'newsHeadline' ) )
 	ingress = processor.collect_text( article.find( class_ = 'lead') )

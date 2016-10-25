@@ -17,7 +17,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'related-articles-container' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'category' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
 
 	datetime_data = article.find( class_ = 'post-meta' )
 	processor.decompose( datetime_data.find( class_ = 'category' ) )
