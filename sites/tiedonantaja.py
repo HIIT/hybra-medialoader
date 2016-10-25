@@ -18,11 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'nosto' ) )
 
-	categories = [None]
-	for category in article.find( class_ = 'links' ).find_all( 'li' ):
-		categories.append( processor.collect_text( category ) )
-	categories.pop(0)
-
+	categories = processor.collect_categories( article.find( class_ = 'links' ).find_all( 'li' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-field-publish-date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'tekija' ) )
 	title = processor.collect_text( article.find( id = 'page-title' ) )

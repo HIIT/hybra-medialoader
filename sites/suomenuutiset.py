@@ -19,7 +19,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'somebar' ) )
 	processor.decompose( article.find( class_ = 'tags' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'post-category' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'post-category' ) )
 
 	datetime_string = article.find( class_ = 'timestamp' ).get_text( ' ', strip = True )
 	datetime_string = processor.convert_month( datetime_string.replace( ',', '' ) )

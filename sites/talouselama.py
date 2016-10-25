@@ -20,7 +20,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'share-buttons' ) )
 	processor.decompose( article.find( class_ = 'subscribe-newsletter' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'kicker' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'kicker' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'meta' ), '' )
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( class_ = 'title' ) )

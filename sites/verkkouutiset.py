@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'full-article' )
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'meta-category' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( itemprop = 'author' ) )
 	title = processor.collect_text( article.find( itemprop = 'name headline' ) )

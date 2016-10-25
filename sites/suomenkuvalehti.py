@@ -18,10 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	category_div = article.find( class_ = 'article-category' )
-	categories = [None]
-	for category in category_div.find_all( 'a' ):
-		categories.append( processor.collect_text( category ) )
-	categories.pop(0)
+	categories = processor.collect_categories( category_div.find_all( 'a' ) )
 
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'article-credits' ) )

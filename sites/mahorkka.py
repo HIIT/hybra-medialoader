@@ -21,7 +21,7 @@ def parse( url ):
 	processor.decompose( article.find( id = 'after-single-post-widget-zone-single-post' ) )
 	processor.decompose( article.find( id = 'sidebar' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'articleSection category' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( itemprop = 'name' ) )
 	title = processor.collect_text( article.find( class_ = ' xt-post-title' ) )
