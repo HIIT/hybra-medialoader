@@ -18,7 +18,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'author' ).find( class_ = 'img' ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'field-name-field-department-tref' ) )]
+	categories = processor.collect_categories( article.find_all( class_ = 'field-name-field-department-tref' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'author' ).find( 'h3' ) )
 	title = processor.collect_text( article.find( class_ = 'field-name-title' ) )

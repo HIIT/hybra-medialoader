@@ -20,10 +20,7 @@ def parse( url ):
 
 	meta = article.find( 'time' )
 
-	category = meta.find( 'b' )
-	categories = [processor.collect_text( category )]
-	category.decompose()
-
+	categories = processor.collect_categories( meta.find_all( 'b' ) )
 	datetime_list = processor.collect_datetime( meta, '' )
 
 	author_tag = article.find( class_ = 'Kirjoittaja' )

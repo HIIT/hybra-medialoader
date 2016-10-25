@@ -19,7 +19,7 @@ def parse( url ):
 
 	meta = article.find( class_ = 'category_date' )
 
-	categories = [processor.collect_text( meta.find( 'a' ) )]
+	categories = processor.collect_categories( meta.find_all( 'a' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
 	author = processor.collect_text( article.find( class_ = 'author_credits' ) )
 	title = processor.collect_text( article.find( 'h1' ) )

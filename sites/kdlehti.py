@@ -18,9 +18,9 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find( 'header' ).find_all( 'img' ) )
 	processor.decompose_all( article.find_all( 'blockquote' ) )
+	processor.decompose( article.find( class_ = "meta-sidebar" ) )
 
-	categories = [processor.collect_text( article.find( class_ = 'cat' ) )]
-
+	categories = processor.collect_categories( article.find_all( class_ = 'cat' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )
