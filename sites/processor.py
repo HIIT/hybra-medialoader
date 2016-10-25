@@ -17,6 +17,16 @@ def decompose_all( html_elements ):
         else:
             continue
 
+def collect_categories( html_elements ):
+    categories = [None]
+
+    for element in html_elements:
+        if element != None:
+            categories.append( collect_text( element ) )
+
+    categories.pop(0)
+    return categories
+
 def collect_datetime( html_element, datetime_format ):
     if datetime_format == 'timedate':
         datetime_expression = r'([0-2]?[0-9][.:][0-6][0-9])[^0-9]*([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)'
@@ -75,21 +85,10 @@ def collect_image_captions( captions ):
     captions_text = [None]
     for caption in captions:
         if caption != None:
-            captions_text.append( '' + process( caption.get_text( ' ', strip = True ) ) )
-        else:
-            continue
+            captions_text.append( '' + collect_text( caption ) )
+
     captions_text.pop(0)
     return captions_text
-
-def collect_categories_nav( html_elements ):
-    categories = [None]
-    for category in html_elements:
-        if category != None:
-            categories.append( process( category.get_text( strip = True ) ) )
-        else:
-            continue
-    categories.pop(0)
-    return categories
 
 def list_datetime_objects( match_list, datetime_format ):
     datetime_list = [None]
