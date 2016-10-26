@@ -22,7 +22,7 @@ def parse( url ):
 	datetime_list = processor.collect_datetime( article.find( itemprop = 'dateCreated datePublished' ), '' )
 	author = processor.collect_text( article.find( rel = 'author' ), False )
 	title = processor.collect_text( article.find( itemprop = 'headline' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), '')
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'sopuli-image-caption' ) )
 
 	processor.decompose_all( article.find_all( itemprop = 'associatedMedia' ) )

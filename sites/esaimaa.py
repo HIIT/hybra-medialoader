@@ -27,7 +27,7 @@ def parse( url ):
 
 	title = processor.collect_text( article.find('h1'), False )
 	text = processor.collect_text( article.find( id = 'main_text' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), 'http://www.esaimaa.fi' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.esaimaa.fi' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 

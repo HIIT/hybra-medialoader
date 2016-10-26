@@ -22,12 +22,7 @@ def parse( url ):
 	author = processor.collect_text( article.find( itemprop = 'author' ), False )
 	title = processor.collect_text( article.find( itemprop = 'name headline' ), False )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ), False )
-
-	images = [None]
-	for img in article.find_all( 'img' ):
-		images.append( '' + str( img['data-src'].encode('utf8') ) )
-	images.pop(0)
-
+	images = processor.collect_images( article.find_all( 'img' ), 'data-src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	processor.decompose_all( article.find_all( class_ ='flexslider') )

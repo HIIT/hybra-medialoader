@@ -23,7 +23,7 @@ def parse( url ):
 	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'author' ), False )
 	title = processor.collect_text( article.find( 'h1' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), 'http://www.kymensanomat.fi' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.kymensanomat.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ))
 
 	processor.decompose_all( article.find_all( class_ = 'img_wrapper' ) )

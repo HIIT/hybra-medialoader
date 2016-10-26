@@ -27,7 +27,7 @@ def parse( url ):
 
 	title = processor.collect_text( article.find( 'h1' ), False )
 	ingress = processor.collect_text( article.find( class_ = 'ingressi' ), True )
-	images = processor.collect_images( article.find_all( 'img' ), '' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvateksti' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvamiddle' ) )

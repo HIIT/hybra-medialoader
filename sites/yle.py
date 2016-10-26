@@ -26,7 +26,7 @@ def parse( url ):
 	title = processor.collect_text( title_div.find( 'h1' ), False )
 	ingress = processor.collect_text( title_div.find( 'p' ), False )
 
-	images = processor.collect_images( article.find_all( 'img' ), 'http:')
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:')
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	processor.decompose_all( article.find_all( 'figcaption' ) )

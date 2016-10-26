@@ -25,7 +25,7 @@ def parse( url ):
 	author = processor.collect_text( article.find( itemprop = 'author creator editor' ), False )
 	title = processor.collect_text( article.find( 'h1' ), False )
 	ingress = processor.collect_text( article.find( class_ = 'sub-header' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), '' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'embedded-image' ) )

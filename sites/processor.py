@@ -67,10 +67,11 @@ def collect_text( html_element, decompose ):
 
     return text
 
-def collect_images( images, url_base ):
+def collect_images( images, attribute, url_base ):
     image_src = [None]
     for img in images:
-        image_src.append( '' + str( url_base + img['src'].encode('utf8') ) )
+        if img != None and img.has_attr( attribute ):
+            image_src.append( '' + str( url_base + img[attribute].encode('utf8') ) )
     image_src.pop(0)
     return image_src
 
@@ -157,12 +158,13 @@ def process(content):
     content = content.replace(' ;', ';')
     content = content.replace(' ]', ']')
     content = content.replace('[ ', '[')
+    content = content.replace('   ', ' ')
     content = content.replace('    ', '')
+    content = content.replace('      ', ' ' )
     content = content.replace('\n', ' ')
     content = content.replace(' '.decode('utf8'), ' ')
     content = content.replace('  '.decode('utf8'), '')
-    content = str( content.encode('utf8') )
-    return content
+    return str( content.encode('utf8') )
 
 def convert_month(datetime_string):
     conversions = { 'syyskuu' : '09' }

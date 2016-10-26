@@ -24,7 +24,7 @@ def parse( url ):
 	author = processor.collect_text( article.find( class_ = 'Kirjoittaja' ), False )
 	title = processor.collect_text( article.find( class_ = 'Otsikko' ), False )
 	ingress= processor.collect_text( article.find( class_ = 'Alaotsikko' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), '' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvavaraus-wrapper' ) )

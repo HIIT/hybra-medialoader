@@ -24,14 +24,12 @@ def parse( url ):
 	processor.decompose( article('h4')[-1] )
 
 	meta = article.find( class_ = 'juttutiedot' )
-
 	datetime_list = processor.collect_datetime( meta, '' )
 	author = processor.collect_text( meta.find( class_ = 'author' ), False )
-
 	processor.decompose( meta )
 
 	title = processor.collect_text( article.find( 'h2' ), True )
-	images = processor.collect_images( article.find_all( 'img' ), '')
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvaTekstiIso' ) )

@@ -25,11 +25,7 @@ def parse( url ):
 	author = processor.collect_text( article.find( class_ = 'tekija' ), False )
 	title = processor.collect_text( article.find( id = 'page-title' ), False )
 	text = processor.collect_text( article.find( class_ = 'body' ), False )
-
-	images = ['']
-	image = article.find( class_ = 'views-field-field-op-main-image' ).find('img')
-	if image != None:
-		images[0] = str( image['src'].encode('utf8') )
+	images = processor.collect_images( article.find( class_ = 'views-field-field-op-main-image' ).find_all( 'img' ), 'src', '' )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 

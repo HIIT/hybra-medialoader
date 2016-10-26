@@ -23,7 +23,7 @@ def parse( url ):
 	title = processor.collect_text( article.find( class_ = 'newsHeadline' ), False )
 	ingress = processor.collect_text( article.find( class_ = 'lead'), False )
 	text = processor.collect_text( article.find( class_ = 'articleBody' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), 'http://www.ilkka.fi' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ilkka.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'newsImgText' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, '', title, ingress, text, images, captions)

@@ -27,7 +27,7 @@ def parse( url ):
 
 	processor.decompose( article.find( class_ = 'authorPicture' ) )
 
-	images = processor.collect_images( article.find_all( 'img' ), '' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'main-media-caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)

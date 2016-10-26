@@ -24,7 +24,7 @@ def parse( url ):
 	author = processor.collect_text( article.find( class_ = 'kirjoittaja' ), False )
 	title = processor.collect_text( article.find( class_ = 'otsikko' ), False )
 	text = processor.collect_text( article.find( class_ = 'tsv3-c-common-article__textitem--teksti' ), False )
-	images = processor.collect_images( article.find_all( 'img' ), 'http://www.ts.fi' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ts.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'tsv3-c-common-article__attachment__info__caption' ) )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
