@@ -17,7 +17,7 @@ kainuunsanomat,http://www.kainuunsanomat.fi/kainuun-sanomat/kotimaa/valtion-raha
 kaleva,http://www.kaleva.fi/uutiset/kotimaa/poliisi-raahen-rivitalopalo-sai-alkunsa-todennakoisesti-keittiosta/738244/
 kansanuutiset,http://www.kansanuutiset.fi/artikkeli/3599725-veroparatiisien-todellisuus-lienee-tarua-ihmeellisempaa
 karjalainen,http://www.karjalainen.fi/uutiset/uutis-alueet/kotimaa/item/116683-metsastajaliitto-asettaa-susiasiamiehia-maakuntiin-erityisen-vaikea-tilanne-idassa
-kauppalehti,http://www.kauppalehti.fi/uutiset/suomessa-kehitettiin-kosketukseton-kosketusnaytto-aidosti-hygieeninen-ratkaisu/TYDAcDKc
+kauppalehti,http://www.kauppalehti.fi/uutiset/karmea-somekohu---seuraa-espoolaisyrityksen-maineen-tuhoutumista-livena/ZMYHMCXN
 kdlehti,http://www.kdlehti.fi/2016/09/14/lahden-kristillisdemokraatit-vanhusten-hoitajamitoitus-sailytettava-nykyisella-tasolla/
 kokemaenjokilaakso,http://www.kokemaenjokilaakso.fi/2016/10/12/tatulle-ja-patulle-suunnitellaan-elamyskohdetta-vammalaan/
 kouvolansanomat,http://www.kouvolansanomat.fi/Online/2016/09/22/Taksiala%20toivoo%20omaa%20Onnibus-ilmi%C3%B6t%C3%A4/2016221291757/4
