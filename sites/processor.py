@@ -55,6 +55,14 @@ def collect_datetime_objects( html_elements, attribute ):
 
     return prepare_datetime_list( datetime_list )
 
+def collect_datetime_json( json, published, updated ):
+    datetime_list = [None]
+    if published in json:
+        datetime_list.append( strip_datetime_object( json[published] ) )
+    if updated in json:
+        datetime_list.append( strip_datetime_object( json[updated] ) )
+    return prepare_datetime_list( datetime_list )
+
 def collect_text( html_element, decompose ):
     if html_element != None:
         text = html_element.get_text( ' ', strip=True )
@@ -128,6 +136,11 @@ def create_datetime_object( datetime_string ):
         datetime_object = datetime.strptime( datetime_parts[0] + ' ' + datetime_parts[1], '%d.%m.%Y %H.%M' )
     else:
         datetime_object = datetime.date( datetime.strptime( datetime_parts[0], '%d.%m.%Y' ) )
+    return datetime_object
+
+def strip_datetime_object( datetime_object ):
+    datetime_object = datetime_object.replace('T', ' ').replace('Z', '')
+    datetime_object = datetime_object.split( '+' )[0].split('.')[0]
     return datetime_object
 
 def prepare_datetime_list( datetime_list ):
