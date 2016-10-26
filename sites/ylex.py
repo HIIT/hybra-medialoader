@@ -18,11 +18,7 @@ def parse( url ):
 	json = r.json()
 
 	categories = [processor.process( json['homesection']['name'] )]
-
-	published = processor.process( json['datePublished'].replace( 'T', ' ' ).split( '+' )[0] )
-	updated = processor.process( json['dateModified'].replace( 'T', ' ' ).split( '+' )[0] )
-	datetime_list = [updated, published]
-
+	datetime_list = processor.collect_datetime_json( json, 'datePublished', 'dateModified' )
 	author = processor.process( json['authors'][0]['name'] )
 	title = processor.process( json['title'] )
 	ingress = processor.process( json['lead'] )
@@ -30,10 +26,12 @@ def parse( url ):
 	text_html = BeautifulSoup( json['html'], "html.parser" )
 	text = processor.collect_text( text_html, False )
 
-	image_json = json['image']
-	images = [image_json['uri'].encode('utf8')]
-	captions = [image_json['alt'].encode('utf8')]
-
+	if 'image' in json:
+		image_json = json['image']
+		images = [image_json['uri'].encode('utf8')]
+		captions = [image_json['alt'].encode('utf8')]
+	else:
+		images, captions = [''], ['']
 
 	return processor.create_dictionary( url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
