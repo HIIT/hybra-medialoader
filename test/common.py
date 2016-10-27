@@ -29,20 +29,26 @@ def write_file( out, content ):
     out.write( file_content.strip() )
 
 def write_difference_log(domain, out, test_content_path):
-    diff_log = file('test/difference_logs/' + domain + '_diff.txt', 'w')
+    filename = 'test/difference_logs/' + domain + '_diff.txt'
+    if not os.path.exists(os.path.dirname(filename)):
+        try:
+            os.makedirs(os.path.dirname(filename))
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+    with open(filename, "w") as diff_log:
+        test_content = open(test_content_path, 'r')
+        content = open(out, 'r')
 
-    test_content = open(test_content_path, 'r')
-    content = open(out, 'r')
+        test_content_text = test_content.read().replace(' ', ' \n')
+        content_text = content.read().replace(' ', ' \n')
 
-    test_content_text = test_content.read().replace(' ', ' \n')
-    content_text = content.read().replace(' ', ' \n')
+        test_content_lines = test_content_text.splitlines()
+        content_lines = content_text.splitlines()
 
-    test_content_lines = test_content_text.splitlines()
-    content_lines = content_text.splitlines()
+        d = difflib.Differ()
+        diff = d.compare(test_content_lines, content_lines)
+        diff_log.write( '\n'.join(diff) )
 
-    d = difflib.Differ()
-    diff = d.compare(test_content_lines, content_lines)
-    diff_log.write( '\n'.join(diff) )
-
-    test_content.close()
-    content.close()
+        test_content.close()
+        content.close()
