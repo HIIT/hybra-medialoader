@@ -10,3 +10,4 @@ notifications:
   email:
     recipients:
       - juho.paakkonen@helsinki.fi
+      - matti.nelimarkka@aalto.fi
