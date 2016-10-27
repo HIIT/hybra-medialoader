@@ -10,5 +10,10 @@ notifications:
   email:
     recipients:
       - juho.paakkonen@helsinki.fi
-  on_success: always
-  on_failure: always
+    on_success: always
+    on_failure: always
+  webhooks:
+    urls:
+      - http://head.hiit.fi/hooks/fguzu511p3nm8cd9p1b78r3zar
+    on_success: always
+    on_failure: always
