@@ -12,7 +12,8 @@ def parse( url ):
 
     r = requests.get( api_path + _id )
     if r.status_code == 404:
-        processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
+        return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
+
     r.encoding = 'UTF-8'
 
     json = r.json()

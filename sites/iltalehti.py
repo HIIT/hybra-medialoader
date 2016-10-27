@@ -9,7 +9,7 @@ def parse( url ):
 
 	r = requests.get( url )
 	if r.status_code == 404:
-		processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'iso-8859-1'
 	soup = BeautifulSoup( r.text, "html.parser" )
