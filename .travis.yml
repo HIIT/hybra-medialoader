@@ -8,4 +8,6 @@ script: python -m pytest
 
 notifications:
   email:
-    - juho.paakkonen@aalto.fi
+    - juho.paakkonen@helsinki.fi
+  webhooks:
+    - http://head.hiit.fi/hooks/fguzu511p3nm8cd9p1b78r3zar
