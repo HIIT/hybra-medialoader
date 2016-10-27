@@ -16,4 +16,3 @@ notifications:
     urls:
       - http://head.hiit.fi/hooks/fguzu511p3nm8cd9p1b78r3zar
     on_success: always
-    on_failure: always
