@@ -11,4 +11,3 @@ notifications:
     recipients:
       - juho.paakkonen@helsinki.fi
       - matti.nelimarkka@aalto.fi
-  webhooks: http://head.hiit.fi/hooks/fguzu511p3nm8cd9p1b78r3zar
