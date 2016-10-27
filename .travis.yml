@@ -5,3 +5,7 @@ install:
   - pip install bs4
 
 script: python -m pytest
+
+notifications:
+  email:
+    - juho.paakkonen@aalto.fi
