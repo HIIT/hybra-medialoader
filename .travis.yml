@@ -8,4 +8,7 @@ script: python -m pytest
 
 notifications:
   email:
-    - juho.paakkonen@helsinki.fi
+    recipients:
+      - juho.paakkonen@helsinki.fi
+  on_success: always
+  on_failure: always
