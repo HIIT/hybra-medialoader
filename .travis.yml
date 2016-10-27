@@ -11,3 +11,8 @@ notifications:
     recipients:
       - juho.paakkonen@helsinki.fi
       - matti.nelimarkka@aalto.fi
+  webhooks:
+    urls:
+      - http://head.hiit.fi/hooks/fguzu511p3nm8cd9p1b78r3zar
+    on_success: change
+    on_failure: always
