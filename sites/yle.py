@@ -20,7 +20,7 @@ def parse( url ):
 
 	categories = [processor.collect_text( article.find( class_ = 'yle__subject' ), False ).capitalize()]
 	datetime_list = processor.collect_datetime( article.find( class_ = 'yle__article__date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name' ), False )
+	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name__text' ), False )
 
 	title_div = article.find( class_ = 'yle__article__header__content' )
 	title = processor.collect_text( title_div.find( 'h1' ), False )
