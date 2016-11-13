@@ -11,8 +11,5 @@ lastfailed
 sites/*.txt
 /test/parser_out.txt
 
-## difference logs
-test/difference_logs/*
-
-## Single url file for testing
-/test/single_url.txt
+## Difference logs
+/test/difference_logs/*

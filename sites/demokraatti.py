@@ -1,45 +1,42 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find('article')
-	article.find('div', {'class' : 'keywords-block'}).decompose()
-	for div in article.find_all( 'div', {'class' : 'share-buttons-block'} ):
-		div.decompose()
-	article('p')[-1].decompose()
-	article.footer.decompose()
-	article.find( class_ = 'post-author' ).decompose()
 
-	title = article.find( class_ = 'entry-title' ).get_text().strip()
-	category = article.find( class_ = 'category' ).get_text().strip()
-	date = [ str( article.find( class_ = 'date' ).get_text().strip().encode('utf8') ) ]
-	time = [ str( article.find( class_ = 'time' ).get_text().strip().encode('utf8') ) ]
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose( article.find( class_ = 'keywords-block' ) )
+	processor.decompose_all( article.find_all( class_ = 'share-buttons-block' ) )
+	processor.decompose( article('p')[-1] )
+	processor.decompose( article.footer )
+	processor.decompose( article.find( class_ = 'wp-user-avatar' ) )
 
-	text = article.find_all( class_='post-content' )
-	text[0].find('ul', {'class' : 'single-post-date'}).decompose()
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ), False )
 
-	images = article.find_all( 'img' )
-	image_src = [None] * len( images )
-	i = 0
-	for img in images:
-		src = "https://demokraatti.fi" + img['src']
-		image_src[i] = str( src.encode('utf8') )
-		i += 1
+	datetime_data = article.find( class_ = 'single-post-date' )
+	processor.decompose( datetime_data.find( class_ = 'category' ) )
+	datetime_list = processor.collect_datetime( datetime_data, '' )
 
-	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, [''])
+	processor.decompose( article.find( class_ = 'single-post-date' ) )
+
+	author = processor.collect_text( article.find( class_ = 'post-author' ).find( 'li' ), False )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ), False )
+	text = processor.collect_text( article.find( class_ = 'post-content' ), False )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'https://demokraatti.fi' )
+
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 
 if __name__ == '__main__':
 

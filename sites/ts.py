@@ -1,25 +1,33 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	text = soup.find_all( class_='tsv3-c-common-article__textitem tsv3-c-common-article__textitem--teksti' )
-	for script in text[0].find_all( 'script' ):
-		script.decompose()
-	text = text[0].get_text(' ', strip = True)
-	text = processor.process(text)
+	article = soup.find( 'article' )
+	processor.decompose_all( article.find_all( 'script' ) )
 
-	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
+	meta = article.find( class_ = 'tsv3-c-common-article__meta__row1' )
+
+	categories = processor.collect_categories( meta.find_all( 'a' ), False )
+	datetime_list = processor.collect_datetime_objects( meta.find_all( 'time' ), 'datetime' )
+	author = processor.collect_text( article.find( class_ = 'kirjoittaja' ), False )
+	title = processor.collect_text( article.find( class_ = 'otsikko' ), False )
+	text = processor.collect_text( article.find( class_ = 'tsv3-c-common-article__textitem--teksti' ), False )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ts.fi' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'tsv3-c-common-article__attachment__caption' ) )
+
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.ts.fi/eduskuntavaalit/750980/Start+up+yrittaja+kuplii+innostusta", file('ts.txt', 'w'))

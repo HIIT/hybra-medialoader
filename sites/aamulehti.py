@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
@@ -5,56 +7,32 @@ import processor
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article-content')
-	article.find( class_ = 'related-articles-container' ).decompose()
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose( article.find( class_ = 'related-articles-container' ) )
 
-	title = article.find( class_ = 'Otsikko' ).get_text().strip()
-	category = article.find( class_ = 'category' ).get_text().strip()
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ), False )
 
-	datetime = article.find( class_ = 'post-meta' )
-	datetime.find( class_ = 'category' ).decompose()
-	datetime.find( class_ = 'updated' ).decompose()
-	datetime_list = [None] * 4
-	i = 0
-	for string in datetime.stripped_strings:
-		datetime_list[i] = string
-		i += 1
-	if i > 1:
-		date = [str( datetime_list[2].encode('utf8') ), str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[3].encode('utf8') ), str( datetime_list[1].encode('utf8') )]
-	else:
-		date = [str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[1].encode('utf8') )]
+	datetime_data = article.find( class_ = 'post-meta' )
+	processor.decompose( datetime_data.find( class_ = 'category' ) )
+	processor.decompose( datetime_data.find( class_ = 'updated' ) )
+	datetime_list = processor.collect_datetime( datetime_data, '' )
 
-	images = article.find_all( 'img' )
-	image_src = [None] * len(images)
-	i = 0
-	for img in images:
-		image_src[i] = str( img['src'].encode('utf8') )
-		i += 1
+	author = processor.collect_text( article.find( class_ = 'Kirjoittaja'), False )
+	title = processor.collect_text( article.find( class_ = 'Otsikko' ), False )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	captions = article.find_all( class_ = 'caption' )
-	captions_text = [None] * len(captions)
-	i = 0
-	for caption in captions:
-		captions_text[i] = str( caption.get_text().encode('utf8') )
-		i += 1
+	processor.decompose_all( article.find_all( class_ = 'kuvavaraus-wrapper' ) )
+	text = processor.collect_text( article.find( class_ = 'Teksti' ), False )
 
-	text = article.find( class_ = 'Teksti' )
-	for div in text.find_all( class_ = 'kuvavaraus-wrapper' ):
-		div.decompose()
-	text = text.get_text(' ', strip = True)
-	text = processor.process(text)
-
-	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 

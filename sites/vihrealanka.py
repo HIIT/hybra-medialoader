@@ -1,35 +1,42 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	text = soup.find_all( class_ = 'node-wrap' )
-	text[0].find('h1').decompose()
-	text[0].find(class_ = 'juttutiedot').decompose()
-	text[0].find(class_ = 'blogaajantiedot').decompose()
-	for script in text[0].find_all('script'):
-		script.decompose()
-	text[0].find(class_ = 'avainsanat').decompose()
-	text[0].find(class_ = 'twitter-share-button').decompose()
-	text[0].find(class_ = 'fb-like').decompose()
-	text[0].find(class_ = 'node-wrap').decompose()
-	for div in text[0].find_all(class_ = 'tyrkkyBox'):
-		div.decompose()
-	text[0]('h4')[-1].decompose()
-	text = text[0].get_text(' ', strip = True)
-	text = processor.process(text)
+	article = soup.find( class_ = 'node-wrap' )
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose( article.find( class_ = 'kredIso' ) )
+	processor.decompose_all( article.find_all(class_ = 'tyrkkyBox') )
+	processor.decompose( article.find( class_ = 'avainsanat' ) )
+	processor.decompose( article.find( class_ = 'twitter-share-button' ) )
+	processor.decompose( article.find( class_ = 'fb-like' ) )
+	processor.decompose( article('h4')[-1] )
 
-	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
+	meta = article.find( class_ = 'juttutiedot' )
+	datetime_list = processor.collect_datetime( meta, '' )
+	author = processor.collect_text( meta.find( class_ = 'author' ), False )
+	processor.decompose( meta )
+
+	title = processor.collect_text( article.find( 'h2' ), True )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
+	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvaTekstiIso' ) )
+
+	processor.decompose_all( article.find_all( class_ = 'kuvaTekstiIso' ) )
+
+	text = processor.collect_text( article, False )
+
+	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.vihrealanka.fi/blogi-eno-vastaa/onko-tonnikalassa-myrkkyj%C3%A4", file('vihrealanka.txt', 'w'))

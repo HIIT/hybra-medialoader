@@ -1,57 +1,33 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'view-news-item')
-	title = article.find( class_ = 'views-field-title' ).get_text().strip()
-	category = article.find( class_ = 'views-field-field-aamuset-category').get_text().strip()
 
-	datetime = article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3]
-	datetime = datetime.get_text().strip()
-	datetime = datetime.split(' ')
-	datetime_list = [None] * len(datetime)
-	i = 0
-	for string in datetime:
-		datetime_list[i] = string
-		i += 1
-	if ( len(datetime_list) > 2 ):
-		date = [str( datetime_list[3].encode('utf8') ), str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[4].replace(')','').encode('utf8') ), str( datetime_list[1].encode('utf8') )]
-	else:
-		date = [str( datetime_list[0].encode('utf8') )]
-		time = [str( datetime_list[1].encode('utf8') )]
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose_all( article.find_all( class_ = 'views-field-field-aamuset-related-images' ) )
 
-	text = article.find_all( class_='views-field views-field-body' )
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
+	categories = processor.collect_categories( article.find_all( class_ = 'views-field-field-aamuset-category'), False )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'views-field-field-aamuset-category').parent.find_all('div')[3], '' )
+	author = processor.collect_text( article.find( class_  = 'views-field-field-visiting-journalist' ), False )
+	title = processor.collect_text( article.find( class_ = 'views-field-title' ), False )
+	text = processor.collect_text( article.find( class_ = 'views-field views-field-body' ), False )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'views-field-field-aamuset-caption-1' ) )
 
-	imageframes = article.find_all(class_ = 'views-field-field-aamuset-images')
-	image_src = [None] * len(imageframes)
-	i = 0
-	for frame in imageframes:
-		img = frame.find('img')
-		image_src[i] = str( img['src'].encode('utf8') )
-		i += 1
-
-	captions = article.find_all( class_ = 'views-field-field-aamuset-caption-1')
-	captions_text = [None] * len(imageframes)
-	i = 0
-	for caption in captions:
-		captions_text[i] = str( caption.get_text().strip().encode('utf8') )
-		i += 1
-
-	return processor.create_dictionary(url, http_status, category, date, time, '', title, '', text, image_src, captions_text)
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 

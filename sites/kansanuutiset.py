@@ -1,29 +1,35 @@
+# -*- coding: utf-8 -*-
+
 import requests
 from bs4 import BeautifulSoup
 import processor
+from datetime import datetime
 
 def parse( url ):
 
 	r = requests.get( url )
-
-	http_status = r.status_code
 	if r.status_code == 404:
-		return
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	text = soup.find_all( class_ = 'cb-entry-content')
-	for script in text[0].find_all('script'):
-		script.decompose()
-	for ad in text[0].find_all( class_ = 'cb-module-title' ):
-		ad.decompose()
-	for quote in text[0].find_all( 'blockquote' ):
-		quote.decompose()
-	text = text[0].get_text(' ', strip=True)
-	text = processor.process(text)
+	article = soup.find( 'article' )
+	processor.decompose_all( article.find_all( 'script' ) )
+	processor.decompose( article.find( 'footer' ) )
+	processor.decompose_all( article.find_all( class_ = 'cb-module-title' ) )
+	processor.decompose_all( article.find_all( 'blockquote' ) )
 
-	return processor.create_dictionary(url, http_status, '', [''], [''], '', '', '', text, [''], [''])
+	categories = processor.collect_categories( article.find_all( class_ = 'cb-category' ), False )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'cb-date' ), '' )
+	author = processor.collect_text( article.find( class_ = 'cb-author' ), False )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'cb-entry-content' ).find( 'h4' ), True )
+	text = processor.collect_text( article.find( class_ = 'cb-entry-content' ), False )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
+
+	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.kansanuutiset.fi/kulttuuri/kirjat/3341821/lahi-idan-rajoja-vedetaan-uusiksi", file('kansanuutiset.txt', 'w'))
