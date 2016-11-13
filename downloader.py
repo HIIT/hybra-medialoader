@@ -2,29 +2,42 @@ import sys
 import os
 import re
 
+## store data
+import json
+
 urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
-outf = './media/'
+error = open( 'error.log', 'w' )
 
-def download( link, filename ):
+def download( id, url, storeto ):
 
-    link = link.strip()
+    url = url.strip()
 
 
     try:
         ## try to dynamically load the correct script using the domain name
-        loader = re.match( urlpat , link ).group('domain')
+        loader = re.match( urlpat , url ).group('domain')
 
-        loader = structures = __import__( 'sites.' + loader, fromlist = [ loader ] )
+        loader = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
-        ## load the current story
+        story = loader.parse( url )
 
-        out = open( outf + filename + '.txt', 'w' )
-        loader.nouda( link, out )
-        out.close()
+        if 'json' in storeto:
+            json.dump( story , open( 'data/' + str(id) + '.json', 'w' ) )
 
     except Exception, e:
-
         print e
+        print "Failed " + url
 
-        print "Failed " + link
+        error.write( url + '\n' )
+
+
+
+if __name__ == '__main__':
+
+    for f in sys.argv[1:]:
+
+        f = open( f )
+        for id, url in enumerate( f ):
+
+            download( id, url, 'json' )
