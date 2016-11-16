@@ -14,6 +14,9 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( class_ = 'article-content')
+	if article == None:
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'related-articles-container' ) )
 
@@ -24,7 +27,7 @@ def parse( url ):
 	processor.decompose( datetime_data.find( class_ = 'updated' ) )
 	datetime_list = processor.collect_datetime( datetime_data, '' )
 
-	author = processor.collect_text( article.find( class_ = 'Kirjoittaja'), False )
+	author = processor.collect_text( article.find( class_ = 'author--main'), False )
 	title = processor.collect_text( article.find( class_ = 'Otsikko' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
