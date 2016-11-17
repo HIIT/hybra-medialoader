@@ -28,12 +28,12 @@ def parse( url ):
 	datetime_list = processor.collect_datetime( datetime_data, '' )
 
 	author = processor.collect_text( article.find( class_ = 'author--main'), False )
-	title = processor.collect_text( article.find( class_ = 'Otsikko' ), False )
+	title = processor.collect_text( article.find( class_ = 'heading--main' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	processor.decompose_all( article.find_all( class_ = 'kuvavaraus-wrapper' ) )
-	text = processor.collect_text( article.find( class_ = 'Teksti' ), False )
+	processor.decompose_all( article.find_all( class_ = 'image-wrapper' ) )
+	text = processor.collect_text( article.find( class_ = 'content--main' ), False )
 
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
