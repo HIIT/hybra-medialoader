@@ -4,13 +4,25 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 import re
 
+"""A module encapsulating the functions used by the media parsers to scrape data from websites."""
+
 def decompose( html_element ):
+    """Decomposes a html element if the element's type is not None.
+
+    Parameters:
+        html_element - A BeautifulSoup Tag.
+    """
     if html_element != None:
         html_element.decompose()
     else:
         return
 
 def decompose_all( html_elements ):
+    """Iterates over a list of html elements and decomposes the elements if their type is not None.
+
+    Parameters:
+        html_elements - A list of BeautifulSoup Tags.
+    """
     for element in html_elements:
         if element != None:
             element.decompose()
@@ -18,6 +30,14 @@ def decompose_all( html_elements ):
             continue
 
 def collect_categories( html_elements, decompose ):
+    """Iterates over a list of html elements and collects their contained text using the collect_text() function.
+
+    Returns the collected texts as a list of strings.
+
+    Parameters:
+        html_elements - A list of BeautifulSoup Tags.
+        decompose - A boolean determining whether the html elements should be decomposed after handling.
+    """
     categories = [None]
 
     for element in html_elements:
@@ -28,6 +48,15 @@ def collect_categories( html_elements, decompose ):
     return categories
 
 def collect_datetime( html_element, datetime_format ):
+    """Collects all datetime strings contained within a html element using the re module,
+    and returns them as a list of datetime objects.
+
+    Uses the list_datetime_objects() function to create the datetime object list from datetime strings.
+
+    Parameters:
+        html_element - A BeautifulSoup Tag containing datetime strings.
+        datetime_format - A string determining the format of the datetime string on the website.
+    """
     if datetime_format == 'timedate':
         datetime_expression = r'([0-2]?[0-9][.:][0-6][0-9])[^0-9]*([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)'
     elif datetime_format == 'datetime date':
@@ -43,6 +72,14 @@ def collect_datetime( html_element, datetime_format ):
     return datetime_list
 
 def collect_datetime_objects( html_elements, attribute ):
+    """Iterates over a list of html_elements and returns their timestamp attributes as a list of datetime objects.
+
+    Uses the function prepare_datetime_list().
+
+    Parameters:
+        html_elements - A list of BeautifulSoup Tags.
+        attribute - A string name of the html element attribute containing the timestamp.
+    """
     datetime_list = [None]
 
     for element in html_elements:
@@ -56,6 +93,13 @@ def collect_datetime_objects( html_elements, attribute ):
     return prepare_datetime_list( datetime_list )
 
 def collect_datetime_json( json, published, updated ):
+    """Collects the publish and update datetime objects from json and returns them as a list.
+
+    Parameters:
+        json - JSON containing the publish and update datetime objects.
+        published - A string name of the attribute in the JSON with the publish datetime as its value.
+        updated - A string name of the attribute in the JSON with the update datetime as its value.
+    """
     datetime_list = [None]
     if published in json:
         datetime_list.append( strip_datetime_object( json[published] ) )
@@ -64,6 +108,14 @@ def collect_datetime_json( json, published, updated ):
     return prepare_datetime_list( datetime_list )
 
 def collect_text( html_element, decompose ):
+    """Returns the text contained in a html element if the type of the element is not None.
+
+    Uses the function process().
+
+    Parameters:
+        html_element - A BeautifulSoup Tag containing the text.
+        decompose - A boolean determining whether the html elements should be decomposed after handling.
+    """
     if html_element != None:
         text = html_element.get_text( ' ', strip=True )
         text = process(text)
@@ -76,6 +128,13 @@ def collect_text( html_element, decompose ):
     return text
 
 def collect_images( images, attribute, url_base ):
+    """Iterates over a list of html image elements and returns their corresponding urls as a list of strings.
+
+    Parameters:
+        images - A list of BeautifulSoup Tags.
+        attribute - A string that gives the image element attribute which contains the image's url.
+        url_base - A string that gives the url base of the collected images.
+    """
     image_src = [None]
     for img in images:
         if img != None and img.has_attr( attribute ):
@@ -84,6 +143,12 @@ def collect_images( images, attribute, url_base ):
     return image_src
 
 def collect_images_by_parent( html_elements, url_base ):
+    """
+
+    Parameters:
+        html_elements - .
+        url_base - .
+    """
     image_src = [None]
     for parent in html_elements:
         image_link = parent.find( 'a' )
@@ -95,6 +160,11 @@ def collect_images_by_parent( html_elements, url_base ):
     return image_src
 
 def collect_image_captions( captions ):
+    """
+
+    Parameters:
+        captions - .
+    """
     captions_text = [None]
     for caption in captions:
         if caption != None:
@@ -104,6 +174,12 @@ def collect_image_captions( captions ):
     return captions_text
 
 def list_datetime_objects( match_list, datetime_format ):
+    """
+
+    Parameters:
+        match_list - .
+        datetime_format - .
+    """
     datetime_list = [None]
     published_date = ''
     for match in match_list:
@@ -127,6 +203,11 @@ def list_datetime_objects( match_list, datetime_format ):
     return prepare_datetime_list( datetime_list )
 
 def create_datetime_object( datetime_string ):
+    """
+
+    Parameters:
+        datetime_string - .
+    """
     datetime_parts = datetime_string.split( ' ' )
     if len( datetime_parts[0] ) < 7 :
         datetime_parts[0] = datetime_parts[0] + '2016'
@@ -139,16 +220,31 @@ def create_datetime_object( datetime_string ):
     return datetime_object
 
 def strip_datetime_object( datetime_object ):
+    """
+
+    Parameters:
+        datetime_object - .
+    """
     datetime_object = datetime_object.replace('T', ' ').replace('Z', '')
     datetime_object = datetime_object.split( '+' )[0].split('.')[0]
     return datetime_object
 
 def prepare_datetime_list( datetime_list ):
+    """
+
+    Parameters:
+        datetime_list - .
+    """
     datetime_list.pop(0)
     datetime_list.reverse()
     return datetime_list
 
 def create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
+    """
+
+    Parameters:
+        url - .
+    """
     media_content = { 'url' : url,
 					  'http' : str( http_status ),
 					  'categories' : categories,
@@ -162,6 +258,11 @@ def create_dictionary(url, http_status, categories, datetime_list, author, title
     return media_content
 
 def process(content):
+    """
+
+    Parameters:
+        content - .
+    """
     content = content.replace(' .', '.')
     content = content.replace(' ,', ',')
     content = content.replace('( ', '(')
@@ -180,6 +281,11 @@ def process(content):
     return str( content.encode('utf8') )
 
 def convert_month(datetime_string):
+    """Converts month substrings in a datetime string into their numeral equivalents.
+
+    Parameters:
+        datetime_string - A string expressing a datetime.
+    """
     conversions = { 'syyskuu' : '09' }
     for conversion in conversions:
         datetime_string = datetime_string.replace( conversion, conversions[conversion] )
