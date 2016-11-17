@@ -10,7 +10,7 @@ def decompose( html_element ):
     """Decomposes a html element if the element's type is not None.
 
     Parameters:
-        html_element - A BeautifulSoup Tag.
+        html_element - A BeautifulSoup tag.
     """
     if html_element != None:
         html_element.decompose()
@@ -21,7 +21,7 @@ def decompose_all( html_elements ):
     """Iterates over a list of html elements and decomposes the elements if their type is not None.
 
     Parameters:
-        html_elements - A list of BeautifulSoup Tags.
+        html_elements - A list of BeautifulSoup tags.
     """
     for element in html_elements:
         if element != None:
@@ -35,7 +35,7 @@ def collect_categories( html_elements, decompose ):
     Returns the collected texts as a list of strings.
 
     Parameters:
-        html_elements - A list of BeautifulSoup Tags.
+        html_elements - A list of BeautifulSoup tags.
         decompose - A boolean determining whether the html elements should be decomposed after handling.
     """
     categories = [None]
@@ -54,8 +54,8 @@ def collect_datetime( html_element, datetime_format ):
     Uses the list_datetime_objects() function to create the datetime object list from datetime strings.
 
     Parameters:
-        html_element - A BeautifulSoup Tag containing datetime strings.
-        datetime_format - A string determining the format of the datetime string on the website.
+        html_element - A BeautifulSoup tag containing datetime strings.
+        datetime_format - A string determining the format of the datetime strings on the website.
     """
     if datetime_format == 'timedate':
         datetime_expression = r'([0-2]?[0-9][.:][0-6][0-9])[^0-9]*([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)'
@@ -77,7 +77,7 @@ def collect_datetime_objects( html_elements, attribute ):
     Uses the function prepare_datetime_list().
 
     Parameters:
-        html_elements - A list of BeautifulSoup Tags.
+        html_elements - A list of BeautifulSoup tags.
         attribute - A string name of the html element attribute containing the timestamp.
     """
     datetime_list = [None]
@@ -113,7 +113,7 @@ def collect_text( html_element, decompose ):
     Uses the function process().
 
     Parameters:
-        html_element - A BeautifulSoup Tag containing the text.
+        html_element - A BeautifulSoup tag containing the text.
         decompose - A boolean determining whether the html elements should be decomposed after handling.
     """
     if html_element != None:
@@ -131,9 +131,9 @@ def collect_images( images, attribute, url_base ):
     """Iterates over a list of html image elements and returns their corresponding urls as a list of strings.
 
     Parameters:
-        images - A list of BeautifulSoup Tags.
+        images - A list of BeautifulSoup tags.
         attribute - A string that gives the image element attribute which contains the image's url.
-        url_base - A string that gives the url base of the collected images.
+        url_base - A string that gives the base part of the image urls.
     """
     image_src = [None]
     for img in images:
@@ -143,11 +143,11 @@ def collect_images( images, attribute, url_base ):
     return image_src
 
 def collect_images_by_parent( html_elements, url_base ):
-    """
+    """Iterates over a list of html elements containing image hyperlinks and collects their urls.
 
     Parameters:
-        html_elements - .
-        url_base - .
+        html_elements - A list of BeautifulSoup tags.
+        url_base - A string that gives the base part of the image urls.
     """
     image_src = [None]
     for parent in html_elements:
@@ -160,10 +160,12 @@ def collect_images_by_parent( html_elements, url_base ):
     return image_src
 
 def collect_image_captions( captions ):
-    """
+    """Iterates over a list of html elements containing image captions and returns them as a list of strings.
+
+    Uses the function collect_text().
 
     Parameters:
-        captions - .
+        captions - A list of BeautifulSoup tags containing the caption texts.
     """
     captions_text = [None]
     for caption in captions:
@@ -174,11 +176,13 @@ def collect_image_captions( captions ):
     return captions_text
 
 def list_datetime_objects( match_list, datetime_format ):
-    """
+    """Iterates over a list of datetime strings and returns a list of datetime objects created from them.
+
+    Uses the functions create_datetime_object() and prepare_datetime_list().
 
     Parameters:
-        match_list - .
-        datetime_format - .
+        match_list - A list containing datetime strings.
+        datetime_format - A string determining the format of the datetime strings on the website.
     """
     datetime_list = [None]
     published_date = ''
@@ -203,10 +207,10 @@ def list_datetime_objects( match_list, datetime_format ):
     return prepare_datetime_list( datetime_list )
 
 def create_datetime_object( datetime_string ):
-    """
+    """Returns a datetime object created from a datetime string.
 
     Parameters:
-        datetime_string - .
+        datetime_string - A datetime in string format.
     """
     datetime_parts = datetime_string.split( ' ' )
     if len( datetime_parts[0] ) < 7 :
@@ -220,30 +224,39 @@ def create_datetime_object( datetime_string ):
     return datetime_object
 
 def strip_datetime_object( datetime_object ):
-    """
+    """Formats a datetime object and returns the formatted object.
 
     Parameters:
-        datetime_object - .
+        datetime_object - A datetime object to format.
     """
     datetime_object = datetime_object.replace('T', ' ').replace('Z', '')
     datetime_object = datetime_object.split( '+' )[0].split('.')[0]
     return datetime_object
 
 def prepare_datetime_list( datetime_list ):
-    """
+    """Removes the first member of a datetime_list and returns the list reversed.
 
     Parameters:
-        datetime_list - .
+        datetime_list - A list of datetime objects.
     """
     datetime_list.pop(0)
     datetime_list.reverse()
     return datetime_list
 
 def create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
-    """
+    """Returns a dictionary containing the scraped data from the website, given as parameters.
 
     Parameters:
-        url - .
+        url - The website url as a string object.
+        http_status - The parser http request status.
+        categories - A list of collected news item categories as strings.
+        datetime_list - A list of datetime objects.
+        author - The author of the news item as a string.
+        title - The title of the news item as a string.
+        ingress - The ingress of the news item as a string.
+        text - The main text content of the news item as a string.
+        images - A list of the source urls of the images in the news item as strings.
+        captions - A list of the image captions in the news item as strings.
     """
     media_content = { 'url' : url,
 					  'http' : str( http_status ),
@@ -258,10 +271,10 @@ def create_dictionary(url, http_status, categories, datetime_list, author, title
     return media_content
 
 def process(content):
-    """
+    """Performs character replace functions on scraped text and returns the text as a string.
 
     Parameters:
-        content - .
+        content - Content text scraped from a website.
     """
     content = content.replace(' .', '.')
     content = content.replace(' ,', ',')
