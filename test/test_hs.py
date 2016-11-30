@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'hs'
-url = 'http://www.hs.fi/paakirjoitukset/a1473738016148'
+url = 'http://www.hs.fi/kaupunki/art-2000004887599.html'
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
