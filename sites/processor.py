@@ -159,18 +159,19 @@ def collect_images_by_parent( html_elements, url_base ):
     image_src.pop(0)
     return image_src
 
-def collect_image_captions( captions ):
+def collect_image_captions( captions, decompose = False ):
     """Iterates over a list of html elements containing image captions and returns them as a list of strings.
 
     Uses the function collect_text().
 
     Parameters:
         captions - A list of BeautifulSoup tags containing the caption texts.
+        decompose - A boolean determining whether the html elements should be decomposed after handling.
     """
     captions_text = [None]
     for caption in captions:
         if caption != None:
-            captions_text.append( '' + collect_text( caption, False ) )
+            captions_text.append( '' + collect_text( caption, decompose ) )
 
     captions_text.pop(0)
     return captions_text
