@@ -64,6 +64,7 @@ def collect_datetime( html_element, datetime_format ):
     else:
         datetime_expression = r'([0-3]?[0-9]\.[0-1]?[0-9]\.[1-2]?[09]?[0-9]?[0-9]?)[^0-9]*([0-2]?[0-9][.:][0-6][0-9])?'
 
+    datetime_list = []
     if html_element != None:
         datetime_string = html_element.get_text( ' ' , strip = True )
         match_list = re.findall( datetime_expression, datetime_string )

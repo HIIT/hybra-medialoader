@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'yle__articlePage__article__author__figure' ) )
 
@@ -25,10 +25,8 @@ def parse( url ):
 	datetime_list = processor.collect_datetime( article.find( class_ = 'yle__article__date' ), '' )
 	author = processor.collect_text( article.find( class_ = 'yle__articlePage__article__author__name__text' ), False )
 
-	title_div = article.find( class_ = 'yle__article__header__content' )
-	title = processor.collect_text( title_div.find( 'h1' ), False )
-	ingress = processor.collect_text( title_div.find( 'p' ), False )
-
+	title = processor.collect_text( article.find( class_ = 'yle__article__heading' ), False )
+	ingress = processor.collect_text( article.find( class_ = 'yle__article__paragraph' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:')
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
@@ -39,4 +37,4 @@ def parse( url ):
 	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
-	parse("http://yle.fi/uutiset/nordea_synkkyys_jatkuu/7663512", file('yle.txt', 'w'))
+	parse("http://yle.fi/uutiset/sinut_on_kaannytetty_suomesta__kokeile_millaisia_vaihtoehtoja_sinulla_on/9136482")
