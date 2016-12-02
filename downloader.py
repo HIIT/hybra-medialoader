@@ -4,6 +4,7 @@ import re
 
 ## store data
 import json
+import pickle
 
 urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
@@ -24,6 +25,9 @@ def download( id, url, storeto ):
 
         if 'json' in storeto:
             json.dump( story , open( 'data/' + str(id) + '.json', 'w' ) )
+
+        if 'pickle' in storeto:
+            pickle.dump( story , open( 'data/' + str(id) + '.pickle', 'w' ) )
 
         return story['http']
 
@@ -46,7 +50,7 @@ if __name__ == '__main__':
         f = open( f )
         for id, url in enumerate( f ):
 
-            s = download( id, url, 'json' )
+            s = download( id, url, 'pickle' )
 
             http_status[ s ] += 1
 
