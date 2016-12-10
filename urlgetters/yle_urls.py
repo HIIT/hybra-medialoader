@@ -18,7 +18,7 @@ while True:
     for item in items:
         print item['fullUrl']
 
-    if d['meta']['remaining'] < 100:
+    if d['meta']['remaining'] <= 0:
         break
 
     i += 1
