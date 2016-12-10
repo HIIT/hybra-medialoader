@@ -16,6 +16,9 @@ def parse( url ):
 	soup = BeautifulSoup( r.text, "html.parser" )
 
 	article = soup.find( 'article' )
+	if article == None:
+		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
+	
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'article-release-info__section' ), False )
