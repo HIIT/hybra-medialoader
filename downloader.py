@@ -10,7 +10,15 @@ urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
 error = open( 'error.log', 'w' )
 
-def download( id, url, storeto ):
+raw_dir = 'data-raw/'
+data_dir = 'data/'
+
+for f in [raw_dir, data_dir]:
+
+    if not os.path.exists( f ):
+        os.makedirs( f )
+
+def download( id, url  ):
 
     url = url.strip()
 
@@ -22,12 +30,7 @@ def download( id, url, storeto ):
         loader = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
         story = loader.parse( url )
-
-        if 'json' in storeto:
-            json.dump( story , open( 'data/' + str(id) + '.json', 'w' ) )
-
-        if 'pickle' in storeto:
-            pickle.dump( story , open( 'data/' + str(id) + '.pickle', 'w' ) )
+        pickle.dump( story , open( raw_dir + str(id) + '.pickle', 'w' ) )
 
         return story['http']
 
@@ -50,10 +53,32 @@ if __name__ == '__main__':
         f = open( f )
         for id, url in enumerate( f ):
 
-            s = download( id, url, 'pickle' )
+            s = download( id, url )
 
             http_status[ s ] += 1
 
     print 'Final status'
     for s, c in http_status.items():
         print s, '\t', c
+
+    ## regroup files to nicer folders
+
+    store = collections.defaultdict( list )
+
+    for d in os.listdir( raw_dir ):
+
+        data = pickle.load( open( raw_dir + d ) )
+        domain = re.match( urlpat , data['url'] ).group('domain')
+
+        time = max( data['datetime_list'] )
+
+        destination = domain + '_' + str( time.year ) + '_' + str( time.month )
+
+        data['datetime_list'] = map( str, data['datetime_list'] ) ## transform dateties to string
+
+        store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
+
+        ## store files as json
+        for filename, data in store.items():
+
+            json.dump( data , open(  data_dir + filename + '.json', 'w' ) )
