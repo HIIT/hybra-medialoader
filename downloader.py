@@ -15,7 +15,7 @@ data_dir = 'data/'
 if not os.path.exists( data_dir ):
     os.makedirs( data_dir )
 
-def download( id, url, storeto ):
+def download( id, url  ):
 
     url = url.strip()
 
@@ -27,12 +27,7 @@ def download( id, url, storeto ):
         loader = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
         story = loader.parse( url )
-
-        if 'json' in storeto:
-            json.dump( story , open( data_dir + str(id) + '.json', 'w' ) )
-
-        if 'pickle' in storeto:
-            pickle.dump( story , open( data_dir + str(id) + '.pickle', 'w' ) )
+        pickle.dump( story , open( data_dir + str(id) + '.pickle', 'w' ) )
 
         return story['http']
 
@@ -55,7 +50,7 @@ if __name__ == '__main__':
         f = open( f )
         for id, url in enumerate( f ):
 
-            s = download( id, url, 'pickle' )
+            s = download( id, url )
 
             http_status[ s ] += 1
 
