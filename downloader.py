@@ -10,6 +10,11 @@ urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
 error = open( 'error.log', 'w' )
 
+data_dir = 'data/'
+
+if not os.path.exists( data_dir ):
+    os.makedirs( data_dir )
+
 def download( id, url, storeto ):
 
     url = url.strip()
@@ -24,10 +29,10 @@ def download( id, url, storeto ):
         story = loader.parse( url )
 
         if 'json' in storeto:
-            json.dump( story , open( 'data/' + str(id) + '.json', 'w' ) )
+            json.dump( story , open( data_dir + str(id) + '.json', 'w' ) )
 
         if 'pickle' in storeto:
-            pickle.dump( story , open( 'data/' + str(id) + '.pickle', 'w' ) )
+            pickle.dump( story , open( data_dir + str(id) + '.pickle', 'w' ) )
 
         return story['http']
 
