@@ -13,3 +13,9 @@ sites/*.txt
 
 ## Difference logs
 /test/difference_logs/*
+
+## log files
+*.log
+
+## text files
+*.txt
