@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'ilkka'
-url = 'http://www.ilkka.fi/uutiset/kotimaa/ylen-j%C3%A4%C3%A4skel%C3%A4inen-kiist%C3%A4%C3%A4-p%C3%A4%C3%A4ministerin-vaikuttaneen-uutisointiin-1.2171492'
+url = 'http://www.ilkka.fi/uutiset/kotimaa/timo-harakka-pj-kilpailusta-en-koe-antti-rinnett%C3%A4-vastustajaksi-1.2180703'
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
