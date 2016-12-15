@@ -10,8 +10,6 @@ import base64
 
 urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
-error = open( 'error.log', 'w' )
-
 raw_dir = 'data-raw/'
 data_dir = 'data/'
 
@@ -20,7 +18,7 @@ for f in [raw_dir, data_dir]:
     if not os.path.exists( f ):
         os.makedirs( f )
 
-def download( url ):
+def download( url , error ):
 
     url = url.strip()
 
@@ -55,10 +53,12 @@ if __name__ == '__main__':
 
     for f in sys.argv[1:]:
 
+        error = open( 'error_' + f + '.log', 'w' )
+
         f = open( f )
         for id, url in enumerate( f ):
 
-            s = download( url )
+            s = download( url , error )
 
             http_status[ s ] += 1
 
