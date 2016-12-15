@@ -1,5 +1,7 @@
 import os
 import difflib
+import filecmp
+import datetime
 
 def initialise_file(out, content_dictionary):
     if ( os.path.isfile(out) ):
@@ -52,3 +54,48 @@ def write_difference_log(domain, out, test_content_path):
 
         test_content.close()
         content.close()
+
+def file_exists(out):
+    assert os.path.isfile(out)
+
+def file_not_empty(out):
+    assert os.path.getsize(out) > 0
+
+def file_contents_match(domain, out):
+    test_content_path = 'test/test_contents/' + domain + '.txt'
+    write_difference_log( domain, out, test_content_path )
+    assert filecmp.cmp( test_content_path, out )
+
+def dictionary_created(d):
+    assert bool( d )
+
+def dictionary_contains_right_keys(d):
+    keys = ['url', 'http', 'categories', 'datetime_list', 'author', 'title', 'ingress', 'text', 'images', 'captions']
+    for key in keys:
+        assert key in d
+
+def dictionary_values_correct_type(d):
+    assert type( d['url'] ) is str
+    assert type( d['http'] ) is str
+
+    assert type( d['categories'] ) is list
+    for category in d['categories']:
+        type( category ) is str
+
+    assert type( d['datetime_list'] ) is list
+    assert len( d['datetime_list'] ) > 0
+    for datetime_object in d['datetime_list']:
+        assert type( datetime_object ) is datetime.datetime or datetime.date
+
+    assert type( d['author'] ) is str
+    assert type( d['title'] ) is str
+    assert type( d['ingress'] ) is str
+    assert type( d['text'] ) is str
+
+    assert type( d['images'] ) is list
+    for img in d['images']:
+        assert type( img ) is str
+
+    assert type( d['captions'] ) is list
+    for caption in d['captions']:
+        assert type( caption ) is str

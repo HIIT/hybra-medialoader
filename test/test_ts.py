@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'ts'
-url = 'http://www.ts.fi/uutiset/talous/2780163/Rauman+telakka+rakentaa+nelja+alusta+Puolustusvoimille'
+url = 'http://www.ts.fi/uutiset/maailma/3132271/Sipila+Venajapakotteita+Syyrian+takia+ei+ole+tiedossa'
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
