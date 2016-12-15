@@ -73,15 +73,23 @@ if __name__ == '__main__':
     for d in os.listdir( raw_dir ):
 
         data = pickle.load( open( raw_dir + d ) )
-        domain = re.match( urlpat , data['url'] ).group('domain')
 
-        time = max( data['datetime_list'] )
+        if int( data['http'] ) == 200:
 
-        destination = domain + '_' + str( time.year ) + '_' + str( time.month )
+            try:
 
-        data['datetime_list'] = map( str, data['datetime_list'] ) ## transform dateties to string
+                domain = re.match( urlpat , data['url'] ).group('domain')
 
-        store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
+                time = max( data['datetime_list'] )
+
+                destination = domain + '_' + str( time.year ) + '_' + str( time.month )
+                data['datetime_list'] = map( str, data['datetime_list'] ) ## transform dateties to string
+
+                store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
+
+            except, Exception e:
+                print e
+
 
         ## store files as json
         for filename, data in store.items():
