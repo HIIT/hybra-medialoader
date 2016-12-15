@@ -292,7 +292,7 @@ def process(content):
     content = content.replace('      ', ' ' )
     content = content.replace('\n', ' ')
     content = content.replace(' '.decode('utf8'), ' ')
-    content = content.replace('  '.decode('utf8'), '')
+    content = content.replace('  '.decode('utf8'), ' ')
     return str( content.encode('utf8') )
 
 def convert_month(datetime_string):
