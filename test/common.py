@@ -83,6 +83,7 @@ def dictionary_values_correct_type(d):
         type( category ) is str
 
     assert type( d['datetime_list'] ) is list
+    assert len( d['datetime_list'] ) > 0
     for datetime_object in d['datetime_list']:
         assert type( datetime_object ) is datetime.datetime or datetime.date
 
