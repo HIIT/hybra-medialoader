@@ -8,6 +8,8 @@ import pickle
 
 import base64
 
+import collections
+
 urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
 raw_dir = 'data-raw/'
@@ -44,29 +46,7 @@ def download( url , error ):
         error.write( url + '\n' )
 
 
-
-if __name__ == '__main__':
-
-    import collections
-
-    http_status = collections.defaultdict( int )
-
-    for f in sys.argv[1:]:
-
-        error = open( 'error_' + f + '.log', 'w' )
-
-        f = open( f )
-        for id, url in enumerate( f ):
-
-            s = download( url , error )
-
-            http_status[ s ] += 1
-
-    print 'Final status'
-    for s, c in http_status.items():
-        print s, '\t', c
-
-    ## regroup files to nicer folders
+def resort_pickles():
 
     store = collections.defaultdict( list )
 
@@ -90,8 +70,30 @@ if __name__ == '__main__':
             except, Exception e:
                 print e
 
+    return store
 
-        ## store files as json
-        for filename, data in store.items():
+if __name__ == '__main__':
 
-            json.dump( data , open(  data_dir + filename + '.json', 'w' ) )
+    http_status = collections.defaultdict( int )
+
+    for f in sys.argv[1:]:
+
+        error = open( 'error_' + f + '.log', 'w' )
+
+        f = open( f )
+        for id, url in enumerate( f ):
+
+            s = download( url , error )
+
+            http_status[ s ] += 1
+
+    print 'Final status'
+    for s, c in http_status.items():
+        print s, '\t', c
+
+    ## regroup files to nicer folders
+    store = resort_pickles()
+
+    ## store files as json
+    for filename, data in store.items():
+        json.dump( data , open(  data_dir + filename + '.json', 'w' ) )
