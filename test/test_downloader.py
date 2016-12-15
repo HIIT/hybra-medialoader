@@ -37,6 +37,15 @@ class TestParser:
 
         self.collected = d.resort_pickles( self.raw_path )
 
+    def teardown_class(self):
+
+        import shutil
+
+        for f in [ self.raw_path, self.data_path ]:
+            shutil.rmtree(f)
+
+        os.remove( self.errors )
+
     def test_downloaded_files_exists(self):
         assert len( os.listdir( self.raw_path ) ) == len( good_urls )
 
