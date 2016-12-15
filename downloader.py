@@ -60,7 +60,7 @@ def resort_pickles( raw_dir ):
 
                 store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
 
-            except Exception, e:
+            except Exception, e: ## sometimes not all data things are there, and thus let's prepeare for it
                 print e
 
     return store
