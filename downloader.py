@@ -6,6 +6,8 @@ import re
 import json
 import pickle
 
+import base64
+
 urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
 error = open( 'error.log', 'w' )
@@ -18,7 +20,7 @@ for f in [raw_dir, data_dir]:
     if not os.path.exists( f ):
         os.makedirs( f )
 
-def download( id, url  ):
+def download( url ):
 
     url = url.strip()
 
@@ -30,7 +32,10 @@ def download( id, url  ):
         loader = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
         story = loader.parse( url )
-        pickle.dump( story , open( raw_dir + str(id) + '.pickle', 'w' ) )
+
+        f = base64.encodestring( url )
+
+        pickle.dump( story , open( raw_dir + f + '.pickle', 'w' ) )
 
         return story['http']
 
@@ -53,7 +58,7 @@ if __name__ == '__main__':
         f = open( f )
         for id, url in enumerate( f ):
 
-            s = download( id, url )
+            s = download( url )
 
             http_status[ s ] += 1
 
