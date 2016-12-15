@@ -19,3 +19,7 @@ sites/*.txt
 
 ## text files
 *.txt
+
+## test data directories
+test-data/*
+test-data-raw/*
