@@ -6,7 +6,11 @@ sys.path.append(path)
 
 import downloader as d
 
-good_urls = ['http://yle.fi/uutiset/tv-uutisten_politiikantoimittaja_timo_kuparinen_kuollut/9167149']
+good_urls = [
+    'http://yle.fi/uutiset/tv-uutisten_politiikantoimittaja_timo_kuparinen_kuollut/9167149',
+    'http://www.hs.fi/kotimaa/art-2000005007566.html',
+    'http://www.iltasanomat.fi/musiikki/art-2000005008209.html'
+]
 bad_urls = ['http://example.com', 'http://www.example.org']
 
 
@@ -56,8 +60,14 @@ class TestParser:
 
     def test_pickles_sorted_keys(self):
 
-        print self.collected.keys()
-
+        ## check file names
         assert 'yle' in ''.join( self.collected.keys() )
+        assert 'hs' in ''.join( self.collected.keys() )
+        assert 'iltasanomat' in ''.join( self.collected.keys() )
+
+        ## years
         assert '2016' in ''.join( self.collected.keys() )
+
+        ## month
         assert '9' in ''.join( self.collected.keys() )
+        assert '12' in ''.join( self.collected.keys() )
