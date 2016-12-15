@@ -10,24 +10,17 @@ import base64
 
 import collections
 
-urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
+__urlpat = r'((http[s]?):\/\/)?(\w+\.)*(?P<domain>\w+)\.(\w+)(\/.*)?'
 
-raw_dir = 'data-raw/'
-data_dir = 'data/'
 
-for f in [raw_dir, data_dir]:
-
-    if not os.path.exists( f ):
-        os.makedirs( f )
-
-def download( url , error ):
+def download( url, raw_dir, error ):
 
     url = url.strip()
 
 
     try:
         ## try to dynamically load the correct script using the domain name
-        loader = re.match( urlpat , url ).group('domain')
+        loader = re.match( __urlpat , url ).group('domain')
 
         loader = __import__( 'sites.' + loader, fromlist = [ loader ] )
 
@@ -46,7 +39,7 @@ def download( url , error ):
         error.write( url + '\n' )
 
 
-def resort_pickles():
+def resort_pickles( raw_dir ):
 
     store = collections.defaultdict( list )
 
@@ -58,7 +51,7 @@ def resort_pickles():
 
             try:
 
-                domain = re.match( urlpat , data['url'] ).group('domain')
+                domain = re.match( __urlpat , data['url'] ).group('domain')
 
                 time = max( data['datetime_list'] )
 
@@ -67,12 +60,20 @@ def resort_pickles():
 
                 store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
 
-            except, Exception e:
+            except Exception, e:
                 print e
 
     return store
 
 if __name__ == '__main__':
+
+    raw_dir = 'data-raw/' ## where pickles are stored
+    data_dir = 'data/' ## where json outputs are stored
+
+    for f in [raw_dir, data_dir]:
+
+        if not os.path.exists( f ):
+            os.makedirs( f )
 
     http_status = collections.defaultdict( int )
 
@@ -83,7 +84,7 @@ if __name__ == '__main__':
         f = open( f )
         for id, url in enumerate( f ):
 
-            s = download( url , error )
+            s = download( url, raw_dir, error )
 
             http_status[ s ] += 1
 
@@ -92,7 +93,7 @@ if __name__ == '__main__':
         print s, '\t', c
 
     ## regroup files to nicer folders
-    store = resort_pickles()
+    store = resort_pickles( raw_dir )
 
     ## store files as json
     for filename, data in store.items():
