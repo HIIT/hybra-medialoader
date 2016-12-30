@@ -9,7 +9,8 @@ def initialise_file(out, content_dictionary):
     write_file( file(out, 'w'), content_dictionary )
 
 def write_file( out, content ):
-    file_content = content['url'] + "\n"
+    file_content = content['domain'] + "\n"
+    file_content += content['url'] + "\n"
     file_content += content['http'] + "\n"
 
     for category in content['categories']:
@@ -70,11 +71,12 @@ def dictionary_created(d):
     assert bool( d )
 
 def dictionary_contains_right_keys(d):
-    keys = ['url', 'http', 'categories', 'datetime_list', 'author', 'title', 'ingress', 'text', 'images', 'captions']
+    keys = ['domain', 'url', 'http', 'categories', 'datetime_list', 'author', 'title', 'ingress', 'text', 'images', 'captions']
     for key in keys:
         assert key in d
 
 def dictionary_values_correct_type(d):
+    assert type( d['domain'] ) is str
     assert type( d['url'] ) is str
     assert type( d['http'] ) is str
 
