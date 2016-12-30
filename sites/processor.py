@@ -287,6 +287,7 @@ def process(content):
     content = content.replace(' ;', ';')
     content = content.replace(' ]', ']')
     content = content.replace('[ ', '[')
+    content = content.replace(' :', ':')
     content = content.replace('   ', ' ')
     content = content.replace('    ', '')
     content = content.replace('      ', ' ' )
