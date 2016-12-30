@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'node-wrap' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'kredIso' ) )
 	processor.decompose_all( article.find_all(class_ = 'tyrkkyBox') )
@@ -39,7 +39,7 @@ def parse( url ):
 
 	text = processor.collect_text( article, False )
 
-	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Vihreä lanka', url, r.status_code, [''], datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.vihrealanka.fi/blogi-eno-vastaa/onko-tonnikalassa-myrkkyj%C3%A4", file('vihrealanka.txt', 'w'))

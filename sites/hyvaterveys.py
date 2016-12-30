@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'region bottom' ) )
@@ -31,7 +31,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'file-image-description-caption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Hyvä terveys', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 

@@ -31,7 +31,7 @@ def parse( url ):
 	author = processor.collect_text( article.find( class_ = 'author vcard' ), False )
 	text = processor.collect_text( article.find( class_ = 'entry-content' ), False )
 
-	return processor.create_dictionary(url, r.status_code, [''], datetime_list, author, title, '', text, [''], [''])
+	return processor.create_dictionary('Iltalehti Blogit', url, r.status_code, [''], datetime_list, author, title, '', text, [''], [''])
 
 if __name__ == '__main__':
 

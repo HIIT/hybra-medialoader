@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( role = 'main' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'article-author__image' ) )
 
@@ -29,7 +29,7 @@ def parse( url ):
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'article__images' ), '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Savon sanomat', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.savonsanomat.fi/uutiset/kotimaa/itsenaisyyspaivan-korkein-kunniamerkki-arkkipiispa-makiselle/1944316", file('savon.txt', 'w'))

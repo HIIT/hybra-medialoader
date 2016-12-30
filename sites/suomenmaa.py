@@ -37,7 +37,7 @@ def parse( url ):
 
 	images = processor.collect_images( soup.find( class_ = 'pikkukuva' ).find_all( 'img' ), 'data-aghref', 'http://www.suomenmaa.fi/' )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, [''])
+	return processor.create_dictionary('Suomenmaa', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, [''])
 
 if __name__ == '__main__':
 	parse("http://www.suomenmaa.fi/etusivu/7399391.html", file('suomenmaa.txt', 'w'))

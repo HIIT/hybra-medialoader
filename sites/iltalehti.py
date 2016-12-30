@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( id = 'container_keski' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'kp-share-area' ) )
 
@@ -37,7 +37,7 @@ def parse( url ):
 
 	text = processor.collect_text( article.find( 'isense' ), False )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Iltalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 

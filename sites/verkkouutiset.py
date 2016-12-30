@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'full-article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ), False )
@@ -32,7 +32,7 @@ def parse( url ):
 
 	text = processor.collect_text( article.find( class_ = 'articlepart-1' ), False )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Verkkouutiset', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.verkkouutiset.fi/talous/ammattisijoittajan_neuvot-33352", file('verkkouutiset.txt', 'w'))

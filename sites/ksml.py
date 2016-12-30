@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( role = 'main' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'article__section' ), False )
@@ -29,7 +29,7 @@ def parse( url ):
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'article__images' ), '' )
 	captions = processor.collect_image_captions( article.find_all( itemprop = 'caption description' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Keskisuomalainen', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.ksml.fi/uutiset/ulkomaat/kalifornian-ennatyskuivuus-paattyi-rankkasateisiin/1944276", file('keski.txt', 'w'))

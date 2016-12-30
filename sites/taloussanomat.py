@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'single-article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = processor.collect_categories( soup.find( class_ = 'section-title' ), False )
@@ -29,7 +29,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Taloussanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.taloussanomat.fi/politiikka/2015/03/16/kreikka-lyhennamme-velkaamme-sovitusti-imflle/20153273/12", file('taloussanomat.txt', 'w'))

@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find( 'header' ).find_all( 'img' ) )
 	processor.decompose_all( article.find_all( 'blockquote' ) )
@@ -32,7 +32,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'featured-image' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Kd-lehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.kdlehti.fi/2015/03/15/paivi-rasanen-internetin-terrorismisisaltoon-puututtava-tehokkaammin/", file('kdlehti.txt', 'w'))

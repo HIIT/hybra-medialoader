@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'attImage' ) )
 
@@ -33,7 +33,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'featuredCaption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Kainuun sanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.kainuunsanomat.fi/kainuun-sanomat/kotimaa/lipponen-moitti-sipilan-puheita-ministerien-vahentamisesta/", file('kainuunsanomat.txt', 'w'))

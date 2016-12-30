@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	meta = article.find( class_ = 'category_date' )
@@ -30,7 +30,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.karjalainen.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'itemImageCaption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Karjalainen', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.karjalainen.fi/uutiset/uutis-alueet/kotimaa/item/71016-arhinmaen-perheeseen-syntymassa-lapsi-puheenjohtaja-ei-osallistu-vaalitilaisuuksiin", file('karjalainen.txt', 'w'))

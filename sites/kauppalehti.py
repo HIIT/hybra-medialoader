@@ -33,7 +33,7 @@ def parse( url ):
     else:
         images = ['']
 
-    return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, [''])
+    return processor.create_dictionary('Kauppalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, [''])
 
 if __name__ == '__main__':
 	parse("http://www.kauppalehti.fi/uutiset/putin-nayttaytyi-julkisuudessa-ilman-juoruja-olisi-tylsaa/pBBPEhQ2?ext=ampparit", file('kauppalehti.txt', 'w'))

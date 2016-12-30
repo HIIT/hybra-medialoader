@@ -34,7 +34,7 @@ def parse( url ):
 
 	text = processor.collect_text( article.find( class_ = 'yle__article__content' ), False )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Yle', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://yle.fi/uutiset/sinut_on_kaannytetty_suomesta__kokeile_millaisia_vaihtoehtoja_sinulla_on/9136482")

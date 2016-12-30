@@ -37,7 +37,7 @@ def parse( url ):
 
 	text = processor.collect_text( article.find( class_ = 'body' ), False )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Helsingin Sanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 

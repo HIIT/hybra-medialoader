@@ -245,10 +245,11 @@ def prepare_datetime_list( datetime_list ):
     datetime_list.reverse()
     return datetime_list
 
-def create_dictionary(url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
+def create_dictionary(domain, url, http_status, categories, datetime_list, author, title, ingress, text, images, captions):
     """Returns a dictionary containing the scraped data from the website, given as parameters.
 
     Parameters:
+        domain - The domain of the media source
         url - The website url as a string object.
         http_status - The parser http request status.
         categories - A list of collected news item categories as strings.
@@ -260,7 +261,8 @@ def create_dictionary(url, http_status, categories, datetime_list, author, title
         images - A list of the source urls of the images in the news item as strings.
         captions - A list of the image captions in the news item as strings.
     """
-    media_content = { 'url' : url,
+    media_content = { 'domain' : domain,
+                      'url' : url,
 					  'http' : str( http_status ),
 					  'categories' : categories,
 					  'datetime_list' : datetime_list,

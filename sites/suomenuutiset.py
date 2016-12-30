@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'somebar' ) )
 	processor.decompose( article.find( class_ = 'tags' ) )
@@ -34,7 +34,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Suomen uutiset', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("https://www.suomenuutiset.fi/perussuomalaiset-hurjassa-nosteessa-puoluesihteeri-ei-yllattynyt/", file('suomenuutiset.txt', 'w'))

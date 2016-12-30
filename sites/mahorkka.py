@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'post' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( 'blockquote' ) )
 	processor.decompose( article.find( class_ = 'author-avatar' ) )
@@ -32,7 +32,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Mahorkka', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.mahorkka.com/pavel-astahov-sai-lahtea-mutta-kuka-on-venajan-uusi-lapsiasiamies/", file('mahorkka.txt', 'w'))

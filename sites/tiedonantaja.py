@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( 'main' )
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'nosto' ) )
 
@@ -30,7 +30,7 @@ def parse( url ):
 	text = processor.collect_text( article.find( class_ = 'body' ), False )
 	images = processor.collect_images( article.find( class_ = 'views-field-field-op-main-image' ).find_all( 'img' ), 'src', '' )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
+	return processor.create_dictionary('Tiedonantaja', url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 
 if __name__ == '__main__':
 	parse("http://www.tiedonantaja.fi/artikkelit/tarinoita-v-kivallasta", file('tiedonantaja.txt', 'w'))

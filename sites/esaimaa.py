@@ -17,7 +17,7 @@ def parse( url ):
 	article = soup.find( class_ = 'news-item')
 	if article == None:
 		return processor.create_dictionary(url, r.status_code, [''], [''], '', '', '', '', [''], [''])
-	
+
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ), False )
@@ -32,7 +32,7 @@ def parse( url ):
 	text = processor.collect_text( article.find( id = 'main_text' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.esaimaa.fi' )
 
-	return processor.create_dictionary(url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
+	return processor.create_dictionary('Etelä-Saimaa', url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
 
 if __name__ == '__main__':
 
