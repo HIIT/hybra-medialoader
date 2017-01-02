@@ -126,7 +126,7 @@ def collect_text( html_element, decompose ):
     else:
         text = ''
 
-    return text
+    return u'' + text
 
 def collect_images( images, attribute, url_base ):
     """Iterates over a list of html image elements and returns their corresponding urls as a list of strings.
@@ -139,7 +139,7 @@ def collect_images( images, attribute, url_base ):
     image_src = [None]
     for img in images:
         if img != None and img.has_attr( attribute ):
-            image_src.append( '' + str( url_base + img[attribute].encode('utf8') ) )
+            image_src.append( url_base + img[attribute] )
     image_src.pop(0)
     return image_src
 
@@ -154,7 +154,7 @@ def collect_images_by_parent( html_elements, url_base ):
     for parent in html_elements:
         image_link = parent.find( 'a' )
         if image_link != None:
-            image_src.append( '' + str( url_base + image_link['href'].encode('utf8') ) )
+            image_src.append( url_base + image_link['href'] )
         else:
             continue
     image_src.pop(0)
@@ -263,7 +263,7 @@ def create_dictionary(domain, url, http_status, categories, datetime_list, autho
     """
     media_content = { 'domain' : domain,
                       'url' : url,
-					  'http' : str( http_status ),
+					  'http' : http_status,
 					  'categories' : categories,
 					  'datetime_list' : datetime_list,
 					  'author' : author,
@@ -294,9 +294,9 @@ def process(content):
     content = content.replace('    ', '')
     content = content.replace('      ', ' ' )
     content = content.replace('\n', ' ')
-    content = content.replace(' '.decode('utf8'), ' ')
-    content = content.replace('  '.decode('utf8'), ' ')
-    return str( content.encode('utf8') )
+    content = content.replace(' '.decode('utf-8'), ' ')
+    content = content.replace('  '.decode('utf-8'), ' ')
+    return content
 
 def convert_month(datetime_string):
     """Converts month substrings in a datetime string into their numeral equivalents.
