@@ -29,10 +29,10 @@ def parse( url ):
 
 	if 'image' in json:
 		image_json = json['image']
-		images = [image_json['uri'].encode('utf8')]
-		captions = [image_json['alt'].encode('utf8')]
+		images = [image_json['uri']]
+		captions = [image_json['alt']]
 	else:
-		images, captions = [''], ['']
+		images, captions = [u''], [u'']
 
 	return processor.create_dictionary('Yle X', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

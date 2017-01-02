@@ -34,7 +34,7 @@ def parse( url ):
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'img' ), '')
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
-	return processor.create_dictionary('Helsingin uutiset', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Helsingin uutiset', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 
 if __name__ == '__main__':
 

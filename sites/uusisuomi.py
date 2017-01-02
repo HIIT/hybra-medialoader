@@ -32,7 +32,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'field-name-field-image-description' ) )
 
-	return processor.create_dictionary('Uusi Suomi', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Uusi Suomi', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.uusisuomi.fi/kotimaa/79148-ex-ministeri-kummastelee-jotkut-pitavat-lahes-rikollisena", file('uusisuomi.txt', 'w'))

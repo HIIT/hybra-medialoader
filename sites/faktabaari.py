@@ -27,7 +27,7 @@ def parse( url ):
 	text = processor.collect_text( article.find( class_ = 'entry-content' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 
-	return processor.create_dictionary('Faktabaari', url, r.status_code, [''], datetime_list, author, title, '', text, images, [''])
+	return processor.create_dictionary('Faktabaari', url, r.status_code, [u''], datetime_list, author, title, u'', text, images, [u''])
 
 if __name__ == '__main__':
 

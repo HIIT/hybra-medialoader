@@ -32,7 +32,7 @@ def parse( url ):
 	text = processor.collect_text( article.find( id = 'main_text' ), False )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.esaimaa.fi' )
 
-	return processor.create_dictionary('Etelä-Saimaa', url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
+	return processor.create_dictionary('Etelä-Saimaa', url, r.status_code, categories, datetime_list, author, title, u'', text, images, [u''])
 
 if __name__ == '__main__':
 

@@ -30,7 +30,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ts.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'tsv3-c-common-article__attachment__caption' ) )
 
-	return processor.create_dictionary('Turun sanomat', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Turun sanomat', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.ts.fi/eduskuntavaalit/750980/Start+up+yrittaja+kuplii+innostusta", file('ts.txt', 'w'))

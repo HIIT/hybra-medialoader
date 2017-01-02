@@ -31,7 +31,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( itemprop = 'associatedMedia' ) )
 	text = processor.collect_text( article.find( itemprop = 'articleBody' ), False )
 
-	return processor.create_dictionary('Kokemäenjokilaakson uutiset', url, r.status_code, categories, datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Kokemäenjokilaakson uutiset', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.kokemaenjokilaakso.fi/2015/03/16/kokemaen-siltala-esittaa-vihreaa-valoa-teljan-kaupungille/", file('kokemaenjokilaakso.txt', 'w'))

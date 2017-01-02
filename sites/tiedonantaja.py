@@ -30,7 +30,7 @@ def parse( url ):
 	text = processor.collect_text( article.find( class_ = 'body' ), False )
 	images = processor.collect_images( article.find( class_ = 'views-field-field-op-main-image' ).find_all( 'img' ), 'src', '' )
 
-	return processor.create_dictionary('Tiedonantaja', url, r.status_code, categories, datetime_list, author, title, '', text, images, [''])
+	return processor.create_dictionary('Tiedonantaja', url, r.status_code, categories, datetime_list, author, title, u'', text, images, [u''])
 
 if __name__ == '__main__':
 	parse("http://www.tiedonantaja.fi/artikkelit/tarinoita-v-kivallasta", file('tiedonantaja.txt', 'w'))

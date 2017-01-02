@@ -29,7 +29,7 @@ def parse( url ):
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ilkka.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'newsImgText' ) )
 
-	return processor.create_dictionary('Ilkka', url, r.status_code, categories, datetime_list, '', title, ingress, text, images, captions)
+	return processor.create_dictionary('Ilkka', url, r.status_code, categories, datetime_list, u'', title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 

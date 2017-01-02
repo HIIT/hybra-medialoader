@@ -29,11 +29,11 @@ def parse( url ):
 
     if 'keyImage' in json:
         image_url = 'http://images.kauppalehti.fi/547x/http:' + json['keyImage']
-        images = [image_url.encode('utf8')]
+        images = [image_url]
     else:
-        images = ['']
+        images = [u'']
 
-    return processor.create_dictionary('Kauppalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, [''])
+    return processor.create_dictionary('Kauppalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, [u''])
 
 if __name__ == '__main__':
 	parse("http://www.kauppalehti.fi/uutiset/putin-nayttaytyi-julkisuudessa-ilman-juoruja-olisi-tylsaa/pBBPEhQ2?ext=ampparit", file('kauppalehti.txt', 'w'))

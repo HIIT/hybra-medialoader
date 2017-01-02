@@ -39,7 +39,7 @@ def parse( url ):
 
 	text = processor.collect_text( article, False )
 
-	return processor.create_dictionary('Vihreä lanka', url, r.status_code, [''], datetime_list, author, title, '', text, images, captions)
+	return processor.create_dictionary('Vihreä lanka', url, r.status_code, [u''], datetime_list, author, title, u'', text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.vihrealanka.fi/blogi-eno-vastaa/onko-tonnikalassa-myrkkyj%C3%A4", file('vihrealanka.txt', 'w'))
