@@ -11,23 +11,23 @@ def initialise_file(out, content_dictionary):
 def write_file( out, content ):
     file_content = content['domain'] + "\n"
     file_content += content['url'] + "\n"
-    file_content += content['http'] + "\n"
+    file_content += str( content['http'] ) + "\n"
 
     for category in content['categories']:
-        file_content += category + "\n"
+        file_content += category.encode('utf-8') + "\n"
 
     for datetime_object in content['datetime_list']:
         file_content += str( datetime_object ) + "\n"
 
-    file_content += content['author'] + "\n"
-    file_content += content['title'] + "\n"
-    file_content += content['ingress'] + "\n"
-    file_content += content['text'] + "\n"
+    file_content += content['author'].encode('utf-8') + "\n"
+    file_content += content['title'].encode('utf-8') + "\n"
+    file_content += content['ingress'].encode('utf-8') + "\n"
+    file_content += content['text'].encode('utf-8') + "\n"
 
     for img in content['images']:
-        file_content += img + "\n"
+        file_content += img.encode('utf-8') + "\n"
     for caption in content['captions']:
-        file_content += caption + "\n"
+        file_content += caption.encode('utf-8') + "\n"
 
     out.write( file_content.strip() )
 
@@ -78,26 +78,26 @@ def dictionary_contains_right_keys(d):
 def dictionary_values_correct_type(d):
     assert type( d['domain'] ) is str
     assert type( d['url'] ) is str
-    assert type( d['http'] ) is str
+    assert type( d['http'] ) is int
 
     assert type( d['categories'] ) is list
     for category in d['categories']:
-        type( category ) is str
+        type( category ) is unicode
 
     assert type( d['datetime_list'] ) is list
     assert len( d['datetime_list'] ) > 0
     for datetime_object in d['datetime_list']:
         assert type( datetime_object ) is datetime.datetime or datetime.date
 
-    assert type( d['author'] ) is str
-    assert type( d['title'] ) is str
-    assert type( d['ingress'] ) is str
-    assert type( d['text'] ) is str
+    assert type( d['author'] ) is unicode
+    assert type( d['title'] ) is unicode
+    assert type( d['ingress'] ) is unicode
+    assert type( d['text'] ) is unicode
 
     assert type( d['images'] ) is list
     for img in d['images']:
-        assert type( img ) is str
+        assert type( img ) is unicode
 
     assert type( d['captions'] ) is list
     for caption in d['captions']:
-        assert type( caption ) is str
+        assert type( caption ) is unicode
