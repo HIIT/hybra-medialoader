@@ -21,10 +21,10 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'reviewpic' ) )
 
-	datetime_list = processor.collect_datetime( article.find( class_ = 'published' ), '' )
-	author = processor.collect_text( article.find( class_ = 'author' ), False )
-	title = processor.collect_text( article.find( 'h1' ), False )
-	text = processor.collect_text( article.find( class_ = 'entry-content' ), False )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'published' ) )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 
 	return processor.create_dictionary('Faktabaari', url, r.status_code, [u''], datetime_list, author, title, u'', text, images, [u''])

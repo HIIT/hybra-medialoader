@@ -23,10 +23,10 @@ def parse( url ):
 	meta = article.find( class_ = 'post-meta' )
 
 	categories = processor.collect_categories( meta.find_all( class_ = 'category' ), True )
-	datetime_list = processor.collect_datetime( meta, '' )
-	author = processor.collect_text( article.find( class_ = 'author--main' ), False )
-	title = processor.collect_text( article.find( class_ = 'heading--main' ), False )
-	text = processor.collect_text( article.find( class_ = 'content--main' ), False )
+	datetime_list = processor.collect_datetime( meta )
+	author = processor.collect_text( article.find( class_ = 'author--main' ) )
+	title = processor.collect_text( article.find( class_ = 'heading--main' ) )
+	text = processor.collect_text( article.find( class_ = 'content--main' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 

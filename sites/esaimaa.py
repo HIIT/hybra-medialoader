@@ -20,16 +20,16 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ), False )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'date'), '' )
+	categories = processor.collect_categories( soup.find( id = 'menu2' ).find( class_ = 'selected' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'date') )
 
 	author = article.find_all( class_ = 'lahde' )
 	author = processor.process( author[0].get_text(' ', strip = True) + ' ' + author[1].get_text(' ', strip = True) )
 
 	processor.decompose_all( article.find_all( class_ = 'lahde' ) )
 
-	title = processor.collect_text( article.find('h1'), False )
-	text = processor.collect_text( article.find( id = 'main_text' ), False )
+	title = processor.collect_text( article.find('h1') )
+	text = processor.collect_text( article.find( id = 'main_text' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.esaimaa.fi' )
 
 	return processor.create_dictionary('Etelä-Saimaa', url, r.status_code, categories, datetime_list, author, title, u'', text, images, [u''])

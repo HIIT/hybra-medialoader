@@ -20,18 +20,18 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'typography__category' ), False )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'meta-content' ), '' )
-	author = processor.collect_text( article.find( class_ = 'typography__author' ), False )
-	title = processor.collect_text( article.find( class_ = 'content__title' ), False )
-	ingress = processor.collect_text( article.find( class_ = 'content__intro' ), False )
-	text = processor.collect_text( article.find( class_ = 'content__body' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'typography__category' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'meta-content' ) )
+	author = processor.collect_text( article.find( class_ = 'typography__author' ) )
+	title = processor.collect_text( article.find( class_ = 'content__title' ) )
+	ingress = processor.collect_text( article.find( class_ = 'content__intro' ) )
+	text = processor.collect_text( article.find( class_ = 'content__body' ) )
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'content__main-gallery' ), '')
 
 	captions = [None]
 	for caption_div in article.find_all( class_ = 'content__main-gallery' ):
 		caption = BeautifulSoup( caption_div.find( 'a' )['data-caption'], "html.parser" )
-		captions.append( processor.collect_text( caption, False ) )
+		captions.append( processor.collect_text( caption ) )
 	captions.pop(0)
 
 	return processor.create_dictionary('Suomen kuvalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)

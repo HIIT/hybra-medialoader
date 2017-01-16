@@ -22,11 +22,11 @@ def parse( url ):
 
 	meta = article.find( class_ = 'tsv3-c-common-article__meta__row1' )
 
-	categories = processor.collect_categories( meta.find_all( 'a' ), False )
+	categories = processor.collect_categories( meta.find_all( 'a' ) )
 	datetime_list = processor.collect_datetime_objects( meta.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( class_ = 'kirjoittaja' ), False )
-	title = processor.collect_text( article.find( class_ = 'otsikko' ), False )
-	text = processor.collect_text( article.find( class_ = 'tsv3-c-common-article__textitem--teksti' ), False )
+	author = processor.collect_text( article.find( class_ = 'kirjoittaja' ) )
+	title = processor.collect_text( article.find( class_ = 'otsikko' ) )
+	text = processor.collect_text( article.find( class_ = 'tsv3-c-common-article__textitem--teksti' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ts.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'tsv3-c-common-article__attachment__caption' ) )
 

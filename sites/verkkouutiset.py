@@ -20,17 +20,17 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( itemprop = 'author' ), False )
-	title = processor.collect_text( article.find( itemprop = 'name headline' ), False )
-	ingress = processor.collect_text( article.find( class_ = 'ingress' ), False )
+	author = processor.collect_text( article.find( itemprop = 'author' ) )
+	title = processor.collect_text( article.find( itemprop = 'name headline' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'data-src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	processor.decompose_all( article.find_all( class_ ='flexslider') )
 
-	text = processor.collect_text( article.find( class_ = 'articlepart-1' ), False )
+	text = processor.collect_text( article.find( class_ = 'articlepart-1' ) )
 
 	return processor.create_dictionary('Verkkouutiset', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

@@ -29,7 +29,7 @@ def decompose_all( html_elements ):
         else:
             continue
 
-def collect_categories( html_elements, decompose ):
+def collect_categories( html_elements, decompose = False ):
     """Iterates over a list of html elements and collects their contained text using the collect_text() function.
 
     Returns the collected texts as a list of strings.
@@ -47,7 +47,7 @@ def collect_categories( html_elements, decompose ):
     categories.pop(0)
     return categories
 
-def collect_datetime( html_element, datetime_format ):
+def collect_datetime( html_element, datetime_format = '' ):
     """Collects all datetime strings contained within a html element using the re module,
     and returns them as a list of datetime objects.
 
@@ -108,7 +108,7 @@ def collect_datetime_json( json, published, updated ):
         datetime_list.append( strip_datetime_object( json[updated] ) )
     return prepare_datetime_list( datetime_list )
 
-def collect_text( html_element, decompose ):
+def collect_text( html_element, decompose = False ):
     """Returns the text contained in a html element if the type of the element is not None.
 
     Uses the function process().

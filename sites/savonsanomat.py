@@ -21,11 +21,11 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'article-author__image' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'article__section' ), False )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'article__published'), '' )
-	author = processor.collect_text( article.find( class_ = 'article__author' ), False )
-	title = processor.collect_text( article.find( class_ = 'article__title' ), False )
-	text = processor.collect_text( article.find( class_ = 'article__body' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'article__section' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'article__published') )
+	author = processor.collect_text( article.find( class_ = 'article__author' ) )
+	title = processor.collect_text( article.find( class_ = 'article__title' ) )
+	text = processor.collect_text( article.find( class_ = 'article__body' ) )
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'article__images' ), '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

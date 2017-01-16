@@ -22,12 +22,12 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'nosto' ) )
 
 	links = article.find( class_ = 'links' )
-	categories = processor.collect_categories( links.find_all( 'li' ), False )
+	categories = processor.collect_categories( links.find_all( 'li' ) )
 
-	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-field-publish-date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'tekija' ), False )
-	title = processor.collect_text( article.find( id = 'page-title' ), False )
-	text = processor.collect_text( article.find( class_ = 'body' ), False )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-field-publish-date' ) )
+	author = processor.collect_text( article.find( class_ = 'tekija' ) )
+	title = processor.collect_text( article.find( id = 'page-title' ) )
+	text = processor.collect_text( article.find( class_ = 'body' ) )
 	images = processor.collect_images( article.find( class_ = 'views-field-field-op-main-image' ).find_all( 'img' ), 'src', '' )
 
 	return processor.create_dictionary('Tiedonantaja', url, r.status_code, categories, datetime_list, author, title, u'', text, images, [u''])

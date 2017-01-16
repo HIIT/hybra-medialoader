@@ -23,11 +23,11 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'share-buttons' ) )
 	processor.decompose( article.find( class_ = 'subscribe-newsletter' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'kicker' ), False )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'meta' ), '' )
-	author = processor.collect_text( article.find( class_ = 'author' ), False )
-	title = processor.collect_text( article.find( class_ = 'title' ), False )
-	text = processor.collect_text( article.find( class_ = 'article-body' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'kicker' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'meta' ) )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( class_ = 'title' ) )
+	text = processor.collect_text( article.find( class_ = 'article-body' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

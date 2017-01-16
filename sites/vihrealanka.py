@@ -27,8 +27,8 @@ def parse( url ):
 	processor.decompose( article('h4')[-1] )
 
 	meta = article.find( class_ = 'juttutiedot' )
-	datetime_list = processor.collect_datetime( meta, '' )
-	author = processor.collect_text( meta.find( class_ = 'author' ), False )
+	datetime_list = processor.collect_datetime( meta, )
+	author = processor.collect_text( meta.find( class_ = 'author' ) )
 	processor.decompose( meta )
 
 	title = processor.collect_text( article.find( 'h2' ), True )
@@ -37,7 +37,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
-	text = processor.collect_text( article, False )
+	text = processor.collect_text( article )
 
 	return processor.create_dictionary('Vihreä lanka', url, r.status_code, [u''], datetime_list, author, title, u'', text, images, captions)
 

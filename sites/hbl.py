@@ -21,14 +21,14 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	departments = article.find( class_ = 'departments' )
-	categories = processor.collect_categories( departments.find_all( 'a' ), False )
+	categories = processor.collect_categories( departments.find_all( 'a' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( class_ = 'author' ), False )
-	title = processor.collect_text( article.find( 'h1' ), False )
-	ingress = processor.collect_text( article.find( class_ = 'ingress' ), False )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
 
 	# This does not get the text because HBL demands registration
-	text = processor.collect_text( article.find( class_ = 'text' ), False )
+	text = processor.collect_text( article.find( class_ = 'text' ) )
 
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'ksf-image-meta' ) )

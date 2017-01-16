@@ -20,20 +20,20 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'related-articles-container' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'category' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'category' ) )
 
 	datetime_data = article.find( class_ = 'post-meta' )
 	processor.decompose( datetime_data.find( class_ = 'category' ) )
 	processor.decompose( datetime_data.find( class_ = 'updated' ) )
-	datetime_list = processor.collect_datetime( datetime_data, '' )
+	datetime_list = processor.collect_datetime( datetime_data )
 
-	author = processor.collect_text( article.find( class_ = 'author--main'), False )
-	title = processor.collect_text( article.find( class_ = 'heading--main' ), False )
+	author = processor.collect_text( article.find( class_ = 'author--main') )
+	title = processor.collect_text( article.find( class_ = 'heading--main' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'image-wrapper' ) )
-	text = processor.collect_text( article.find( class_ = 'content--main' ), False )
+	text = processor.collect_text( article.find( class_ = 'content--main' ) )
 
 	return processor.create_dictionary('Aamulehti', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 

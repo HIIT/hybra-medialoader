@@ -23,12 +23,12 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'cb-module-title' ) )
 	processor.decompose_all( article.find_all( 'blockquote' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'cb-category' ), False )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'cb-date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'cb-author' ), False )
-	title = processor.collect_text( article.find( class_ = 'entry-title' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'cb-category' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'cb-date' ) )
+	author = processor.collect_text( article.find( class_ = 'cb-author' ) )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'cb-entry-content' ).find( 'h4' ), True )
-	text = processor.collect_text( article.find( class_ = 'cb-entry-content' ), False )
+	text = processor.collect_text( article.find( class_ = 'cb-entry-content' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 

@@ -21,21 +21,21 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'kp-share-area' ) )
 
-	categories = processor.collect_categories( soup.find_all( class_ = 'sel' ), False )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'juttuaika' ), '' )
+	categories = processor.collect_categories( soup.find_all( class_ = 'sel' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'juttuaika' ) )
 
 	author_div = article.find( class_ = 'author' )
 	processor.decompose( author_div.find( 'a' ) )
 	author = processor.collect_text( author_div, True )
 
-	title = processor.collect_text( article.find( 'h1' ), False )
+	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingressi' ), True )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvateksti' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvamiddle' ) )
 
-	text = processor.collect_text( article.find( 'isense' ), False )
+	text = processor.collect_text( article.find( 'isense' ) )
 
 	return processor.create_dictionary('Iltalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

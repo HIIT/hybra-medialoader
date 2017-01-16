@@ -25,7 +25,7 @@ def parse( url ):
     ingress = processor.process( json['headline'] )
 
     text_html = BeautifulSoup( json['body'], "html.parser" )
-    text = processor.collect_text( text_html, False )
+    text = processor.collect_text( text_html )
 
     if 'keyImage' in json:
         image_url = 'http://images.kauppalehti.fi/547x/http:' + json['keyImage']
