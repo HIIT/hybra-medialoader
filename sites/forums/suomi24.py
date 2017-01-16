@@ -26,8 +26,12 @@ def parse( url ):
 	topics = breadcrumbs[1:-1]
 	user = processor.collect_text( info.find( class_ = 'user-info-name' ) )
 	user_role = processor.collect_text( info.find( class_ = 'user-info-role' ) )
-	time = processor.collect_datetime( info.find( class_ = 'user-info-timestamp' ) )[0]
+	time = str( processor.collect_datetime( info.find( class_ = 'user-info-timestamp' ) )[0] )
 	text = processor.collect_text( thread.find( class_ = 'thread-text' ) )
+
+	removed_comments = len( thread.find_all( class_ = 'comment-removed' ) )
+	processor.decompose_all( thread.find_all( class_ = 'comment-removed' ) )
+
 	answers = get_answers( thread.find_all( class_ = 'answer-block-container' ), user )
 
 	return {'title' : title,
@@ -36,7 +40,8 @@ def parse( url ):
 			'user_role' : user_role,
 			'time' : time,
 			'text' : text,
-			'answers' : answers}
+			'answers' : answers,
+			'removed_comments' : removed_comments}
 
 def get_answers( answers_html_element, to_user ):
 	answers = []
@@ -50,7 +55,7 @@ def get_answers( answers_html_element, to_user ):
 
 		answer_data['user'] = processor.collect_text( answer_div.find( class_ = 'user-info-name') )
 		answer_data['user_role'] = processor.collect_text( answer_div.find( class_ = 'user-info-role') )
-		answer_data['time'] = processor.collect_datetime( answer_div.find( class_ = 'user-info-timestamp') )[0]
+		answer_data['time'] = str( processor.collect_datetime( answer_div.find( class_ = 'user-info-timestamp') )[0] )
 		answer_data['text'] = processor.collect_text( answer_div.find( class_ = 'answer') )
 		answer_data['to'] = to_user
 		answer_data['comments'] = get_comments( answer.find( class_ = 'comments' ), answer_data['user'] )
@@ -73,14 +78,14 @@ def get_comments( comments_html_element, to_user ):
 
 			comment_data['user'] = processor.collect_text( comment_div.find( class_ = 'user-info-name') )
 			comment_data['user_role'] = processor.collect_text( comment_div.find( class_ = 'user-info-role') )
-			comment_data['time'] = processor.collect_datetime( comment_div.find( class_ = 'user-info-timestamp') )[0]
+			comment_data['time'] = str( processor.collect_datetime( comment_div.find( class_ = 'user-info-timestamp') )[0] )
 			comment_data['text'] = processor.collect_text( comment_div.find( class_ = 'comment-text') )
 			comment_data['to'] = to_user
 			comment_data['quote'] = {}
 
 			blockquote = comment_div.find( 'blockquote' )
 			if blockquote:
-				comment_data['quote']['from'] = processor.collect_text( blockquote.find( 'header' ).find( 'strong' ) )
+				comment_data['quote']['quoted_user'] = processor.collect_text( blockquote.find( 'header' ).find( 'strong' ) )
 				comment_data['quote']['text'] = processor.collect_text( blockquote.find( class_ = 'text-muted blockquote-collapse-body' ) )
 
 			comments.append(comment_data)
