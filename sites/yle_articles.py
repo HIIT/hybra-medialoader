@@ -167,16 +167,19 @@ def api_download( max_iterations = 1000, item_limit = 1000 ):
         print i
 
         news_items = make_request( limit = item_limit, offset = i * item_limit )
+
         news_items = parse( news_items )
+
         month_data = separate_months( news_items, old_month_items )
+
         old_month_items = month_data
 
         i = i + 1
-
         if ( len( news_items ) < item_limit ) or ( max_iterations > 0 and i == max_iterations ):
+
             dump( old_month_items )
             break
 
 if __name__ == '__main__':
     ## Downloads 10 pages of 1000 items each and dumps them
-    api_download( max_iterations = 10, item_limit = 1000 )
+    api_download(max_iterations = 10, item_limit = 1000)
