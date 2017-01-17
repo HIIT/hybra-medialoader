@@ -25,7 +25,7 @@ def parse( url ):
 	ingress = processor.process( json['lead'] )
 
 	text_html = BeautifulSoup( json['html'], "html.parser" )
-	text = processor.collect_text( text_html, False )
+	text = processor.collect_text( text_html )
 
 	if 'image' in json:
 		image_json = json['image']

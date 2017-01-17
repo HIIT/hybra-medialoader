@@ -20,12 +20,12 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( soup.find( class_ = 'section-title' ), False )
-	datetime_list = processor.collect_datetime( article.find( 'time' ), '' )
-	author = processor.collect_text( article.find( class_ = 'byline' ), False )
-	title = processor.collect_text( article.find( itemprop = 'headline name' ), False )
-	ingress = processor.collect_text( article.find( class_ = 'ingress' ), False )
-	text = processor.collect_text( article.find( class_ = 'body' ), False )
+	categories = processor.collect_categories( soup.find( class_ = 'section-title' ) )
+	datetime_list = processor.collect_datetime( article.find( 'time' ) )
+	author = processor.collect_text( article.find( class_ = 'byline' ) )
+	title = processor.collect_text( article.find( itemprop = 'headline name' ) )
+	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
+	text = processor.collect_text( article.find( class_ = 'body' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

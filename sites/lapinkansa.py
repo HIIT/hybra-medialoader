@@ -24,15 +24,15 @@ def parse( url ):
 
 	categories = processor.collect_categories( meta.find_all( class_ = 'category' ), True )
 	datetime_list = processor.collect_datetime( meta, 'datetime date' )
-	author = processor.collect_text( article.find( class_ = 'author--main' ), False )
-	title = processor.collect_text( article.find( class_ = 'heading--main' ), False )
-	ingress= processor.collect_text( article.find( class_ = 'heading--secondary' ), False )
+	author = processor.collect_text( article.find( class_ = 'author--main' ) )
+	title = processor.collect_text( article.find( class_ = 'heading--main' ) )
+	ingress= processor.collect_text( article.find( class_ = 'heading--secondary' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'image-wrapper' ) )
 
-	text = processor.collect_text( article.find( class_ = 'content--main' ), False )
+	text = processor.collect_text( article.find( class_ = 'content--main' ) )
 
 	return processor.create_dictionary('Lapin kansa', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 

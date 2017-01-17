@@ -20,7 +20,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	title = processor.collect_text( article.find( class_ = 'entry-title' ), False )
+	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
 
 	url_elements = url.split('/')
 	year = url_elements[4]
@@ -28,8 +28,8 @@ def parse( url ):
 	day = url_elements[6]
 	datetime_list = [datetime.date(datetime.strptime(day + '.' + month + '.' + year, "%d.%m.%Y"))]
 
-	author = processor.collect_text( article.find( class_ = 'author vcard' ), False )
-	text = processor.collect_text( article.find( class_ = 'entry-content' ), False )
+	author = processor.collect_text( article.find( class_ = 'author vcard' ) )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
 
 	return processor.create_dictionary('Iltalehti Blogit', url, r.status_code, [u''], datetime_list, author, title, u'', text, [u''], [u''])
 

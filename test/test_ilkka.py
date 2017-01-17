@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'ilkka'
-url = 'http://www.ilkka.fi/uutiset/ulkomaat/ven%C3%A4j%C3%A4-aikoo-maksaa-usa-n-karkotukset-samalla-mitalla-1.2189202'
+url = 'http://www.ilkka.fi/uutiset/talous/apteekkariliitto-kilpailu-laskenut-yli-1-500-l%C3%A4%C3%A4kkeen-hintaa-1.2198244' 
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )

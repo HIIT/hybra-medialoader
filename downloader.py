@@ -17,7 +17,6 @@ def download( url, raw_dir, error ):
 
     url = url.strip()
 
-
     try:
         ## try to dynamically load the correct script using the domain name
         loader = re.match( __urlpat , url ).group('domain')
@@ -37,6 +36,25 @@ def download( url, raw_dir, error ):
         print "Failed " + url
 
         error.write( url + '\n' )
+
+
+def download_forum( url, raw_dir ):
+    url = url.strip()
+
+    try:
+        loader = re.match( __urlpat , url ).group('domain')
+
+        loader = __import__( 'forums.' + loader, fromlist = [ loader ] )
+
+        data = loader.parse( url )
+
+        f = base64.encodestring( url )
+
+        json.dump( data , open( raw_dir + f + '.json', 'w' ) )
+
+    except Exception, e:
+        print e
+        print "Failed " + url
 
 
 def resort_pickles( raw_dir ):

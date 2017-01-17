@@ -22,12 +22,12 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'ad' ) )
 	processor.decompose( article.find( id = 'fullWidthBottom' ) )
 
-	categories= processor.collect_categories( article.find_all( class_ = 'article-category' ), False )
+	categories= processor.collect_categories( article.find_all( class_ = 'article-category' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( class_ = 'author-name' ), False )
-	title = processor.collect_text( article.find( class_ = 'article-title' ), False )
-	ingress = processor.collect_text( article.find( class_ = 'lead-paragraph' ), False )
-	text = processor.collect_text( article.find( class_ = 'editorial' ), False )
+	author = processor.collect_text( article.find( class_ = 'author-name' ) )
+	title = processor.collect_text( article.find( class_ = 'article-title' ) )
+	ingress = processor.collect_text( article.find( class_ = 'lead-paragraph' ) )
+	text = processor.collect_text( article.find( class_ = 'editorial' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'figcaption' ) )
 

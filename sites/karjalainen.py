@@ -22,11 +22,11 @@ def parse( url ):
 
 	meta = article.find( class_ = 'category_date' )
 
-	categories = processor.collect_categories( meta.find_all( 'a' ), False )
+	categories = processor.collect_categories( meta.find_all( 'a' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( class_ = 'author_credits' ), False )
-	title = processor.collect_text( article.find( 'h1' ), False )
-	text = processor.collect_text( article.find( class_ = 'itemFullText' ), False )
+	author = processor.collect_text( article.find( class_ = 'author_credits' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
+	text = processor.collect_text( article.find( class_ = 'itemFullText' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.karjalainen.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'itemImageCaption' ) )
 

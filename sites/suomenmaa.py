@@ -18,19 +18,19 @@ def parse( url ):
 	processor.decompose_all( soup.find_all( class_ = 'keski_footer') )
 	processor.decompose_all( soup.find_all( class_ = 'right_footer') )
 
-	categories = [processor.collect_text( soup.find( class_ = 'vinjetti' ), False )]
+	categories = [processor.collect_text( soup.find( class_ = 'vinjetti' ) )]
 	processor.decompose_all( soup.find_all( class_ = 'vinjetti' ) )
 
-	datetime_list = processor.collect_datetime( soup.find( class_ = 'datetime' ).parent.parent, '' )
-	author = processor.collect_text( soup.find( class_ = 'text-editor' ), False )
-	title = processor.collect_text( soup.find( class_ = 'otsikko' ), False )
-	ingress = processor.collect_text( soup.find( class_ = 'alarivi' ), False )
+	datetime_list = processor.collect_datetime( soup.find( class_ = 'datetime' ).parent.parent )
+	author = processor.collect_text( soup.find( class_ = 'text-editor' ) )
+	title = processor.collect_text( soup.find( class_ = 'otsikko' ) )
+	ingress = processor.collect_text( soup.find( class_ = 'alarivi' ) )
 
 	processor.decompose_all( soup.find_all( class_ = 'alarivi' ) )
 
 	text = ''
 	for paragraph in soup.find_all( class_='teksti' ):
-		paragraph_text = processor.collect_text( paragraph, False )
+		paragraph_text = processor.collect_text( paragraph )
 		if paragraph_text not in text:
 			text = text + ' ' + paragraph_text
 	text = text.strip()

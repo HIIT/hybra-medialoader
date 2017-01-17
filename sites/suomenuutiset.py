@@ -22,15 +22,15 @@ def parse( url ):
 	processor.decompose_all( article.find_all( class_ = 'somebar' ) )
 	processor.decompose( article.find( class_ = 'tags' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'post-category' ), False )
+	categories = processor.collect_categories( article.find_all( class_ = 'post-category' ) )
 
 	datetime_string = article.find( class_ = 'timestamp' ).get_text( ' ', strip = True )
 	datetime_string = processor.convert_month( datetime_string.replace( ',', '' ) )
 	datetime_list = [datetime.strptime( datetime_string, '%m %d %Y %H:%M' )]
 
 	author = processor.collect_text( article.find( class_ = 'article-page-writer' ), True )
-	title = processor.collect_text( article.find( class_ = 'post-title' ), False )
-	text = processor.collect_text( article.find( class_ = 'post-content' ), False )
+	title = processor.collect_text( article.find( class_ = 'post-title' ) )
+	text = processor.collect_text( article.find( class_ = 'post-content' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 

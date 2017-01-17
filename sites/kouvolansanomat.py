@@ -21,17 +21,17 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	menu = soup.find( id = 'menu2' )
-	categories = processor.collect_categories( menu.find_all( class_ = 'selected' ), False )
+	categories = processor.collect_categories( menu.find_all( class_ = 'selected' ) )
 
-	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ), '' )
-	author = processor.collect_text( article.find( class_ = 'author' ), True )
-	title = processor.collect_text( article.find( 'h1' ), False )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ) )
+	author = processor.collect_text( article.find( class_ = 'author' ) )
+	title = processor.collect_text( article.find( 'h1' ) )
 	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.kouvolansanomat.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'caption' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'img_wrapper' ) )
 
-	text = processor.collect_text( article.find( id = 'main_text' ), False )
+	text = processor.collect_text( article.find( id = 'main_text' ) )
 
 	return processor.create_dictionary('Kouvolan sanomat', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 
