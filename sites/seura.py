@@ -14,24 +14,22 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	article = soup.find( class_ = 'article' )
+	article = soup.find( class_ = 'content__wrapper' )
 	if article == None:
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	category_div = article.find( class_ = 'article-category' )
-	categories = processor.collect_categories( category_div.find_all( 'a' ) )
-
-	datetime_list = processor.collect_datetime( article.find( class_ = 'article-meta' ) )
-	author = processor.collect_text( article.find( class_ = 'article-credits' ) )
-	title = processor.collect_text( article.find( class_ = 'article-title' ) )
-	ingress = processor.collect_text( article.find( class_ = 'article-ingress' ) )
-	text = processor.collect_text( article.find( class_ = 'article-body' ))
-	images = processor.collect_images_by_parent( article.find_all( class_ = 'fotorama head' ), '' )
+	categories = processor.collect_categories( article.find_all( class_ = 'typography__category' ) )
+	datetime_list = processor.collect_datetime( article.find( class_ = 'meta-content' ) )
+	author = processor.collect_text( article.find( class_ = 'typography__author' ) )
+	title = processor.collect_text( article.find( class_ = 'content__title' ) )
+	ingress = processor.collect_text( article.find( class_ = 'content__intro' ) )
+	text = processor.collect_text( article.find( class_ = 'content__body' ))
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'content__main-gallery' ), '' )
 
 	captions = [None]
-	for caption_div in article.find_all( class_ = 'fotorama head' ):
+	for caption_div in article.find_all( class_ = 'content__main-gallery' ):
 		caption = BeautifulSoup( caption_div.find( 'a' )['data-caption'], "html.parser" )
 		captions.append( processor.collect_text( caption ) )
 	captions.pop(0)
