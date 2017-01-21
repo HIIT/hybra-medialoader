@@ -191,6 +191,7 @@ if __name__ == '__main__':
         import argparse
         parser = argparse.ArgumentParser()
         parser.add_argument('--key', default='yle_keys.json' )
+        parser.add_argument('--iteration', default = 10)
         args = parser.parse_args()
         keys = json.load( open( args.key ), strict = False )
     except:
@@ -198,4 +199,4 @@ if __name__ == '__main__':
         quit()
 
     ## Downloads 10 pages of 1000 items each and dumps them
-    api_download( keys['url'], keys['app_id'], keys['app_key'], max_iterations = 10, item_limit = 1000)
+    api_download( keys['url'], keys['app_id'], keys['app_key'], max_iterations = args.iteration, item_limit = 1000)
