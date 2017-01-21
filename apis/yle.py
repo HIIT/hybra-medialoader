@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+## XXX fixeme
+
+import sys
+sys.path.insert(0, '../sites/')
+
 import requests
 import collections
 import processor
@@ -8,6 +13,9 @@ import pickle
 import json
 
 def dump( data ):
+
+    if not data:
+        return
 
     ## Get month
     date = data[0].get( 'datetime_list' )
@@ -75,22 +83,19 @@ def separate_months( news_items, old_month_items ):
 
         dump( months_dict[ month ] )
 
-def make_request( limit, offset ):
+def make_request( base_url, app_id, app_key, limit = 1000, offset = 0):
 
-    # Currently uses API's test environment
-
-    app_id = ''
-    app_key = ''
-
-    base_url = 'https://articles.api-test.yle.fi/v2/articles.json?'
-
-    api_request = ( base_url +
+    api_request = ( base_url + '/articles.json?' +
     '&orderby=published desc' +
     '&limit=' + str( limit ) + '&offset=' + str( offset ) +
     '&app_id=' + app_id + '&app_key=' + app_key +
     '&fields=publisher,url,subjects,datePublished,dateContentModified,headline,lead,authors,content' )
 
     request = requests.get( api_request )
+
+    if request.status_code >= 400:
+        print request.status_code
+        print request.text
 
     return request
 
@@ -148,7 +153,7 @@ def parse(news_items):
 
     return list_to_return
 
-def api_download( max_iterations = 1000, item_limit = 1000 ):
+def api_download( base_url, app_id, app_secret, max_iterations = 1000, item_limit = 1000 ):
 
     ## Just in case things don't yet work as expexted,
     ## this will by default run for 1000 rounds
@@ -166,7 +171,7 @@ def api_download( max_iterations = 1000, item_limit = 1000 ):
 
         print i
 
-        news_items = make_request( limit = item_limit, offset = i * item_limit )
+        news_items = make_request( base_url, app_id, app_secret, limit = item_limit, offset = i * item_limit )
 
         news_items = parse( news_items )
 
@@ -181,5 +186,16 @@ def api_download( max_iterations = 1000, item_limit = 1000 ):
             break
 
 if __name__ == '__main__':
+
+    try:
+        import argparse
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--key', default='yle_keys.json' )
+        args = parser.parse_args()
+        keys = json.load( open( args.key ), strict = False )
+    except:
+        print 'Can not read keys'
+        quit()
+
     ## Downloads 10 pages of 1000 items each and dumps them
-    api_download(max_iterations = 10, item_limit = 1000)
+    api_download( keys['url'], keys['app_id'], keys['app_key'], max_iterations = 10, item_limit = 1000)
