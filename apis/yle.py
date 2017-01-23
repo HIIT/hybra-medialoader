@@ -11,77 +11,7 @@ import processor
 from datetime import datetime
 import pickle
 import json
-
-def dump( data ):
-
-    if not data:
-        return
-
-    ## Get month
-    date = data[0].get( 'datetime_list' )
-    date = date[0][0:7]
-    date = date.replace( '-', '_' )
-
-    month = date[5:7]
-    if month[0] == '0':
-        date = date[0:5] + date[6:7]
-
-    ## Get 'domain' (e.g 'Yle Uutiset', 'Yle Novosti', 'svenska-nyheter')
-    ## and for each domain dump data in a file named 'yle_domain_year_month.json'
-
-    domain_set = set( [ d.get( 'domain' ) for d in data ] )
-
-    for domain in domain_set:
-        domain_data = filter( lambda x: x.get( 'domain' ) == domain, data )
-        domain = domain.replace( ' ', '_' )
-
-        print 'Dumping ' + 'yle_' + domain + '_' + date + '.json'
-
-        f = open( 'yle_' + domain + '_' + date + '.json', 'w' )
-        json.dump( domain_data, f )
-        f.close()
-
-        f = open( 'yle_' + domain + '_' + date + '.pickle', 'w' )
-        pickle.dump( domain_data, f )
-        f.close()
-
-def separate_months( news_items, old_month_items ):
-
-    news_items = old_month_items + news_items
-
-    time_format = '%Y-%m-%d %H:%M:%S'
-
-    datetimes = [ datetime.strptime( news_item.get('datetime_list')[0], time_format) for news_item in news_items ]
-
-    ## Get months in format yyyy-m
-
-    months = set( [ str( date.year ) + '-' + str( date.month ) for date in datetimes ] )
-
-    months_dict = collections.defaultdict(list)
-
-    for news_item in news_items:
-
-        news_item_date = datetime.strptime( news_item.get('datetime_list')[0], time_format )
-        news_item_month = str( news_item_date.year ) + '-' + str( news_item_date.month )
-
-        months_dict[news_item_month].append(news_item)
-
-    month_keys = sorted( months_dict, key = lambda x: datetime.strptime( x, '%Y-%m' ), reverse = True )
-
-    ## If dict has only one month's data,
-    ## this month is still incomplete, so return it
-
-    if len( months_dict ) == 1:
-        return months_dict[ months_dict.keys()[0] ]
-
-    ## Otherwise dump finished months
-
-    for month in month_keys:
-
-        if month == months_dict.keys()[ len(months_dict) - 1 ]:
-            return months_dict[ month ]
-
-        dump( months_dict[ month ] )
+import os
 
 def make_request( base_url, app_id, app_key, limit = 1000, offset = 0):
 
@@ -153,7 +83,46 @@ def parse(news_items):
 
     return list_to_return
 
-def api_download( base_url, app_id, app_secret, max_iterations = 1000, item_limit = 1000 ):
+def resort_pickles( raw_dir ):
+
+    store = collections.defaultdict( list )
+
+    for d in os.listdir( raw_dir ):
+
+        data = pickle.load( open( raw_dir + d ) )
+
+        time_format = '%Y-%m-%d %H:%M:%S'
+
+        if int( data['http'] ) == 200:
+
+            try:
+
+                #domain = re.match( __urlpat , data['url'] ).group('domain')
+
+                domain = data[ 'domain' ]
+
+                datetimes = data[ 'datetime_list' ]
+                datetime_list = []
+
+                for date_time in datetimes:
+                    date_time = datetime.strptime(date_time, time_format)
+                    datetime_list.append(date_time)
+
+                #datetime.strptime( news_item.get('datetime_list')[0], time_format)
+
+                time = max( datetime_list )
+
+                destination = 'yle_' + domain + '_' + str( time.year ) + '_' + str( time.month )
+                data['datetime_list'] = map( str, data['datetime_list'] ) ## transform dateties to string
+
+                store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
+
+            except Exception, e: ## sometimes not all data things are there, and thus let's prepeare for it
+                print e
+
+    return store
+
+def api_download( base_url, app_id, app_secret, max_iterations = 1000, item_limit = 1000, raw_dir = 'data-raw/' ):
 
     ## Just in case things don't yet work as expexted,
     ## this will by default run for 1000 rounds
@@ -169,20 +138,24 @@ def api_download( base_url, app_id, app_secret, max_iterations = 1000, item_limi
 
     while True:
 
-        print i
-
         news_items = make_request( base_url, app_id, app_secret, limit = item_limit, offset = i * item_limit )
 
         news_items = parse( news_items )
 
-        month_data = separate_months( news_items, old_month_items )
+        j = 0
 
-        old_month_items = month_data
+        for news_item in news_items:
+
+            with open( raw_dir + str(i) + '_' + str(j) + '.pickle', 'w' ) as f:
+                pickle.dump(news_item, f)
+
+                j = j + 1
 
         i = i + 1
-        if ( len( news_items ) < item_limit ) or ( max_iterations > 0 and i == max_iterations ):
 
-            dump( old_month_items )
+        print str(i) + ' out of ' + str(max_iterations)
+
+        if (max_iterations > 0 and i == max_iterations):
             break
 
 if __name__ == '__main__':
@@ -198,5 +171,18 @@ if __name__ == '__main__':
         print 'Can not read keys'
         quit()
 
-    ## Downloads 10 pages of 1000 items each and dumps them
-    api_download( keys['url'], keys['app_id'], keys['app_key'], max_iterations = args.iteration, item_limit = 1000)
+    raw_dir = 'data-raw/' ## where pickles are stored
+    data_dir = 'data/' ## where json outputs are stored
+
+    ## Downloads 10 pages of 1000 items each
+    ## and dumps each news item in a pickle
+
+    api_download( keys['url'], keys['app_id'], keys['app_key'], max_iterations = int( args.iteration ), item_limit = 1000, raw_dir = raw_dir )
+
+    ## Combines pickles and dumps them in
+    ## 'yle_domain_year_month' json files
+
+    store = resort_pickles( raw_dir )
+
+    for filename, data in store.items():
+        json.dump( data , open( data_dir + filename + '.json', 'w' ) )
