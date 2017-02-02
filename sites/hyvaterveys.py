@@ -20,6 +20,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'region bottom' ) )
+	processor.decompose( article.find( class_ = 'field-name-field-related-content' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'field-name-field-category' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ), 'timedate' )
