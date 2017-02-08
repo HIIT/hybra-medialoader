@@ -14,23 +14,31 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	article = soup.find( class_ = 'article' )
+	article = soup.find( class_ = 'article__full' )
 	if article == None:
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	processor.decompose_all( article.find_all( 'script' ) )
-	processor.decompose( article.find( class_ = 'listingNewsBox' ) )
 
-	categories = processor.collect_categories( soup.find_all( class_ = 'active' ) )
-	datetime_list = processor.collect_datetime( article.find( class_ = 'date' ) )
-	title = processor.collect_text( article.find( class_ = 'newsHeadline' ) )
+	categories = processor.collect_categories( article.find_all( class_ = 'article__meta__category' ) )
+	datetime_list = processor.collect_datetime( soup.find( class_ = 'teaser__meta__timestamp' ) )
+	author = processor.collect_text( article.find( class_ = 'author__name' ) )
+	title = processor.collect_text( article.find( class_ = 'medium-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'lead') )
-	text = processor.collect_text( article.find( class_ = 'articleBody' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ilkka.fi' )
-	captions = processor.collect_image_captions( article.find_all( class_ = 'newsImgText' ) )
 
-	return processor.create_dictionary('Ilkka', url, r.status_code, categories, datetime_list, u'', title, ingress, text, images, captions)
+	text = u''
+	for string in article.find_all( 'p' ):
+		text += ' ' + processor.collect_text( string )
+	text = text.strip()
+
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.ilkka.fi' )
+
+	captions = []
+	for caption_element in article.find_all( lambda tag: tag.name == 'a' and 'data-caption' in tag.attrs):
+		captions.append( caption_element['data-caption'] )
+
+	return processor.create_dictionary('Ilkka', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 
-	parse( 'http://www.ilkka.fi/uutiset/kotimaa/vertailu-suomessa-kolmanneksi-vahiten-korruptiota-1.1731397', file('ilkka.txt', 'w') )
+	parse( 'https://www.ilkka.fi/uutiset/talous/kauhajokelainen-serres-osti-puolet-oululaisesta-firmasta-1.2211765' )
