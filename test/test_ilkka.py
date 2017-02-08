@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'ilkka'
-url = 'http://www.ilkka.fi/uutiset/talous/oulu-pyrkii-pelialan-kakkoskaupungiksi-1.2207112' 
+url = 'https://www.ilkka.fi/uutiset/talous/kauhajokelainen-serres-osti-puolet-oululaisesta-firmasta-1.2211765' 
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
