@@ -26,7 +26,7 @@ def parse( url ):
 	title = processor.collect_text( article.find( class_ = 'medium-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'lead') )
 
-	text = u''
+	text = ''
 	for string in article.find_all( 'p' ):
 		text += ' ' + processor.collect_text( string )
 	text = text.strip()
