@@ -155,7 +155,9 @@ def api_download( base_url, app_id, app_secret, max_iterations = 1000, item_limi
 
         print str(i) + ' out of ' + str(max_iterations)
 
-        if (max_iterations > 0 and i == max_iterations):
+        ## Break if max number of iterations has been reached
+        ## or if the response from the API contains fewer elements than the limit
+        if (max_iterations > 0 and i == max_iterations) or (len(news_items < item_limit)):
             break
 
 if __name__ == '__main__':
