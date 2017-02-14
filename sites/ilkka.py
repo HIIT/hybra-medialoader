@@ -21,9 +21,16 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'script' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'article__meta__category' ) )
-	datetime_list = processor.collect_datetime( soup.find( class_ = 'teaser__meta__timestamp' ) )
-	author = processor.collect_text( article.find( class_ = 'author__name' ) )
+
 	title = processor.collect_text( article.find( class_ = 'medium-title' ) )
+
+	datetime_list = []
+	for teaser in soup.find_all( class_ = 'article-teaser__wrapper--wide' ):
+		meta_title = processor.collect_text( teaser.find( class_ =  'small-title' ) )
+		if meta_title == title:
+			datetime_list = processor.collect_datetime( teaser.find( class_ = 'teaser__meta__timestamp' ) )
+
+	author = processor.collect_text( article.find( class_ = 'author__name' ) )
 	ingress = processor.collect_text( article.find( class_ = 'lead') )
 
 	text = ''
