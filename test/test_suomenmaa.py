@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'suomenmaa'
-url = 'http://www.suomenmaa.fi/?app=NeoDirect&com=6/3/158528/89d1e24e14'
+url = 'http://www.suomenmaa.fi/uutiset/merkelilla-ei-vaihtoehtoja--putin-ja-trump-pakottavat-hakemaan-jatkokautta-6.3.206004.f13da076a7'
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
