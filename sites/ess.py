@@ -28,6 +28,7 @@ def parse( url ):
 	text = processor.collect_text( article.find( class_ = 'body' ) )
 
 	processor.decompose( article.find( class_ = 'authorPicture' ) )
+	processor.decompose( article.find( id = 'main-subscribe' ) )
 
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'main-media-caption' ) )
