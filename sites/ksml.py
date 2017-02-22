@@ -31,5 +31,41 @@ def parse( url ):
 
 	return processor.create_dictionary('Keskisuomalainen', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
+
+def parse_from_archive(url, content):
+	article = BeautifulSoup( content, "html.parser" )
+
+	if article == None:
+		return processor.create_dictionary('', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
+
+	processor.decompose_all( article.find_all( 'script' ) )
+
+	meta = article.find( class_ = 'date' )
+
+	categories = [processor.collect_text(meta).split(' ')[0]]
+	datetime_list = str(processor.collect_datetime( meta ))
+	author = processor.collect_text( article.find( class_  = 'author'), True )
+
+	processor.decompose( meta )
+
+	title_parts = article.find_all('h2')
+	title = ''
+	for part in title_parts:
+		title += processor.collect_text(part, True) + ' '
+	title = title.strip()
+
+	ingress_parts = article.find_all('h4')
+	ingress = ''
+	for part in ingress_parts:
+		ingress += processor.collect_text(part, True) + ' '
+	ingress = ingress.strip()
+
+	processor.decompose( article.find_all( 'p' )[-1] )
+
+	text = processor.collect_text( article )
+
+	return processor.create_dictionary('Keskisuomalainen', url, 200, categories, datetime_list, author, title, ingress, text, [u''], [u''])
+
+
 if __name__ == '__main__':
 	parse("http://www.ksml.fi/uutiset/ulkomaat/kalifornian-ennatyskuivuus-paattyi-rankkasateisiin/1944276", file('keski.txt', 'w'))
