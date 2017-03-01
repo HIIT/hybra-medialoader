@@ -1,6 +1,6 @@
 import time
 import json
-import ksml
+from sites import ksml as ksml_parser
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -84,7 +84,7 @@ def collect_content(driver, urls):
                 )
         finally:
             content = driver.find_element_by_id('neocontent')
-            data = ksml.parse_from_archive( url, content.get_attribute('innerHTML') )
+            data = ksml_parser.parse_from_archive( url, content.get_attribute('innerHTML') )
             json.dump( data , open(  'ksml_test/' + str(i) + '.json', 'w' ) )
             i += 1
 
