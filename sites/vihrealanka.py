@@ -24,7 +24,7 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'avainsanat' ) )
 	processor.decompose( article.find( class_ = 'twitter-share-button' ) )
 	processor.decompose( article.find( class_ = 'fb-like' ) )
-	processor.decompose( article('h4')[-1] )
+	processor.decompose( article.find( class_ = 'moreLanka' ) )
 
 	meta = article.find( class_ = 'juttutiedot' )
 	datetime_list = processor.collect_datetime( meta, )
@@ -42,4 +42,4 @@ def parse( url ):
 	return processor.create_dictionary('Vihreä lanka', url, r.status_code, [u''], datetime_list, author, title, u'', text, images, captions)
 
 if __name__ == '__main__':
-	parse("http://www.vihrealanka.fi/blogi-eno-vastaa/onko-tonnikalassa-myrkkyj%C3%A4", file('vihrealanka.txt', 'w'))
+	parse("http://www.vihrealanka.fi/uutiset-ymp%C3%A4rist%C3%B6/sy%C3%B6mmek%C3%B6-tulevaisuudessa-ilmaa-ja-vett%C3%A4-suomalaishanke-lupaa-puolet-proteiinia", file('vihrealanka.txt', 'w'))
