@@ -33,7 +33,7 @@ def parse( url ):
 
 
 def parse_from_archive(url, content):
-	article = BeautifulSoup( content, "html.parser" )
+	article = BeautifulSoup( content.encode('utf-8'), "html.parser" )
 
 	if article == None:
 		return processor.create_dictionary('', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
@@ -43,7 +43,7 @@ def parse_from_archive(url, content):
 	meta = article.find( class_ = 'date' )
 
 	categories = [processor.collect_text(meta).split(' ')[0]]
-	datetime_list = str(processor.collect_datetime( meta ))
+	datetime_list = processor.collect_datetime( meta )
 	author = processor.collect_text( article.find( class_  = 'author'), True )
 
 	processor.decompose( meta )
