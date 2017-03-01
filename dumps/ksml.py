@@ -17,6 +17,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from pyvirtualdisplay import Display
+
 
 def login(driver, username, password):
     driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
@@ -140,6 +142,9 @@ if __name__ == '__main__':
 
         if not os.path.exists( f ):
             os.makedirs( f )
+
+    display = Display(visible=0, size=(800, 600))
+    display.start()
 
     driver = webdriver.Firefox()
 
