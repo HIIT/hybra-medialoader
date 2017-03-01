@@ -33,6 +33,8 @@ def login(driver, username, password):
 
 
 def collect_urls(driver, year):
+    print "Collecting urls " + year
+
     driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + year + '0101&dayto=' + year + '1231' )
 
     urls = []
@@ -58,6 +60,8 @@ def collect_urls(driver, year):
 
             paginator = content.find_element_by_class_name('paginatorArchive')
 
+            print str(len(urls)) + ' urls collected...'
+
             if 'Seuraava' not in paginator.find_elements_by_tag_name('a')[-1].get_attribute('innerHTML'):
                 break
             else:
@@ -69,6 +73,8 @@ def collect_urls(driver, year):
 
 
 def save_urls(urls, year):
+    print "Saving urls " + year
+
     url_dir = 'saved_urls/'
 
     if not os.path.exists( url_dir ):
@@ -143,6 +149,10 @@ if __name__ == '__main__':
 
     for year in sys.argv[3:]:
         urls = collect_urls( driver, year )
+
+        print "Urls collected " + year
+
+        print "Downloading content " + year
 
         error = open( error_dir + 'error_' + year + '.log', 'w' )
 
