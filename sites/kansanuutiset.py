@@ -22,6 +22,7 @@ def parse( url ):
 	processor.decompose( article.find( 'footer' ) )
 	processor.decompose_all( article.find_all( class_ = 'cb-module-title' ) )
 	processor.decompose_all( article.find_all( 'blockquote' ) )
+	processor.decompose_all( article.find_all( 'aside' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'cb-category' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'cb-date' ) )
