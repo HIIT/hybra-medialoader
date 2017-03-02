@@ -132,20 +132,26 @@ def remove_ad(driver, ad_id):
         pass
 
 
-def split_to_months():
+def split_to_months(year):
 
-    periods = {'0101' : '0201',
-               '0202' : '0301',
-               '0302' : '0401',
-               '0402' : '0501',
-               '0502' : '0601',
-               '0602' : '0701',
-               '0702' : '0801',
-               '0802' : '0901',
-               '0902' : '1001',
-               '1002' : '1101',
-               '1102' : '1201',
-               '1202' : '1231'
+    leap_years = ['1996', '2000', '2004', '2008', '2012', '2016']
+
+    feb_end = '0228'
+    if (year in leap_years ):
+        feb_end = '0229'
+
+    periods = {'0101' : '0131',
+               '0201' : feb_end,
+               '0301' : '0331',
+               '0401' : '0430',
+               '0501' : '0531',
+               '0601' : '0630',
+               '0701' : '0731',
+               '0801' : '0831',
+               '0901' : '0930',
+               '1001' : '1031',
+               '1101' : '1130',
+               '1201' : '1231'
                }
 
     return periods
@@ -173,7 +179,7 @@ if __name__ == '__main__':
 
     for year in sys.argv[3:]:
 
-        months = split_to_months()
+        months = split_to_months( year )
 
         for start, end in months.items():
 
