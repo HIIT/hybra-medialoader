@@ -202,7 +202,7 @@ if __name__ == '__main__':
 
                 downloaded += 1
 
-                print downloaded + " stories downloaded from " + start_date + '...' + end_date
+                print str(downloaded) + " stories downloaded from " + start_date + '...' + end_date
 
                 http_status[ s ] += 1
 
