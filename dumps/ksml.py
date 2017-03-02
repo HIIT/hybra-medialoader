@@ -194,9 +194,15 @@ if __name__ == '__main__':
 
             error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
 
+            downloaded = 0
+
             for url in urls:
 
                 s = download( driver, url, raw_dir, error )
+
+                downloaded += 1
+
+                print downloaded + " stories downloaded from " + start_date + '...' + end_date
 
                 http_status[ s ] += 1
 
