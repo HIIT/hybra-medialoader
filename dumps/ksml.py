@@ -34,10 +34,10 @@ def login(driver, username, password):
     time.sleep(10)
 
 
-def collect_urls(driver, year):
-    print "Collecting urls " + year
+def collect_urls(driver, start_date, end_date):
+    print "Collecting urls: " + start_date + '...' + end_date
 
-    driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + year + '0101&dayto=' + year + '1231' )
+    driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date + '&dayto=' + end_date )
 
     urls = []
 
@@ -69,13 +69,13 @@ def collect_urls(driver, year):
             else:
                 paginator.find_elements_by_tag_name('a')[-1].click()
 
-    save_urls( urls, year )
+    save_urls( urls, start_date, end_date )
 
     return urls
 
 
-def save_urls(urls, year):
-    print "Saving urls " + year
+def save_urls(urls, start_date, end_date):
+    print "Saving urls: " + start_date + '...' + end_date
 
     url_dir = 'saved_urls/'
 
@@ -83,7 +83,7 @@ def save_urls(urls, year):
         os.makedirs( url_dir )
 
     try:
-        url_log = open( url_dir + year + '.log', 'w' )
+        url_log = open( url_dir + start_date + '_' + end_date + '.log', 'w' )
 
         for url in urls:
 
@@ -91,7 +91,7 @@ def save_urls(urls, year):
 
     except Exception, e:
         print e
-        print "Error in saving urls " + year
+        print "Error in saving urls " + start_date + '...' + end_date
 
 
 def download(driver, url, raw_dir, error):
@@ -132,6 +132,25 @@ def remove_ad(driver, ad_id):
         pass
 
 
+def split_to_months():
+
+    periods = {'0101' : '0201',
+               '0202' : '0301',
+               '0302' : '0401',
+               '0402' : '0501',
+               '0502' : '0601',
+               '0602' : '0701',
+               '0702' : '0801',
+               '0802' : '0901',
+               '0902' : '1001',
+               '1002' : '1101',
+               '1102' : '1201',
+               '1202' : '1231'
+               }
+
+    return periods
+
+
 if __name__ == '__main__':
 
     raw_dir = 'data-raw/' ## where pickles are stored
@@ -153,19 +172,27 @@ if __name__ == '__main__':
     http_status = collections.defaultdict( int )
 
     for year in sys.argv[3:]:
-        urls = collect_urls( driver, year )
 
-        print "Urls collected " + year
+        months = split_to_months()
 
-        print "Downloading content " + year
+        for start, end in months.items():
 
-        error = open( error_dir + 'error_' + year + '.log', 'w' )
+            start_date = year + start
+            end_date = year + end
 
-        for url in urls:
+            urls = collect_urls( driver, start_date, end_date )
 
-            s = download( driver, url, raw_dir, error )
+            print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
 
-            http_status[ s ] += 1
+            print "Downloading content: " + start_date + '...' + end_date
+
+            error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
+
+            for url in urls:
+
+                s = download( driver, url, raw_dir, error )
+
+                http_status[ s ] += 1
 
     driver.quit()
 
