@@ -33,7 +33,7 @@ def parse( url ):
 
 
 def parse_from_archive(url, content):
-	article = BeautifulSoup( content.encode('utf-8'), "html.parser" )
+	article = BeautifulSoup( content, "html.parser" )
 
 	if article == None:
 		return processor.create_dictionary('', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
