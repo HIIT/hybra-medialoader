@@ -38,11 +38,9 @@ def collect_urls(driver, start_date, end_date):
     print "Collecting urls: " + start_date + '...' + end_date
 
     driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date + '&dayto=' + end_date )
-
     urls = []
 
     while True:
-
         try:
             element = WebDriverWait(driver, 20).until(
                 EC.visibility_of_element_located((By.ID, 'neocontent'))
@@ -53,11 +51,14 @@ def collect_urls(driver, start_date, end_date):
             remove_ad(driver, 'ESM_Tikkeri')
 
             content = driver.find_element_by_id('neocontent')
+
             tags = content.find_elements_by_tag_name('a')
 
             for tag in tags:
+
                 if 'search' in tag.get_attribute('href'):
                     continue
+
                 urls.append(tag.get_attribute('href'))
 
             paginator = content.find_element_by_class_name('paginatorArchive')
@@ -86,7 +87,6 @@ def save_urls(urls, start_date, end_date):
         url_log = open( url_dir + start_date + '_' + end_date + '.log', 'w' )
 
         for url in urls:
-
             url_log.write( url.replace('neo', 'arkisto/') + '\n' )
 
     except Exception, e:
@@ -141,7 +141,7 @@ def split_to_months(year):
         feb_end = '0229'
 
     if year == '2017':
-        return {'0101' : '0131', '0201' : '0228', '0301' : '0302'}
+        return {'0101' : '0131', '0201' : feb_end, '0301' : '0302'}
 
     periods = {'0101' : '0131',
                '0201' : feb_end,
@@ -167,7 +167,6 @@ if __name__ == '__main__':
     error_dir = 'error-logs/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
-
         if not os.path.exists( f ):
             os.makedirs( f )
 
@@ -181,18 +180,15 @@ if __name__ == '__main__':
     http_status = collections.defaultdict( int )
 
     for year in sys.argv[3:]:
-
         months = split_to_months( year )
 
         for start, end in months.items():
-
             start_date = year + start
             end_date = year + end
 
             urls = collect_urls( driver, start_date, end_date )
 
             print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
-
             print "Downloading content: " + start_date + '...' + end_date
 
             error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
@@ -200,7 +196,6 @@ if __name__ == '__main__':
             downloaded = 0
 
             for url in urls:
-
                 s = download( driver, url, raw_dir, error )
 
                 downloaded += 1
