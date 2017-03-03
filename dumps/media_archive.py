@@ -4,7 +4,6 @@ import pickle
 import base64
 import collections
 import importlib
-import tempfile
 
 import sys,os
 sys.path.append( os.getcwd() )
@@ -214,8 +213,6 @@ def resort_pickles( raw_dir ):
 
 
 if __name__ == '__main__':
-
-    tempfile.mkdtemp( suffix = '', prefix = 'tmp', dir = sys.argv[3] )
 
     raw_dir = 'data-raw/media_archive/' + sys.argv[4] + '/' ## where pickles are stored
     data_dir = 'data/media_archive/' + sys.argv[4] + '/' ## where json outputs are stored
