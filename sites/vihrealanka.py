@@ -25,6 +25,8 @@ def parse( url ):
 	processor.decompose( article.find( class_ = 'twitter-share-button' ) )
 	processor.decompose( article.find( class_ = 'fb-like' ) )
 	processor.decompose( article.find( class_ = 'moreLanka' ) )
+	processor.decompose( article.find( class_ = 'kredIso' ) )
+	processor.decompose( article.find( 'cite' ) )
 
 	meta = article.find( class_ = 'juttutiedot' )
 	datetime_list = processor.collect_datetime( meta, )
