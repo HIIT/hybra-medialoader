@@ -9,7 +9,7 @@ def parse( url ):
 
 	r = requests.get( url )
 	if r.status_code == 404:
-		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
+		return processor.create_dictionary('Keskisuomalainen', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
@@ -36,7 +36,7 @@ def parse_from_archive(url, content):
 	article = BeautifulSoup( content, "html.parser" )
 
 	if article == None:
-		return processor.create_dictionary('', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
+		return processor.create_dictionary('Keskisuomalainen', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
