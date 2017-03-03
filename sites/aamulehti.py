@@ -37,5 +37,39 @@ def parse( url ):
 
 	return processor.create_dictionary('Aamulehti', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)
 
+
+def parse_from_archive(url, content):
+
+	article = BeautifulSoup( content, "html.parser" )
+
+	if article == None:
+		return processor.create_dictionary('Aamulehti', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
+
+	meta = article.find( class_ = 'hakutuloslahde' )
+
+	datetime_list = processor.collect_datetime( meta )
+
+	category = processor.collect_text( meta ).split(',')[1].strip()
+	subcat = processor.collect_text( article.find( class_ = 'jalkirivi' ) )
+	subsubcat = processor.collect_text( article.find( class_ = 'esirivi' ) )
+
+	categories = []
+	for c in [category, subcat, subsubcat]:
+		if c:
+			categories.append(c)
+
+	title = processor.collect_text( article.find( class_ = 'otsikko' ) )
+
+	text = ''
+	text_divs = article.find( class_ = 'artikkelip')
+	for text_content in text_divs:
+		text += processor.collect_text( article.find( class_ = 'artikkelip' ) ) + ' '
+	text = text.strip()
+
+	captions = processor.collect_image_captions( article.find_all( class_ = 'kuva') )
+
+	return processor.create_dictionary('Aamulehti', url, 200, categories, datetime_list, u'', title, u'', text, [u''], captions)
+
+
 if __name__ == '__main__':
 	parse("http://www.aamulehti.fi/kotimaa/vanhemmat-uhmaavat-tamperelaisen-koulun-ohjetta-odotetaan-sita-paivaa-etta-joku-jaa-auton-alle/")
