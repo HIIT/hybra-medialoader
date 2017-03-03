@@ -179,7 +179,7 @@ if __name__ == '__main__':
 
     http_status = collections.defaultdict( int )
 
-    for year in sys.argv[4:]:
+    for year in sys.argv[3:]:
         months = split_to_months( year )
 
         for start, end in months.items():

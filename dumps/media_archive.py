@@ -214,9 +214,9 @@ def resort_pickles( raw_dir ):
 
 if __name__ == '__main__':
 
-    raw_dir = 'data-raw/media_archive/' + sys.argv[4] + '/' ## where pickles are stored
-    data_dir = 'data/media_archive/' + sys.argv[4] + '/' ## where json outputs are stored
-    error_dir = 'error-logs/media_archive/' + sys.argv[4] + '/' ## save error logs here
+    raw_dir = 'data-raw/media_archive/' + sys.argv[3] + '/' ## where pickles are stored
+    data_dir = 'data/media_archive/' + sys.argv[3] + '/' ## where json outputs are stored
+    error_dir = 'error-logs/media_archive/' + sys.argv[3] + '/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
         if not os.path.exists( f ):
@@ -231,7 +231,7 @@ if __name__ == '__main__':
 
     http_status = collections.defaultdict( int )
 
-    journal = sys.argv[4].title().replace(' ', '+') + '1'
+    journal = sys.argv[3].title().replace(' ', '+') + '1'
 
     query_sources = get_sources( driver, journal )
 
