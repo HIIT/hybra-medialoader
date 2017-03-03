@@ -39,6 +39,48 @@ def parse( url ):
 
 	return processor.create_dictionary('Iltalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
+
+def parse_from_archive( url, content ):
+	article = BeautifulSoup( content, "html.parser" )
+
+	if article == None:
+		return processor.create_dictionary('', url, 404, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
+
+	meta = article.find( class_ = 'hakutuloslahde' )
+
+	domain = 'Iltalehti'
+	if 'xtra' in meta.text:
+		domain += ' Extra'
+
+	datetime_list = processor.collect_datetime( meta )
+
+	category = processor.collect_text( meta ).split(',')[1].strip()
+	subcat = processor.collect_text( article.find_all( class_ = 'jalkirivi')[0] )
+
+	categories = []
+	for c in [category, subcat]:
+		if c:
+			categories.append(c)
+
+	author = processor.collect_text( article.find( class_ = 'signeeraus' ) )
+
+	title = processor.collect_text( article.find( class_ = 'otsikko' ) )
+
+	ingress = processor.collect_text( article.find_all( class_ = 'jalkirivi')[1] )
+	ingress += ' ' + processor.collect_text( article.find( class_ = 'esirivi' ) )
+	ingress = ingress.strip()
+
+	text_divs = article.find_all( class_ = 'artikkelip')
+	text = ''
+	for text_content in text_divs:
+		text += processor.collect_text(text_content) + ' '
+	text = text.strip()
+
+	captions = processor.collect_image_captions( article.find_all( class_ = 'kuva') )
+
+	return processor.create_dictionary(domain, url, 200, categories, datetime_list, author, title, ingress, text, [u''], captions)
+
+
 if __name__ == '__main__':
 
 	parse("http://www.iltalehti.fi/uutiset/2014120218885176_uu.shtml", file('iltalehti.txt', 'w'))
