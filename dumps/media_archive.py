@@ -214,15 +214,6 @@ def resort_pickles( raw_dir ):
 
 if __name__ == '__main__':
 
-    raw_dir = 'data-raw/media_archive/' ## where pickles are stored
-    data_dir = 'data/media_archive/' ## where json outputs are stored
-    error_dir = 'error-logs/media_archive/' ## save error logs here
-
-    for f in [raw_dir, data_dir, error_dir]:
-
-        if not os.path.exists( f ):
-            os.makedirs( f )
-
     display = Display(visible=0, size=(800, 600))
     display.start()
 
@@ -235,6 +226,15 @@ if __name__ == '__main__':
     journal = 'Kaikki1'
     if sys.argv[3]:
         journal = sys.argv[3].title().replace(' ', '+') + '1'
+
+    raw_dir = 'data-raw/media_archive/' + sys.argv[3] + '/' ## where pickles are stored
+    data_dir = 'data/media_archive/' + sys.argv[3] + '/' ## where json outputs are stored
+    error_dir = 'error-logs/media_archive/' + sys.argv[3] + '/' ## save error logs here
+
+    for f in [raw_dir, data_dir, error_dir]:
+
+        if not os.path.exists( f ):
+            os.makedirs( f )
 
     query_sources = get_sources( driver, journal )
 
