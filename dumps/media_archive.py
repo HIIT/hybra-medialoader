@@ -4,6 +4,7 @@ import pickle
 import base64
 import collections
 import importlib
+import tempfile
 
 import sys,os
 sys.path.append( os.getcwd() )
@@ -214,6 +215,16 @@ def resort_pickles( raw_dir ):
 
 if __name__ == '__main__':
 
+    tempfile.mkdtemp( suffix = '', prefix = 'tmp', dir = sys.argv[3] )
+
+    raw_dir = 'data-raw/media_archive/' + sys.argv[4] + '/' ## where pickles are stored
+    data_dir = 'data/media_archive/' + sys.argv[4] + '/' ## where json outputs are stored
+    error_dir = 'error-logs/media_archive/' + sys.argv[4] + '/' ## save error logs here
+
+    for f in [raw_dir, data_dir, error_dir]:
+        if not os.path.exists( f ):
+            os.makedirs( f )
+
     display = Display(visible=0, size=(800, 600))
     display.start()
 
@@ -223,18 +234,7 @@ if __name__ == '__main__':
 
     http_status = collections.defaultdict( int )
 
-    journal = 'Kaikki1'
-    if sys.argv[3]:
-        journal = sys.argv[3].title().replace(' ', '+') + '1'
-
-    raw_dir = 'data-raw/media_archive/' + sys.argv[3] + '/' ## where pickles are stored
-    data_dir = 'data/media_archive/' + sys.argv[3] + '/' ## where json outputs are stored
-    error_dir = 'error-logs/media_archive/' + sys.argv[3] + '/' ## save error logs here
-
-    for f in [raw_dir, data_dir, error_dir]:
-
-        if not os.path.exists( f ):
-            os.makedirs( f )
+    journal = sys.argv[4].title().replace(' ', '+') + '1'
 
     query_sources = get_sources( driver, journal )
 

@@ -3,6 +3,7 @@ import json
 import pickle
 import base64
 import collections
+import tempfile
 
 import sys,os
 sys.path.append( os.getcwd() )
@@ -162,6 +163,8 @@ def split_to_months(year):
 
 if __name__ == '__main__':
 
+    tempfile.mkdtemp( suffix = '', prefix = 'tmp', dir = sys.argv[3])
+
     raw_dir = 'data-raw/ksml/' ## where pickles are stored
     data_dir = 'data/ksml/' ## where json outputs are stored
     error_dir = 'error-logs/ksml/' ## save error logs here
@@ -179,7 +182,7 @@ if __name__ == '__main__':
 
     http_status = collections.defaultdict( int )
 
-    for year in sys.argv[3:]:
+    for year in sys.argv[4:]:
         months = split_to_months( year )
 
         for start, end in months.items():
