@@ -162,9 +162,9 @@ def split_to_months(year):
 
 if __name__ == '__main__':
 
-    raw_dir = 'data-raw/' ## where pickles are stored
-    data_dir = 'data/' ## where json outputs are stored
-    error_dir = 'error-logs/' ## save error logs here
+    raw_dir = 'data-raw/ksml/' ## where pickles are stored
+    data_dir = 'data/ksml/' ## where json outputs are stored
+    error_dir = 'error-logs/ksml/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
         if not os.path.exists( f ):
