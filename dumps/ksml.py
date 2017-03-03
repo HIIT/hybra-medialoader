@@ -18,7 +18,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-#from pyvirtualdisplay import Display
+from pyvirtualdisplay import Display
 
 
 def login(driver, username, password):
@@ -173,8 +173,8 @@ if __name__ == '__main__':
         if not os.path.exists( f ):
             os.makedirs( f )
 
-    #display = Display(visible=0, size=(800, 600))
-    #display.start()
+    display = Display(visible=0, size=(800, 600))
+    display.start()
 
     driver = webdriver.Firefox()
 
