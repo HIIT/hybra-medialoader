@@ -137,8 +137,11 @@ def split_to_months(year):
     leap_years = ['1996', '2000', '2004', '2008', '2012', '2016']
 
     feb_end = '0228'
-    if (year in leap_years ):
+    if year in leap_years:
         feb_end = '0229'
+
+    if year == '2017':
+        return {'0101' : '0131', '0201' : '0228', '0301' : '0302'}
 
     periods = {'0101' : '0131',
                '0201' : feb_end,
