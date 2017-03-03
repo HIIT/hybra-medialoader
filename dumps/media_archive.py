@@ -225,9 +225,7 @@ if __name__ == '__main__':
     display = Display(visible=0, size=(800, 600))
     display.start()
 
-    profile = webdriver.FirefoxProfile('/home/juhopaak/selenium_tmp/')
-
-    driver = webdriver.Firefox(profile)
+    driver = webdriver.Firefox()
 
     login( driver, sys.argv[1], sys.argv[2] )
 
