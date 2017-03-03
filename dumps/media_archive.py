@@ -181,7 +181,7 @@ def download( driver, url, domain, raw_dir, error ):
 
         except Exception, e:
             print e
-            "Error in downloading content: " + url
+            print "Error in downloading content: " + url
 
             error.write( url + '\n' )
 
@@ -197,7 +197,7 @@ def resort_pickles( raw_dir ):
         if int( data['http'] ) == 200:
 
             try:
-                domain = data['domain'].lower()
+                domain = data['domain'].replace(' ', '_').lower()
 
                 time = max( data['datetime_list'] )
 
