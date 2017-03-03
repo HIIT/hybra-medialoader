@@ -36,6 +36,7 @@ def parse( url ):
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuvaTekstiIso' ) )
 
 	processor.decompose_all( article.find_all( class_ = 'kuvaTekstiIso' ) )
+	processor.decompose_all( article.find_all( 'figcaption' ) )
 
 	text = processor.collect_text( article )
 
