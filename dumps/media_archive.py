@@ -1,4 +1,5 @@
 import time
+import datetime
 import json
 import pickle
 import base64
@@ -214,9 +215,11 @@ def resort_pickles( raw_dir ):
 
 if __name__ == '__main__':
 
-    raw_dir = 'data-raw/media_archive/' + sys.argv[3] + '/' ## where pickles are stored
-    data_dir = 'data/media_archive/' + sys.argv[3] + '/' ## where json outputs are stored
-    error_dir = 'error-logs/media_archive/' + sys.argv[3] + '/' ## save error logs here
+    stamp = datetime.datetime.now().isoformat().split('.')[0]
+
+    raw_dir = 'data-raw/' + stamp + '/' ## where pickles are stored
+    data_dir = 'data/' + stamp + '/' ## where json outputs are stored
+    error_dir = 'error-logs/' + stamp + '/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
         if not os.path.exists( f ):

@@ -1,4 +1,5 @@
 import time
+import datetime
 import json
 import pickle
 import base64
@@ -17,7 +18,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 
 
 def login(driver, username, password):
@@ -162,16 +163,18 @@ def split_to_months(year):
 
 if __name__ == '__main__':
 
-    raw_dir = 'data-raw/ksml/' ## where pickles are stored
-    data_dir = 'data/ksml/' ## where json outputs are stored
-    error_dir = 'error-logs/ksml/' ## save error logs here
+    stamp = datetime.datetime.now().isoformat().split('.')[0]
+
+    raw_dir = 'data-raw/' + stamp + '/' ## where pickles are stored
+    data_dir = 'data/' + stamp + '/' ## where json outputs are stored
+    error_dir = 'error-logs/' + stamp + '/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
         if not os.path.exists( f ):
             os.makedirs( f )
 
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
     driver = webdriver.Firefox()
 
