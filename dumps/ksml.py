@@ -96,12 +96,29 @@ def save_urls(urls, start_date, end_date):
 
 
 def download(driver, url, raw_dir, error):
-    driver.get(url.replace('neo', 'arkisto/'))
+    url = url.replace('neo', 'arkisto/')
+
+    try:
+        driver.get(url)
+
+    except Exception, e:
+        print e
+        print "Failed " + url
+
+        error.write( url + '\n')
+        driver.quit()
 
     try:
         element = WebDriverWait(driver, 20).until(
             EC.visibility_of_element_located((By.ID, 'neocontent'))
             )
+
+    except Exception, e:
+        print e
+        print "Failed " + url
+
+        error.write( url + '\n' )
+        driver.quit()
 
     finally:
 
