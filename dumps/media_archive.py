@@ -43,9 +43,14 @@ def get_sources( driver, journal ):
     driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=all&src=' + journal)
 
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'hakutuloslyhennelmaots'))
             )
+
+    except Exception, e:
+        print e
+        "Error in getting sources."
+        driver.quit()
 
     finally:
 
@@ -75,9 +80,14 @@ def collect_urls( driver, source, page ):
     driver.get( source['query'] + '&page=' + str( page ) )
 
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'hakutuloslyhennelmaots'))
             )
+
+    except Exception, e:
+        print e
+        "Error in collecting urls: " + source['domain'] + '_' + str(page)
+        driver.quit()
 
     finally:
 
@@ -161,9 +171,16 @@ def download( driver, url, domain, raw_dir, error ):
     driver.get( url )
 
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'artikkeli'))
             )
+
+    except Exception, e:
+        print e
+        print "Error in downloading content: " + url
+
+        error.write( url + '\n' )
+        driver.quit()
 
     finally:
 

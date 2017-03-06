@@ -43,7 +43,7 @@ def collect_urls(driver, start_date, end_date):
 
     while True:
         try:
-            element = WebDriverWait(driver, 20).until(
+            element = WebDriverWait(driver, 30).until(
                 EC.visibility_of_element_located((By.ID, 'neocontent'))
                 )
 
@@ -57,10 +57,12 @@ def collect_urls(driver, start_date, end_date):
 
             for tag in tags:
 
-                if 'search' in tag.get_attribute('href'):
+                url = get_url_from_element( driver, tag )
+
+                if 'search' in url:
                     continue
 
-                urls.append(tag.get_attribute('href'))
+                urls.append(url)
 
             paginator = content.find_element_by_class_name('paginatorArchive')
 
@@ -74,6 +76,20 @@ def collect_urls(driver, start_date, end_date):
     save_urls( urls, start_date, end_date )
 
     return urls
+
+
+def get_url_from_element( driver, tag ):
+    attempt = 1
+    while True:
+        try:
+            url = tag.get_attribute('href')
+        except Exception, e:
+            if attempt > 5:
+                print e
+                driver.quit()
+            attempt += 1
+
+    return url
 
 
 def save_urls(urls, start_date, end_date):
@@ -109,7 +125,7 @@ def download(driver, url, raw_dir, error):
         driver.quit()
 
     try:
-        element = WebDriverWait(driver, 20).until(
+        element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.ID, 'neocontent'))
             )
 
