@@ -37,10 +37,10 @@ def login(driver, username, password):
     time.sleep(5)
 
 
-def get_sources( driver, journal ):
+def get_sources( driver, journal, interval ):
     sources = []
 
-    driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=all&src=' + journal)
+    driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=' + interval + '&src=' + journal)
 
     try:
         element = WebDriverWait(driver, 30).until(
@@ -253,7 +253,11 @@ if __name__ == '__main__':
 
     journal = sys.argv[3].title().replace(' ', '+') + '1'
 
-    query_sources = get_sources( driver, journal )
+    interval = 'all'
+    if sys.argv[4]:
+        interval = sys.argv[4]
+
+    query_sources = get_sources( driver, journal, interval )
 
     for source in query_sources:
 
