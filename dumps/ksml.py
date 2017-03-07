@@ -41,7 +41,7 @@ def collect_urls(driver, start_date, end_date, error):
     urls = []
 
     try:
-        driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=19960101&dayto=19960102' )
+        driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date )
 
     except Exception, e:
         print e
