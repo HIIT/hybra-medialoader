@@ -18,7 +18,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 
 
 def login(driver, username, password):
@@ -35,17 +35,32 @@ def login(driver, username, password):
     time.sleep(10)
 
 
-def collect_urls(driver, start_date, end_date):
+def collect_urls(driver, start_date, end_date, error):
     print "Collecting urls: " + start_date + '...' + end_date
 
-    driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date + '&dayto=' + end_date )
     urls = []
+
+    try:
+        driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=19960101&dayto=19960102' )
+
+    except Exception, e:
+        print e
+        print "Error in collecting urls: " + start_date + '...' + end_date
+
+        error.write( "Error in collecting urls: " + start_date + '...' + end_date + '\n' )
 
     while True:
         try:
             element = WebDriverWait(driver, 30).until(
                 EC.visibility_of_element_located((By.ID, 'neocontent'))
                 )
+
+        except Exception, e:
+            print e
+            print "Error in collecting urls: " + start_date + '...' + end_date
+
+            error.write( "Error in collecting urls: " + start_date + '...' + end_date + '\n' )
+            break
 
         finally:
             remove_ad(driver, 'ESM_Tarranurkka')
@@ -55,18 +70,24 @@ def collect_urls(driver, start_date, end_date):
 
             tags = content.find_elements_by_tag_name('a')
 
+            if not tags:
+                error.write( "No urls found: " + start_date + '...' + end_date + 'page' + str(page) + '\n')
+
             for tag in tags:
 
                 url = get_url_from_element( driver, tag )
+
+                if not url:
+                    error.write( "Error in getting url: " + tag + '\n' )
 
                 if 'search' in url:
                     continue
 
                 urls.append(url)
 
-            paginator = content.find_element_by_class_name('paginatorArchive')
-
             print str(len(urls)) + ' urls collected...'
+
+            paginator = content.find_element_by_class_name('paginatorArchive')
 
             if 'Seuraava' not in paginator.find_elements_by_tag_name('a')[-1].get_attribute('innerHTML'):
                 break
@@ -85,8 +106,7 @@ def get_url_from_element( driver, tag ):
             url = tag.get_attribute('href')
         except Exception, e:
             if attempt > 5:
-                print e
-                driver.quit()
+                return ''
             attempt += 1
             continue
 
@@ -120,14 +140,6 @@ def download(driver, url, raw_dir, error):
     try:
         driver.get(url)
 
-    except Exception, e:
-        print e
-        print "Failed " + url
-
-        error.write( url + '\n')
-        driver.quit()
-
-    try:
         element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.ID, 'neocontent'))
             )
@@ -136,8 +148,7 @@ def download(driver, url, raw_dir, error):
         print e
         print "Failed " + url
 
-        error.write( url + '\n' )
-        driver.quit()
+        error.write( "Error in downloading content: " + url + '\n')
 
     finally:
 
@@ -156,7 +167,7 @@ def download(driver, url, raw_dir, error):
             print e
             print "Failed " + url
 
-            error.write( url + '\n' )
+            error.write( "Error in downloading content: " + url + '\n')
 
 
 def remove_ad(driver, ad_id):
@@ -209,8 +220,8 @@ if __name__ == '__main__':
         if not os.path.exists( f ):
             os.makedirs( f )
 
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
     driver = webdriver.Firefox()
 
@@ -225,12 +236,12 @@ if __name__ == '__main__':
             start_date = year + start
             end_date = year + end
 
-            urls = collect_urls( driver, start_date, end_date )
+            error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
+
+            urls = collect_urls( driver, start_date, end_date, error )
 
             print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
             print "Downloading content: " + start_date + '...' + end_date
-
-            error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
 
             downloaded = 0
 

@@ -40,9 +40,9 @@ def login(driver, username, password):
 def get_sources( driver, journal, interval ):
     sources = []
 
-    driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=' + interval + '&src=' + journal)
-
     try:
+        driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=' + interval + '&src=' + journal)
+
         element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'hakutuloslyhennelmaots'))
             )
@@ -71,15 +71,17 @@ def get_sources( driver, journal, interval ):
         except Exception, e:
             print e
             "Error in getting sources."
+            driver.quit()
 
     return sources
 
 
-def collect_urls( driver, source, page ):
+def collect_urls( driver, source, page, error ):
     urls = []
-    driver.get( source['query'] + '&page=' + str( page ) )
 
     try:
+        driver.get( source['query'] + '&page=' + str( page ) )
+
         element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'hakutuloslyhennelmaots'))
             )
@@ -87,7 +89,8 @@ def collect_urls( driver, source, page ):
     except Exception, e:
         print e
         "Error in collecting urls: " + source['domain'] + '_' + str(page)
-        driver.quit()
+        error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
+
 
     finally:
 
@@ -104,6 +107,7 @@ def collect_urls( driver, source, page ):
         except Exception, e:
             print e
             "Error in collecting urls: " + source['domain'] + '_' + str(page)
+            error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
 
     if urls:
         save_urls( urls, source['domain'], page )
@@ -137,7 +141,7 @@ def collect_source( driver, source, raw_dir, error, http_status ):
     downloaded = 0
 
     while( True ):
-        urls = collect_urls( driver, source, page )
+        urls = collect_urls( driver, source, page, error )
 
         if not urls:
             break
@@ -168,9 +172,9 @@ def format_for_download( domain ):
 
 
 def download( driver, url, domain, raw_dir, error ):
-    driver.get( url )
-
     try:
+        driver.get( url )
+
         element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'artikkeli'))
             )
@@ -179,8 +183,7 @@ def download( driver, url, domain, raw_dir, error ):
         print e
         print "Error in downloading content: " + url
 
-        error.write( url + '\n' )
-        driver.quit()
+        error.write("Error in downloading content: " + url + '\n' )
 
     finally:
 
@@ -201,7 +204,7 @@ def download( driver, url, domain, raw_dir, error ):
             print e
             print "Error in downloading content: " + url
 
-            error.write( url + '\n' )
+            error.write("Error in downloading content: " + url + '\n' )
 
 
 def resort_pickles( raw_dir ):
