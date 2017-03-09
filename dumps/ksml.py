@@ -32,11 +32,15 @@ def login(driver, username, password):
     password_elem.send_keys( password )
     submit_btn.click()
 
-    time.sleep(10)
+    time.sleep(2)
 
 
-def collect_urls(driver, start_date, end_date, error):
+def collect_urls(username, password, start_date, end_date, error):
     print "Collecting urls: " + start_date + '...' + end_date
+
+    driver = webdriver.Firefox()
+
+    login( driver, username, password)
 
     urls = []
 
@@ -96,6 +100,7 @@ def collect_urls(driver, start_date, end_date, error):
 
     save_urls( urls, start_date, end_date )
 
+    driver.quit()
     return urls
 
 
@@ -212,9 +217,9 @@ if __name__ == '__main__':
 
     stamp = datetime.datetime.now().isoformat().split('.')[0]
 
-    raw_dir = 'data-raw/' + stamp + '/' ## where pickles are stored
-    data_dir = 'data/' + stamp + '/' ## where json outputs are stored
-    error_dir = 'error-logs/' + stamp + '/' ## save error logs here
+    raw_dir = 'data-raw/ksml/' + stamp + '/' ## where pickles are stored
+    data_dir = 'data/ksml/' + stamp + '/' ## where json outputs are stored
+    error_dir = 'error-logs/ksml/' + stamp + '/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
         if not os.path.exists( f ):
@@ -223,9 +228,8 @@ if __name__ == '__main__':
     display = Display(visible=0, size=(800, 600))
     display.start()
 
-    driver = webdriver.Firefox()
-
-    login( driver, sys.argv[1], sys.argv[2] )
+    username = sys.argv[1]
+    password = sys.argv[2]
 
     http_status = collections.defaultdict( int )
 
@@ -238,14 +242,19 @@ if __name__ == '__main__':
 
             error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
 
-            urls = collect_urls( driver, start_date, end_date, error )
+            urls = collect_urls( username, password, start_date, end_date, error )
 
             print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
             print "Downloading content: " + start_date + '...' + end_date
 
             downloaded = 0
 
+            driver = webdriver.Firefox()
+
+            login( driver, username, password )
+
             for url in urls:
+
                 s = download( driver, url, raw_dir, error )
 
                 downloaded += 1
@@ -254,7 +263,7 @@ if __name__ == '__main__':
 
                 http_status[ s ] += 1
 
-    driver.quit()
+            driver.quit()
 
     print 'Final status'
     for s, c in http_status.items():

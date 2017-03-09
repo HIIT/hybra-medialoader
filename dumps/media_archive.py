@@ -34,11 +34,12 @@ def login(driver, username, password):
     password_elem.send_keys( password )
     submit_btn.click()
 
-    time.sleep(5)
+    time.sleep(1)
 
 
-def get_sources( driver, journal, interval ):
-    sources = []
+def get_source( driver, journal, interval ):
+
+    source = {}
 
     try:
         driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=' + interval + '&src=' + journal)
@@ -49,8 +50,7 @@ def get_sources( driver, journal, interval ):
 
     except Exception, e:
         print e
-        "Error in getting sources."
-        driver.quit()
+        "Error in getting source."
 
     finally:
 
@@ -66,14 +66,13 @@ def get_sources( driver, journal, interval ):
                 query_domain = tag.get_attribute('innerHTML').lower().replace(' ', '_')
                 query_url = tag.get_attribute( 'href' )
 
-                sources.append( {'domain' : query_domain, 'query' : query_url} )
+                source = {'domain' : query_domain, 'query' : query_url}
 
         except Exception, e:
             print e
-            "Error in getting sources."
-            driver.quit()
+            "Error in getting source."
 
-    return sources
+    return source
 
 
 def collect_urls( driver, source, page, error ):
@@ -90,7 +89,6 @@ def collect_urls( driver, source, page, error ):
         print e
         "Error in collecting urls: " + source['domain'] + '_' + str(page)
         error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
-
 
     finally:
 
@@ -134,13 +132,18 @@ def save_urls(urls, domain, page):
         print "Error in saving urls " + domain + '_' + str(page)
 
 
-def collect_source( driver, source, raw_dir, error, http_status ):
-    print "Collecting source: " + source['domain']
+def collect_source( username, password, raw_dir, error, http_status ):
 
     page = 0
     downloaded = 0
 
     while( True ):
+        driver = webdriver.Firefox()
+
+        login( driver, username, password )
+
+        source = get_source( driver, journal, interval )
+
         urls = collect_urls( driver, source, page, error )
 
         if not urls:
@@ -152,6 +155,8 @@ def collect_source( driver, source, raw_dir, error, http_status ):
             downloaded += 1
 
             http_status[ s ] += 1
+
+        driver.quit()
 
         print str(downloaded) + " stories downloaded from " + source['domain']
 
@@ -172,6 +177,7 @@ def format_for_download( domain ):
 
 
 def download( driver, url, domain, raw_dir, error ):
+
     try:
         driver.get( url )
 
@@ -182,7 +188,6 @@ def download( driver, url, domain, raw_dir, error ):
     except Exception, e:
         print e
         print "Error in downloading content: " + url
-
         error.write("Error in downloading content: " + url + '\n' )
 
     finally:
@@ -203,8 +208,9 @@ def download( driver, url, domain, raw_dir, error ):
         except Exception, e:
             print e
             print "Error in downloading content: " + url
-
             error.write("Error in downloading content: " + url + '\n' )
+
+            return story['http']
 
 
 def resort_pickles( raw_dir ):
@@ -237,9 +243,9 @@ if __name__ == '__main__':
 
     stamp = datetime.datetime.now().isoformat().split('.')[0]
 
-    raw_dir = 'data-raw/' + stamp + '/' ## where pickles are stored
-    data_dir = 'data/' + stamp + '/' ## where json outputs are stored
-    error_dir = 'error-logs/' + stamp + '/' ## save error logs here
+    raw_dir = 'data-raw/media_archive/' + stamp + '/' ## where pickles are stored
+    data_dir = 'data/media_archive/' + stamp + '/' ## where json outputs are stored
+    error_dir = 'error-logs/media_archive/' + stamp + '/' ## save error logs here
 
     for f in [raw_dir, data_dir, error_dir]:
         if not os.path.exists( f ):
@@ -248,27 +254,20 @@ if __name__ == '__main__':
     display = Display(visible=0, size=(800, 600))
     display.start()
 
-    driver = webdriver.Firefox()
-
-    login( driver, sys.argv[1], sys.argv[2] )
+    username = sys.argv[1]
+    password = sys.argv[2]
 
     http_status = collections.defaultdict( int )
 
+    print "Collecting source: " + sys.argv[3] + ' ' + sys.argv[4]
+
+    error = open( error_dir + 'error_' + sys.argv[3] + '_' + sys.argv[4] + '.log', 'w' )
+
     journal = sys.argv[3].title().replace(' ', '+') + '1'
 
-    interval = 'all'
-    if sys.argv[4]:
-        interval = sys.argv[4]
+    interval = sys.argv[4].replace('-', '+-+')
 
-    query_sources = get_sources( driver, journal, interval )
-
-    for source in query_sources:
-
-        error = open( error_dir + 'error_' + source['domain'] + '.log', 'w' )
-
-        http_status = collect_source( driver, source, raw_dir, error, http_status )
-
-    driver.quit()
+    http_status = collect_source( username, password, raw_dir, error, http_status )
 
     print 'Final status'
     for s, c in http_status.items():
