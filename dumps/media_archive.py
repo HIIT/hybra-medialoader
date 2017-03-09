@@ -109,6 +109,8 @@ def collect_urls( driver, source, page, error ):
 
     if urls:
         save_urls( urls, source['domain'], page )
+    else:
+        error.write("No urls collected: " + source['domain'] + '_' + str(page) + '\n' )        
 
     return urls
 
@@ -138,16 +140,21 @@ def collect_source( username, password, raw_dir, error, http_status ):
     downloaded = 0
 
     while( True ):
-        driver = webdriver.Firefox()
+        attempts = 1
+        try:
+            driver = webdriver.Firefox()
+        except Exception, e:
+            if attempts > 10:
+                raise e
+                break
+            attempts += 1
+            continue
 
         login( driver, username, password )
 
         source = get_source( driver, journal, interval )
 
         urls = collect_urls( driver, source, page, error )
-
-        if not urls:
-            break
 
         for url in urls:
             s = download( driver, url, source['domain'], raw_dir, error )
@@ -209,8 +216,6 @@ def download( driver, url, domain, raw_dir, error ):
             print e
             print "Error in downloading content: " + url
             error.write("Error in downloading content: " + url + '\n' )
-
-            return story['http']
 
 
 def resort_pickles( raw_dir ):
