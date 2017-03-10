@@ -80,6 +80,7 @@ def get_source( driver, journal, interval, error ):
 
 def collect_urls( driver, source, page, error ):
     urls = []
+    print "Collecting urls " + source['domain'] + " page " + str(page)
 
     try:
         driver.get( source['query'] + '&page=' + str( page ) )
