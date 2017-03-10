@@ -147,6 +147,7 @@ def collect_source( username, password, raw_dir, error, http_status ):
     while( True ):
 
         try:
+            print "Starting new browser instance on page " + str(page) + "..."
             driver = webdriver.Firefox()
         except Exception, e:
             print e
