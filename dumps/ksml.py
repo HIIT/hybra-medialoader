@@ -4,6 +4,7 @@ import json
 import pickle
 import base64
 import collections
+from webdriver_timer import Timeout
 
 import sys,os
 sys.path.append( os.getcwd() )
@@ -88,7 +89,7 @@ def collect_urls(driver, start_date, end_date, error):
 
                 urls.append(url)
 
-            print str(len(urls)) + ' urls collected...'
+            print str(len(urls)) + ' urls collected: ' + start_date + '...' + end_date
 
             paginator = content.find_element_by_class_name('paginatorArchive')
 
@@ -242,8 +243,9 @@ if __name__ == '__main__':
             error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
 
             try:
-                print "Starting new browser instance..."
-                driver = webdriver.Firefox()
+                print "Trying to start new browser instance..."
+                with Timeout(20):
+                    driver = webdriver.Firefox()
             except Exception, e:
                 print e
                 print "Error in starting browser instance: " + start_date + '...' + end_date
@@ -262,8 +264,9 @@ if __name__ == '__main__':
             downloaded = 0
 
             try:
-                print "Starting new browser instance..."
-                driver = webdriver.Firefox()
+                print "Trying to start new browser instance..."
+                with Timeout(20):
+                    driver = webdriver.Firefox()
             except Exception, e:
                 print e
                 print "Error in starting browser instance: " + start_date + '...' + end_date
@@ -276,9 +279,9 @@ if __name__ == '__main__':
 
                 s = download( driver, url, raw_dir, error )
 
-                downloaded += 1
-
-                print str(downloaded) + " stories downloaded from " + start_date + '...' + end_date
+                if s == 200:
+                    downloaded += 1
+                    print str(downloaded) + "/" + str(len(urls)) + " stories downloaded from " + start_date + '...' + end_date
 
                 http_status[ s ] += 1
 

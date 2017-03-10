@@ -5,6 +5,7 @@ import pickle
 import base64
 import collections
 import importlib
+from webdriver_timer import Timeout
 
 import sys,os
 sys.path.append( os.getcwd() )
@@ -146,18 +147,15 @@ def collect_source( username, password, raw_dir, error, http_status ):
     downloaded = 0
 
     while True :
-
-        print "Starting new browser instance on page " + str(page) + "..."
-        driver = webdriver.Firefox()
-
-        #try:
-            #print "Starting new browser instance on page " + str(page) + "..."
-            #driver = webdriver.Firefox()
-        #except Exception, e:
-            #print e
-            #print "Error in starting browser instance on page " + str(page)
-            #error.write("Error in starting browser instance on page " + str(page) + '\n' )
-            #continue
+        try:
+            print "Trying to start new browser instance on page " + str(page) + "..."
+            with Timeout(20):
+                driver = webdriver.Firefox()
+        except Exception, e:
+            print e
+            print "Error in starting browser instance on page " + str(page)
+            error.write("Error in starting browser instance on page " + str(page) + '\n' )
+            continue
 
         login( driver, username, password )
 
