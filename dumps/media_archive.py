@@ -158,6 +158,13 @@ def collect_source( username, password, raw_dir, error, http_status ):
 
         source = get_source( driver, journal, interval, error )
 
+        if not source:
+            print "Empty source on page: " + str(page)
+            error.write("Empty source on page: " + str(page) + '\n')
+            driver.quit()
+            page += 1
+            continue
+
         urls = collect_urls( driver, source, page, error )
 
         for url in urls:
