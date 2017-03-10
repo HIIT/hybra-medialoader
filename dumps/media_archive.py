@@ -37,12 +37,13 @@ def login(driver, username, password):
     time.sleep(1)
 
 
-def get_source( driver, journal, interval ):
+def get_source( driver, journal, interval, error ):
 
     source = {}
+    url = 'http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=' + interval + '&src=' + journal
 
     try:
-        driver.get('http://www.media-arkisto.com/ma/VisualBasic.php?query=&interval=' + interval + '&src=' + journal)
+        driver.get(url)
 
         element = WebDriverWait(driver, 30).until(
             EC.visibility_of_element_located((By.CLASS_NAME, 'hakutuloslyhennelmaots'))
@@ -50,7 +51,8 @@ def get_source( driver, journal, interval ):
 
     except Exception, e:
         print e
-        "Error in getting source."
+        print "Error in getting source."
+        error.write("Error in getting source: " + url + '\n' )
 
     finally:
 
@@ -70,7 +72,8 @@ def get_source( driver, journal, interval ):
 
         except Exception, e:
             print e
-            "Error in getting source."
+            print "Error in getting source."
+            error.write("Error in getting source: " + url + '\n' )
 
     return source
 
@@ -87,7 +90,7 @@ def collect_urls( driver, source, page, error ):
 
     except Exception, e:
         print e
-        "Error in collecting urls: " + source['domain'] + '_' + str(page)
+        print "Error in collecting urls: " + source['domain'] + '_' + str(page)
         error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
 
     finally:
@@ -96,6 +99,8 @@ def collect_urls( driver, source, page, error ):
             search_results = driver.find_elements_by_class_name( 'hakutuloslyhennelmaots' )
 
             if not search_results:
+                print "No search results: " + source['domain'] + '_' + str(page)
+                error.write("No search results: " + source['domain'] + '_' + str(page) + '\n' )
                 return urls
 
             for result in search_results:
@@ -104,13 +109,13 @@ def collect_urls( driver, source, page, error ):
 
         except Exception, e:
             print e
-            "Error in collecting urls: " + source['domain'] + '_' + str(page)
+            print "Error in collecting urls: " + source['domain'] + '_' + str(page)
             error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
 
     if urls:
         save_urls( urls, source['domain'], page )
     else:
-        error.write("No urls collected: " + source['domain'] + '_' + str(page) + '\n' )        
+        error.write("No urls collected: " + source['domain'] + '_' + str(page) + '\n' )
 
     return urls
 
@@ -140,19 +145,17 @@ def collect_source( username, password, raw_dir, error, http_status ):
     downloaded = 0
 
     while( True ):
-        attempts = 1
+
         try:
             driver = webdriver.Firefox()
         except Exception, e:
-            if attempts > 10:
-                raise e
-                break
-            attempts += 1
-            continue
+            print e
+            print "Error in starting browser instance for page " + str(page)
+            error.write("Error in starting browser instance for page " + str(page) + '\n' )
 
         login( driver, username, password )
 
-        source = get_source( driver, journal, interval )
+        source = get_source( driver, journal, interval, error )
 
         urls = collect_urls( driver, source, page, error )
 
