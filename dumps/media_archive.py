@@ -150,8 +150,9 @@ def collect_source( username, password, raw_dir, error, http_status ):
             driver = webdriver.Firefox()
         except Exception, e:
             print e
-            print "Error in starting browser instance for page " + str(page)
-            error.write("Error in starting browser instance for page " + str(page) + '\n' )
+            print "Error in starting browser instance on page " + str(page)
+            error.write("Error in starting browser instance on page " + str(page) + '\n' )
+            continue
 
         login( driver, username, password )
 
