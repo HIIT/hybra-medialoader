@@ -18,7 +18,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 
 
 def login(driver, username, password):
@@ -35,12 +35,8 @@ def login(driver, username, password):
     time.sleep(2)
 
 
-def collect_urls(username, password, start_date, end_date, error):
+def collect_urls(driver, start_date, end_date, error):
     print "Collecting urls: " + start_date + '...' + end_date
-
-    driver = webdriver.Firefox()
-
-    login( driver, username, password)
 
     urls = []
 
@@ -69,6 +65,7 @@ def collect_urls(username, password, start_date, end_date, error):
         finally:
             remove_ad(driver, 'ESM_Tarranurkka')
             remove_ad(driver, 'ESM_Tikkeri')
+            remove_ad(driver, 'ESM_avaussivu')
 
             content = driver.find_element_by_id('neocontent')
 
@@ -82,7 +79,9 @@ def collect_urls(username, password, start_date, end_date, error):
                 url = get_url_from_element( driver, tag )
 
                 if not url:
-                    error.write( "Error in getting url: " + tag + '\n' )
+                    print "Error in getting url: " + start_date + '...' + end_date + 'page' + str(page)
+                    error.write( "Error in getting url: " + start_date + '...' + end_date + 'page' + str(page) + '\n')
+                    continue
 
                 if 'search' in url:
                     continue
@@ -225,8 +224,8 @@ if __name__ == '__main__':
         if not os.path.exists( f ):
             os.makedirs( f )
 
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
     username = sys.argv[1]
     password = sys.argv[2]
@@ -242,14 +241,34 @@ if __name__ == '__main__':
 
             error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
 
-            urls = collect_urls( username, password, start_date, end_date, error )
+            try:
+                print "Starting new browser instance..."
+                driver = webdriver.Firefox()
+            except Exception, e:
+                print e
+                print "Error in starting browser instance: " + start_date + '...' + end_date
+                error.write( "Error in starting browser instance: " + start_date + '...' + end_date + '\n')
+                continue
+
+            login( driver, username, password)
+
+            driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date )
+
+            urls = collect_urls( driver, start_date, end_date, error )
 
             print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
             print "Downloading content: " + start_date + '...' + end_date
 
             downloaded = 0
 
-            driver = webdriver.Firefox()
+            try:
+                print "Starting new browser instance..."
+                driver = webdriver.Firefox()
+            except Exception, e:
+                print e
+                print "Error in starting browser instance: " + start_date + '...' + end_date
+                error.write( "Error in starting browser instance: " + start_date + '...' + end_date + '\n')
+                continue
 
             login( driver, username, password )
 
