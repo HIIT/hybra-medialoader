@@ -72,15 +72,15 @@ def collect_urls(driver, start_date, end_date, error):
             tags = content.find_elements_by_tag_name('a')
 
             if not tags:
-                error.write( "No urls found: " + start_date + '...' + end_date + 'page' + str(page) + '\n')
+                error.write( "No urls found: " + start_date + '...' + end_date + '\n')
 
             for tag in tags:
 
                 url = get_url_from_element( driver, tag )
 
                 if not url:
-                    print "Error in getting url: " + start_date + '...' + end_date + 'page' + str(page)
-                    error.write( "Error in getting url: " + start_date + '...' + end_date + 'page' + str(page) + '\n')
+                    print "Error in getting url: " + start_date + '...' + end_date
+                    error.write( "Error in getting url: " + start_date + '...' + end_date + '\n')
                     continue
 
                 if 'search' in url:
