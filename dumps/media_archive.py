@@ -80,7 +80,7 @@ def get_source( driver, journal, interval, error ):
 
 def collect_urls( driver, source, page, error ):
     urls = []
-    print "Collecting urls " + source['domain'] + " page " + str(page)
+    print "Collecting urls: " + source['domain'] + " page " + str(page)
 
     try:
         driver.get( source['query'] + '&page=' + str( page ) )
@@ -169,6 +169,8 @@ def collect_source( username, password, raw_dir, error, http_status ):
 
         urls = collect_urls( driver, source, page, error )
 
+        print "Downloading stories: " + source['domain'] + ' page ' + str(page)
+
         for url in urls:
             s = download( driver, url, source['domain'], raw_dir, error )
 
@@ -229,7 +231,7 @@ def download( driver, url, domain, raw_dir, error ):
             print e
             print "Error in downloading content: " + url
             error.write("Error in downloading content: " + url + '\n' )
-
+            return 520
 
 def resort_pickles( raw_dir ):
 
