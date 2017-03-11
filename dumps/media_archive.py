@@ -20,20 +20,27 @@ from selenium.webdriver.support import expected_conditions as EC
 from pyvirtualdisplay import Display
 
 
-def login(driver, username, password):
-    driver.get('http://www.media-arkisto.com/Login.php')
+def login(driver, username, password, error):
+    try:
+        driver.get('http://www.media-arkisto.com/Login.php')
 
-    form = driver.find_element_by_class_name( 'hakuformbg' )
+        form = driver.find_element_by_class_name( 'hakuformbg' )
 
-    inputs = form.find_elements_by_tag_name( 'input' )
+        inputs = form.find_elements_by_tag_name( 'input' )
 
-    username_elem = inputs[0]
-    password_elem = inputs[1]
-    submit_btn = inputs[2]
+        username_elem = inputs[0]
+        password_elem = inputs[1]
+        submit_btn = inputs[2]
 
-    username_elem.send_keys( username )
-    password_elem.send_keys( password )
-    submit_btn.click()
+        username_elem.send_keys( username )
+        password_elem.send_keys( password )
+        submit_btn.click()
+
+    except Exception, e:
+        print e
+        print "Error in logging in."
+        error.write("Error in logging in." + '\n' )
+
 
     time.sleep(1)
 
@@ -157,7 +164,7 @@ def collect_source( username, password, raw_dir, error, http_status ):
             error.write("Error in starting browser instance on page " + str(page) + '\n' )
             continue
 
-        login( driver, username, password )
+        login( driver, username, password, error )
 
         source = get_source( driver, journal, interval, error )
 
