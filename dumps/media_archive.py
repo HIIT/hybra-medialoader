@@ -164,8 +164,13 @@ def collect_source( username, password, raw_dir, error, http_status ):
         if not source:
             print "Empty source on page: " + str(page)
             error.write("Empty source on page: " + str(page) + '\n')
-            driver.quit()
             page += 1
+
+            try:
+                driver.quit()
+            except WebDriverException:
+                pass
+
             continue
 
         urls = collect_urls( driver, source, page, error )
@@ -179,7 +184,10 @@ def collect_source( username, password, raw_dir, error, http_status ):
 
             http_status[ s ] += 1
 
-        driver.quit()
+        try:
+            driver.quit()
+        except WebDriverException:
+            pass
 
         print str(downloaded) + " stories downloaded from " + source['domain']
 

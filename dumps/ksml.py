@@ -108,7 +108,11 @@ def collect_urls(driver, start_date, end_date, error):
 
     save_urls( urls, start_date, end_date )
 
-    driver.quit()
+    try:
+        driver.quit()
+    except WebDriverException:
+        pass
+
     return urls
 
 
@@ -299,7 +303,10 @@ if __name__ == '__main__':
 
                 http_status[ s ] += 1
 
-            driver.quit()
+            try:
+                driver.quit()
+            except WebDriverException:
+                pass
 
     print 'Final status'
     for s, c in http_status.items():
