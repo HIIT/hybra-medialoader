@@ -37,9 +37,8 @@ def login(driver, username, password, error):
         submit_btn.click()
 
     except Exception, e:
-        print e
-        print "Error in logging in."
-        error.write("Error in logging in." + '\n' )
+        print "Error logging in: " + repr(e)
+        error.write("Error logging in: " + repr(e) + '\n' )
 
 
     time.sleep(1)
@@ -58,9 +57,8 @@ def get_source( driver, journal, interval, error ):
             )
 
     except Exception, e:
-        print e
-        print "Error in getting source."
-        error.write("Error in getting source: " + url + '\n' )
+        print "Error in getting source: " + repr(e)
+        error.write("Error in getting source: " + repr(e) + ', url: ' + url + '\n' )
 
     finally:
 
@@ -79,9 +77,8 @@ def get_source( driver, journal, interval, error ):
                 source = {'domain' : query_domain, 'query' : query_url}
 
         except Exception, e:
-            print e
-            print "Error in getting source."
-            error.write("Error in getting source: " + url + '\n' )
+            print "Error in getting source: " + repr(e)
+            error.write("Error in getting source: " + repr(e) + ', url: ' + url + '\n' )
 
     return source
 
@@ -98,9 +95,8 @@ def collect_urls( driver, source, page, error ):
             )
 
     except Exception, e:
-        print e
-        print "Error in collecting urls: " + source['domain'] + '_' + str(page)
-        error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
+        print "Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page)
+        error.write("Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
 
     finally:
 
@@ -117,9 +113,8 @@ def collect_urls( driver, source, page, error ):
                 urls.append( tag.get_attribute( 'href' ) )
 
         except Exception, e:
-            print e
-            print "Error in collecting urls: " + source['domain'] + '_' + str(page)
-            error.write("Error in collecting urls: " + source['domain'] + '_' + str(page) + '\n' )
+            print "Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page)
+            error.write("Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
 
     if urls:
         save_urls( urls, source['domain'], page )
@@ -144,8 +139,7 @@ def save_urls(urls, domain, page):
             url_log.write( url + '\n' )
 
     except Exception, e:
-        print e
-        print "Error in saving urls " + domain + '_' + str(page)
+        print "Error in saving urls: " + repr(e) + ', domain: ' + domain + '_' + str(page)
 
 
 def collect_source( username, password, raw_dir, error, http_status ):
@@ -153,15 +147,14 @@ def collect_source( username, password, raw_dir, error, http_status ):
     page = 0
     downloaded = 0
 
-    while True :
+    while True:
         try:
             print "Trying to start new browser instance on page " + str(page) + "..."
             with Timeout(20):
                 driver = webdriver.Firefox()
         except Exception, e:
-            print e
-            print "Error in starting browser instance on page " + str(page)
-            error.write("Error in starting browser instance on page " + str(page) + '\n' )
+            print "Error in starting browser instance on page " + str(page) + ': ' + repr(e)
+            error.write("Error in starting browser instance on page " + str(page) + ': ' + repr(e) + '\n' )
             continue
 
         login( driver, username, password, error )
@@ -216,9 +209,8 @@ def download( driver, url, domain, raw_dir, error ):
             )
 
     except Exception, e:
-        print e
-        print "Error in downloading content: " + url
-        error.write("Error in downloading content: " + url + '\n' )
+        print "Error in downloading content: " + repr(e) + ', url: ' + url
+        error.write("Error in downloading content: " + repr(e) + ', url: ' + url + '\n' )
 
     finally:
 
@@ -236,9 +228,8 @@ def download( driver, url, domain, raw_dir, error ):
             return story['http']
 
         except Exception, e:
-            print e
-            print "Error in downloading content: " + url
-            error.write("Error in downloading content: " + url + '\n' )
+            print "Error in downloading content: " + repr(e) + ', url: ' + url
+            error.write("Error in downloading content: " + repr(e) + ', url: ' + url + '\n' )
             return 520
 
 def resort_pickles( raw_dir ):
@@ -262,7 +253,7 @@ def resort_pickles( raw_dir ):
                 store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
 
             except Exception, e: ## sometimes not all data things are there, and thus let's prepeare for it
-                print e
+                print repr(e)
 
     return store
 

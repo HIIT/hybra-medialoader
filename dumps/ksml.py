@@ -22,16 +22,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from pyvirtualdisplay import Display
 
 
-def login(driver, username, password):
-    driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
+def login(driver, username, password, error):
+    try:
+        driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
 
-    username_elem = driver.find_element_by_id( 'Username' )
-    password_elem = driver.find_element_by_id( 'Password' )
-    submit_btn = driver.find_element_by_xpath( '//input[@type="submit"]' )
+        username_elem = driver.find_element_by_id( 'Username' )
+        password_elem = driver.find_element_by_id( 'Password' )
+        submit_btn = driver.find_element_by_xpath( '//input[@type="submit"]' )
 
-    username_elem.send_keys( username )
-    password_elem.send_keys( password )
-    submit_btn.click()
+        username_elem.send_keys( username )
+        password_elem.send_keys( password )
+        submit_btn.click()
+
+    except Exception, e:
+        print "Error logging in: " + repr(e)
+        error.write("Error logging in: " + repr(e) + '\n' )
 
     time.sleep(2)
 
@@ -40,28 +45,26 @@ def collect_urls(driver, start_date, end_date, error):
     print "Collecting urls: " + start_date + '...' + end_date
 
     urls = []
+    pagination = 1
 
     try:
-        driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date )
+        driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
 
     except Exception, e:
-        print e
-        print "Error in collecting urls: " + start_date + '...' + end_date
-
-        error.write( "Error in collecting urls: " + start_date + '...' + end_date + '\n' )
+        print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
+        error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
 
     while True:
+
         try:
             element = WebDriverWait(driver, 30).until(
                 EC.visibility_of_element_located((By.ID, 'neocontent'))
                 )
 
         except Exception, e:
-            print e
-            print "Error in collecting urls: " + start_date + '...' + end_date
-
-            error.write( "Error in collecting urls: " + start_date + '...' + end_date + '\n' )
-            break
+            print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
+            error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            continue
 
         finally:
             remove_ad(driver, 'ESM_Tarranurkka')
@@ -73,15 +76,15 @@ def collect_urls(driver, start_date, end_date, error):
             tags = content.find_elements_by_tag_name('a')
 
             if not tags:
-                error.write( "No urls found: " + start_date + '...' + end_date + '\n')
+                error.write( "No urls found: " + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n')
 
             for tag in tags:
 
                 url = get_url_from_element( driver, tag )
 
                 if not url:
-                    print "Error in getting url: " + start_date + '...' + end_date
-                    error.write( "Error in getting url: " + start_date + '...' + end_date + '\n')
+                    print "Error in getting url: " + start_date + '...' + end_date + ', from = ' + str(pagination)
+                    error.write( "Error in getting url: " + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n')
                     continue
 
                 if 'search' in url:
@@ -91,12 +94,17 @@ def collect_urls(driver, start_date, end_date, error):
 
             print str(len(urls)) + ' urls collected: ' + start_date + '...' + end_date
 
-            paginator = content.find_element_by_class_name('paginatorArchive')
-
-            if 'Seuraava' not in paginator.find_elements_by_tag_name('a')[-1].get_attribute('innerHTML'):
+            if check_pagination(content, pagination, error):
                 break
-            else:
-                paginator.find_elements_by_tag_name('a')[-1].click()
+
+            pagination += 20
+
+            try:
+                driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
+
+            except Exception, e:
+                print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
+                error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
 
     save_urls( urls, start_date, end_date )
 
@@ -120,6 +128,21 @@ def get_url_from_element( driver, tag ):
     return url
 
 
+def check_pagination(content, pagination, error):
+    try:
+        paginator = content.find_element_by_class_name('paginatorArchive')
+        last_tag = paginator.find_elements_by_tag_name('a')[-1].get_attribute('innerHTML')
+    except Exception, e:
+        print "Error in checking pagination: " + repr(e) + ', pagination: ' + str(pagination)
+        error.write( "Error in checking pagination: " + repr(e) + ', pagination: ' + str(pagination) + '\n')
+        return False
+
+    if 'Seuraava' not in last_tag:
+        return True
+    else:
+        return False
+
+
 def save_urls(urls, start_date, end_date):
     print "Saving urls: " + start_date + '...' + end_date
 
@@ -135,8 +158,7 @@ def save_urls(urls, start_date, end_date):
             url_log.write( url.replace('neo', 'arkisto/') + '\n' )
 
     except Exception, e:
-        print e
-        print "Error in saving urls " + start_date + '...' + end_date
+        print "Error in saving urls: " + repr(e) + ', date: ' + start_date + '...' + end_date
 
 
 def download(driver, url, raw_dir, error):
@@ -150,10 +172,8 @@ def download(driver, url, raw_dir, error):
             )
 
     except Exception, e:
-        print e
-        print "Failed " + url
-
-        error.write( "Error in downloading content: " + url + '\n')
+        print "Error in downloading content: " + repr(e) + ', url: ' + url
+        error.write( "Error in downloading content: " + repr(e) + ', url: ' + url + '\n')
 
     finally:
 
@@ -169,10 +189,8 @@ def download(driver, url, raw_dir, error):
             return story['http']
 
         except Exception, e:
-            print e
-            print "Failed " + url
-
-            error.write( "Error in downloading content: " + url + '\n')
+            print "Error in downloading content: " + repr(e) + ', url: ' + url
+            error.write( "Error in downloading content: " + repr(e) + ', url: ' + url + '\n')
 
 
 def remove_ad(driver, ad_id):
@@ -247,14 +265,11 @@ if __name__ == '__main__':
                 with Timeout(20):
                     driver = webdriver.Firefox()
             except Exception, e:
-                print e
-                print "Error in starting browser instance: " + start_date + '...' + end_date
-                error.write( "Error in starting browser instance: " + start_date + '...' + end_date + '\n')
+                print "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date
+                error.write( "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date + '\n')
                 continue
 
-            login( driver, username, password)
-
-            driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date )
+            login( driver, username, password, error)
 
             urls = collect_urls( driver, start_date, end_date, error )
 
@@ -268,12 +283,11 @@ if __name__ == '__main__':
                 with Timeout(20):
                     driver = webdriver.Firefox()
             except Exception, e:
-                print e
-                print "Error in starting browser instance: " + start_date + '...' + end_date
-                error.write( "Error in starting browser instance: " + start_date + '...' + end_date + '\n')
+                print "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date
+                error.write( "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date + '\n')
                 continue
 
-            login( driver, username, password )
+            login( driver, username, password, error )
 
             for url in urls:
 
