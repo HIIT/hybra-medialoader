@@ -22,7 +22,7 @@ from pyvirtualdisplay import Display
 
 def login(driver, username, password, error):
     try:
-        with Timeout(20):
+        with Timeout(30):
             driver.get('http://www.media-arkisto.com/Login.php')
 
         form = driver.find_element_by_class_name( 'hakuformbg' )
@@ -40,8 +40,10 @@ def login(driver, username, password, error):
     except Exception, e:
         print "Error logging in: " + repr(e)
         error.write("Error logging in: " + repr(e) + '\n' )
+        return false
 
     time.sleep(1)
+    return true
 
 
 def get_source( driver, journal, interval, error ):
@@ -160,21 +162,15 @@ def collect_source( username, password, raw_dir, error, http_status ):
             error.write("Error in starting browser instance on page " + str(page) + ': ' + repr(e) + '\n' )
             continue
 
-        login( driver, username, password, error )
-
-        source = get_source( driver, journal, interval, error )
-
-        if not source:
-            print "Empty source on page: " + str(page)
-            error.write("Empty source on page: " + str(page) + '\n')
-            page += 1
-
+        success = login( driver, username, password, error )
+        if not success:
             try:
                 driver.quit()
-                continue
             except Exception, e:
                 print repr(e)
-                break
+            continue
+
+        source = get_source( driver, journal, interval, error )
 
         urls = collect_urls( driver, source, page, error )
 

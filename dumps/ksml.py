@@ -24,7 +24,7 @@ from pyvirtualdisplay import Display
 
 def login(driver, username, password, error):
     try:
-        with Timeout(20):
+        with Timeout(30):
             driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
 
         username_elem = driver.find_element_by_id( 'Username' )
