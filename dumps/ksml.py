@@ -24,8 +24,7 @@ from pyvirtualdisplay import Display
 
 def login(driver, username, password, error):
     try:
-        with Timeout(30):
-            driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
+        driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
 
         username_elem = driver.find_element_by_id( 'Username' )
         password_elem = driver.find_element_by_id( 'Password' )
@@ -38,8 +37,14 @@ def login(driver, username, password, error):
     except Exception, e:
         print "Error logging in: " + repr(e)
         error.write("Error logging in: " + repr(e) + '\n' )
+        try:
+            driver.quit()
+        except Exception, e:
+            print repr(e)
+        return False
 
     time.sleep(2)
+    return True
 
 
 def collect_urls(driver, start_date, end_date, error):
@@ -274,7 +279,8 @@ if __name__ == '__main__':
                 error.write( "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date + '\n')
                 continue
 
-            login( driver, username, password, error)
+            if not login( driver, username, password, error):
+                continue
 
             urls = collect_urls( driver, start_date, end_date, error )
 
@@ -292,7 +298,8 @@ if __name__ == '__main__':
                 error.write( "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date + '\n')
                 continue
 
-            login( driver, username, password, error )
+            if not login( driver, username, password, error ):
+                continue
 
             for url in urls:
 
