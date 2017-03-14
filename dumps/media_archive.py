@@ -22,8 +22,7 @@ from pyvirtualdisplay import Display
 
 def login(driver, username, password, error):
     try:
-        with Timeout(30):
-            driver.get('http://www.media-arkisto.com/Login.php')
+        driver.get('http://www.media-arkisto.com/Login.php')
 
         form = driver.find_element_by_class_name( 'hakuformbg' )
 
@@ -40,6 +39,10 @@ def login(driver, username, password, error):
     except Exception, e:
         print "Error logging in: " + repr(e)
         error.write("Error logging in: " + repr(e) + '\n' )
+        try:
+            driver.quit()
+        except Exception, e:
+            print repr(e)
         return False
 
     time.sleep(1)
@@ -61,6 +64,10 @@ def get_source( driver, journal, interval, error ):
     except Exception, e:
         print "Error in getting source: " + repr(e)
         error.write("Error in getting source: " + repr(e) + ', url: ' + url + '\n' )
+        try:
+            driver.quit()
+        except Exception, e:
+            print repr(e)
         return source
 
     finally:
@@ -82,6 +89,10 @@ def get_source( driver, journal, interval, error ):
         except Exception, e:
             print "Error in getting source: " + repr(e)
             error.write("Error in getting source: " + repr(e) + ', url: ' + url + '\n' )
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
 
         return source
 
@@ -162,20 +173,11 @@ def collect_source( username, password, raw_dir, error, http_status ):
             error.write("Error in starting browser instance on page " + str(page) + ': ' + repr(e) + '\n' )
             continue
 
-        success = login( driver, username, password, error )
-        if not success:
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
+        if not login( driver, username, password, error ):
             continue
 
         source = get_source( driver, journal, interval, error )
         if not source:
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
             continue
 
         urls = collect_urls( driver, source, page, error )
