@@ -171,6 +171,12 @@ def collect_source( username, password, raw_dir, error, http_status ):
             continue
 
         source = get_source( driver, journal, interval, error )
+        if not source:
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
+            continue
 
         urls = collect_urls( driver, source, page, error )
 
