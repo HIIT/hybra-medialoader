@@ -40,10 +40,10 @@ def login(driver, username, password, error):
     except Exception, e:
         print "Error logging in: " + repr(e)
         error.write("Error logging in: " + repr(e) + '\n' )
-        return false
+        return False
 
     time.sleep(1)
-    return true
+    return True
 
 
 def get_source( driver, journal, interval, error ):
