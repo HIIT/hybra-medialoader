@@ -22,7 +22,8 @@ from pyvirtualdisplay import Display
 
 def login(driver, username, password, error):
     try:
-        driver.get('http://www.media-arkisto.com/Login.php')
+        with Timeout(20):
+            driver.get('http://www.media-arkisto.com/Login.php')
 
         form = driver.find_element_by_class_name( 'hakuformbg' )
 
@@ -39,7 +40,6 @@ def login(driver, username, password, error):
     except Exception, e:
         print "Error logging in: " + repr(e)
         error.write("Error logging in: " + repr(e) + '\n' )
-
 
     time.sleep(1)
 
@@ -59,6 +59,7 @@ def get_source( driver, journal, interval, error ):
     except Exception, e:
         print "Error in getting source: " + repr(e)
         error.write("Error in getting source: " + repr(e) + ', url: ' + url + '\n' )
+        return source
 
     finally:
 
@@ -80,7 +81,7 @@ def get_source( driver, journal, interval, error ):
             print "Error in getting source: " + repr(e)
             error.write("Error in getting source: " + repr(e) + ', url: ' + url + '\n' )
 
-    return source
+        return source
 
 
 def collect_urls( driver, source, page, error ):
@@ -97,6 +98,7 @@ def collect_urls( driver, source, page, error ):
     except Exception, e:
         print "Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page)
         error.write("Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
+        return urls
 
     finally:
 
@@ -115,6 +117,7 @@ def collect_urls( driver, source, page, error ):
         except Exception, e:
             print "Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page)
             error.write("Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
+            return urls
 
     if urls:
         save_urls( urls, source['domain'], page )
@@ -168,10 +171,10 @@ def collect_source( username, password, raw_dir, error, http_status ):
 
             try:
                 driver.quit()
-            except WebDriverException:
-                pass
-
-            continue
+                continue
+            except Exception, e:
+                print repr(e)
+                break
 
         urls = collect_urls( driver, source, page, error )
 
@@ -180,14 +183,31 @@ def collect_source( username, password, raw_dir, error, http_status ):
         for url in urls:
             s = download( driver, url, source['domain'], raw_dir, error )
 
-            downloaded += 1
+            if s == 200:
+                downloaded += 1
+            elif s == 0:
+                try:
+                    driver.quit()
+                except Exception, e:
+                    print repr(e)
+                    break
+
+                try:
+                    print "Error with browser instance while downloading content, trying to start new instance on page " + str(page) + "..."
+                    with Timeout(20):
+                        driver = webdriver.Firefox()
+                        continue
+                except Exception, e:
+                    print "Could not start new browser instance while downloading content on page " + str(page) + ': ' + repr(e)
+                    error.write("Could not start new browser instance while downloading content on page " + str(page) + ': ' + repr(e) + '\n' )
+                    break
 
             http_status[ s ] += 1
 
         try:
             driver.quit()
-        except WebDriverException:
-            pass
+        except Exception, e:
+            print repr(e)
 
         print str(downloaded) + " stories downloaded from " + source['domain']
 
@@ -219,6 +239,7 @@ def download( driver, url, domain, raw_dir, error ):
     except Exception, e:
         print "Error in downloading content: " + repr(e) + ', url: ' + url
         error.write("Error in downloading content: " + repr(e) + ', url: ' + url + '\n' )
+        return 0
 
     finally:
 
