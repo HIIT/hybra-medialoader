@@ -20,9 +20,72 @@ from selenium.webdriver.support import expected_conditions as EC
 from pyvirtualdisplay import Display
 
 
+def collect_source( username, password, raw_dir, error, http_status ):
+
+    page = 0
+    downloaded = 0
+
+    while True:
+        try:
+            print "Trying to start new browser instance on page " + str(page) + "..."
+            with Timeout(20):
+                driver = webdriver.Firefox()
+        except Exception, e:
+            print "Error in starting browser instance on page " + str(page) + ': ' + repr(e)
+            error.write("Error in starting browser instance on page " + str(page) + ': ' + repr(e) + '\n' )
+            continue
+
+        if not get_archive(driver, error): continue
+
+        if not login(driver, username, password, error): continue
+
+        source = get_source( driver, journal, interval, error )
+        if not source: continue
+
+        urls = collect_urls( driver, source, page, error )
+
+        print "Downloading stories: " + source['domain'] + ' page ' + str(page)
+
+        for url in urls:
+            s = download( driver, url, source['domain'], raw_dir, error )
+
+            if s == 200:
+                downloaded += 1
+
+            http_status[ s ] += 1
+
+        try:
+            driver.quit()
+        except Exception, e:
+            print repr(e)
+
+        print str(downloaded) + " stories downloaded from " + source['domain']
+
+        page += 1
+
+    return http_status
+
+
+def get_archive(driver, error):
+    try:
+        driver.get('http://www.media-arkisto.com/ma/VisualBasic.php')
+    except Exception, e:
+        print "Error in accessing archive: " + repr(e)
+        error.write("Error in accessing archive: " + repr(e) + '\n' )
+        try:
+            driver.quit()
+        except Exception, e:
+            print repr(e)
+        return False
+
+    return True
+
+
 def login(driver, username, password, error):
     try:
-        driver.get('http://www.media-arkisto.com/Login.php')
+        title = driver.find_element_by_class_name( 'otsikko' )
+        if title.get_attribute('innerHTML') == 'Haku':
+            return True
 
         form = driver.find_element_by_class_name( 'hakuformbg' )
 
@@ -132,7 +195,7 @@ def collect_urls( driver, source, page, error ):
             error.write("Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
             return urls
 
-    if urls:
+    if not urls:
         save_urls( urls, source['domain'], page )
     else:
         error.write("No urls collected: " + source['domain'] + '_' + str(page) + '\n' )
@@ -158,68 +221,6 @@ def save_urls(urls, domain, page):
         print "Error in saving urls: " + repr(e) + ', domain: ' + domain + '_' + str(page)
 
 
-def collect_source( username, password, raw_dir, error, http_status ):
-
-    page = 0
-    downloaded = 0
-
-    while True:
-        try:
-            print "Trying to start new browser instance on page " + str(page) + "..."
-            with Timeout(20):
-                driver = webdriver.Firefox()
-        except Exception, e:
-            print "Error in starting browser instance on page " + str(page) + ': ' + repr(e)
-            error.write("Error in starting browser instance on page " + str(page) + ': ' + repr(e) + '\n' )
-            continue
-
-        if not login( driver, username, password, error ):
-            continue
-
-        source = get_source( driver, journal, interval, error )
-        if not source:
-            continue
-
-        urls = collect_urls( driver, source, page, error )
-
-        print "Downloading stories: " + source['domain'] + ' page ' + str(page)
-
-        for url in urls:
-            s = download( driver, url, source['domain'], raw_dir, error )
-
-            if s == 200:
-                downloaded += 1
-            elif s == 0:
-                try:
-                    driver.quit()
-                except Exception, e:
-                    print repr(e)
-                    break
-
-                try:
-                    print "Error with browser instance while downloading content, trying to start new instance on page " + str(page) + "..."
-                    with Timeout(20):
-                        driver = webdriver.Firefox()
-                        continue
-                except Exception, e:
-                    print "Could not start new browser instance while downloading content on page " + str(page) + ': ' + repr(e)
-                    error.write("Could not start new browser instance while downloading content on page " + str(page) + ': ' + repr(e) + '\n' )
-                    break
-
-            http_status[ s ] += 1
-
-        try:
-            driver.quit()
-        except Exception, e:
-            print repr(e)
-
-        print str(downloaded) + " stories downloaded from " + source['domain']
-
-        page += 1
-
-    return http_status
-
-
 def format_for_download( domain ):
     domain_parts = domain.split('_')
     formatted_domain = ''
@@ -232,7 +233,6 @@ def format_for_download( domain ):
 
 
 def download( driver, url, domain, raw_dir, error ):
-
     try:
         driver.get( url )
 
@@ -243,7 +243,7 @@ def download( driver, url, domain, raw_dir, error ):
     except Exception, e:
         print "Error in downloading content: " + repr(e) + ', url: ' + url
         error.write("Error in downloading content: " + repr(e) + ', url: ' + url + '\n' )
-        return 0
+        return 520
 
     finally:
 
@@ -264,6 +264,7 @@ def download( driver, url, domain, raw_dir, error ):
             print "Error in downloading content: " + repr(e) + ', url: ' + url
             error.write("Error in downloading content: " + repr(e) + ', url: ' + url + '\n' )
             return 520
+
 
 def resort_pickles( raw_dir ):
 
