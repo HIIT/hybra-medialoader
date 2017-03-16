@@ -17,7 +17,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 
 
 def collect_source( username, password, raw_dir, error, http_status, start_page ):
@@ -330,8 +330,8 @@ if __name__ == '__main__':
         if not os.path.exists( f ):
             os.makedirs( f )
 
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
     username = sys.argv[1]
     password = sys.argv[2]
@@ -343,6 +343,7 @@ if __name__ == '__main__':
     error = open( error_dir + 'error_' + sys.argv[3] + '_' + sys.argv[4] + '.log', 'w' )
 
     journal = sys.argv[3].title().replace(' ', '+') + '1'
+    journal = journal.replace('Lannen+Media1', 'Lannen+Media')
 
     interval = sys.argv[4].replace('-', '+-+')
 
