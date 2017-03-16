@@ -17,7 +17,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 
 
 def collect_source( username, password, raw_dir, error, http_status ):
@@ -195,7 +195,7 @@ def collect_urls( driver, source, page, error ):
             error.write("Error in collecting urls: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
             return urls
 
-    if not urls:
+    if urls:
         save_urls( urls, source['domain'], page )
     else:
         error.write("No urls collected: " + source['domain'] + '_' + str(page) + '\n' )
@@ -304,8 +304,8 @@ if __name__ == '__main__':
         if not os.path.exists( f ):
             os.makedirs( f )
 
-    display = Display(visible=0, size=(800, 600))
-    display.start()
+    #display = Display(visible=0, size=(800, 600))
+    #display.start()
 
     username = sys.argv[1]
     password = sys.argv[2]
