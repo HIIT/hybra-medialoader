@@ -60,11 +60,12 @@ def parse_from_archive(url, content):
 
 	title = processor.collect_text( article.find( class_ = 'otsikko' ) )
 
-	text = ''
-	text_divs = article.find( class_ = 'artikkelip')
-	for text_content in text_divs:
-		text += processor.collect_text( article.find( class_ = 'artikkelip' ) ) + ' '
-	text = text.strip()
+	text_divs = article.find_all( class_ = 'artikkelip')
+    text = ''
+    for text_content in text_divs:
+        text += processor.collect_text(text_content) + ' '
+	text = processor.process( text.strip() )
+	text += processor.collect_text( article.find( class_ = 'korjaus' ) )
 
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuva') )
 
