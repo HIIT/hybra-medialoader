@@ -20,9 +20,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from pyvirtualdisplay import Display
 
 
-def collect_source( username, password, raw_dir, error, http_status ):
+def collect_source( username, password, raw_dir, error, http_status, start_page ):
 
-    page = 0
+    page = start_page
     downloaded = 0
 
     while True:
@@ -43,6 +43,11 @@ def collect_source( username, password, raw_dir, error, http_status ):
         if not source: continue
 
         urls = collect_urls( driver, source, page, error )
+
+        if not urls:
+            if check_if_finished(driver, source, page, error):
+                print "Source collected! Finishing..."
+                break
 
         print "Downloading stories: " + source['domain'] + ' page ' + str(page)
 
@@ -203,6 +208,27 @@ def collect_urls( driver, source, page, error ):
     return urls
 
 
+def check_if_finished(driver, source, page, error):
+    try:
+        driver.get( source['query'] + '&page=' + str( page ) )
+
+    except Exception, e:
+        print "Error while checking if finished: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page)
+        error.write("Error while checking if finished: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
+        return False
+
+    try:
+        body = driver.find_element_by_tag_name('body')
+
+    except Exception, e:
+        print "Error while checking if finished: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page)
+        error.write("Error while checking if finished: " + repr(e) + ', source: ' + source['domain'] + '_' + str(page) + '\n' )
+        return False
+
+    if 'Database query failed' in body.get_attribute('innerHTML'):
+        return True
+
+
 def save_urls(urls, domain, page):
     print "Saving urls: " + domain + ' page ' + str(page)
 
@@ -320,7 +346,9 @@ if __name__ == '__main__':
 
     interval = sys.argv[4].replace('-', '+-+')
 
-    http_status = collect_source( username, password, raw_dir, error, http_status )
+    start_page = int(sys.argv[5])
+
+    http_status = collect_source( username, password, raw_dir, error, http_status, start_page )
 
     print 'Final status'
     for s, c in http_status.items():
