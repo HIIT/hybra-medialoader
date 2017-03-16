@@ -39,7 +39,6 @@ def parse( url ):
 
 	return processor.create_dictionary('Iltalehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
-
 def parse_from_archive( url, content ):
 	article = BeautifulSoup( content, "html.parser" )
 
@@ -71,17 +70,14 @@ def parse_from_archive( url, content ):
 	ingress = ingress.strip()
 
 	text_divs = article.find_all( class_ = 'artikkelip')
-    text = ''
-    for text_content in text_divs:
-        text += processor.collect_text(text_content) + ' '
+	text = ''
+	for text_content in text_divs:
+		text += processor.collect_text(text_content) + ' '
 	text = processor.process( text.strip() )
 	text += processor.collect_text( article.find( class_ = 'korjaus' ) )
 
 	captions = processor.collect_image_captions( article.find_all( class_ = 'kuva') )
-
 	return processor.create_dictionary(domain, url, 200, categories, datetime_list, author, title, ingress, text, [u''], captions)
 
-
 if __name__ == '__main__':
-
 	parse("http://www.iltalehti.fi/uutiset/2014120218885176_uu.shtml", file('iltalehti.txt', 'w'))
