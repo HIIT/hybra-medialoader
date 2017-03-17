@@ -157,7 +157,7 @@ def check_pagination(content, pagination, error):
 def save_urls(urls, start_date, end_date):
     print "Saving urls: " + start_date + '...' + end_date
 
-    url_dir = 'saved_urls/ksml'
+    url_dir = 'saved_urls/ksml/'
 
     if not os.path.exists( url_dir ):
         os.makedirs( url_dir )
