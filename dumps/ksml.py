@@ -277,7 +277,6 @@ if __name__ == '__main__':
 
     for year in sys.argv[4:]:
         months = split_to_months( year, inc_months )
-        print months
 
         for start, end in months.items():
             start_date = year + start
