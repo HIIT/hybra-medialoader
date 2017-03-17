@@ -247,7 +247,9 @@ def split_to_months(year, inc_months):
         stripped_periods = {}
 
         for month in months:
-            start = '0' + month + '01'
+            start = month + '01'
+            if len(month) == 1:
+                start = '0' + start
             stripped_periods[start] = periods[start]
 
         return stripped_periods
@@ -277,6 +279,8 @@ if __name__ == '__main__':
 
     for year in sys.argv[4:]:
         months = split_to_months( year, inc_months )
+        print 'Collecting periods: '
+        print months
 
         for start, end in months.items():
             start_date = year + start
