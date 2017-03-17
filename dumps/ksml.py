@@ -59,6 +59,7 @@ def collect_urls(driver, start_date, end_date, error):
     except Exception, e:
         print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
         error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+        return urls
 
     while True:
 
@@ -213,7 +214,7 @@ def remove_ad(driver, ad_id):
         pass
 
 
-def split_to_months(year):
+def split_to_months(year, inc_months):
 
     leap_years = ['1996', '2000', '2004', '2008', '2012', '2016']
 
@@ -238,7 +239,18 @@ def split_to_months(year):
                '1201' : '1231'
                }
 
-    return periods
+    if not inc_months:
+        return periods
+
+    else:
+        months = inc_months.split(',')
+        stripped_periods = {}
+
+        for month in months:
+            start = '0' + month + '01'
+            stripped_periods[start] = periods[start]
+
+        return stripped_periods
 
 
 if __name__ == '__main__':
@@ -261,8 +273,11 @@ if __name__ == '__main__':
 
     http_status = collections.defaultdict( int )
 
-    for year in sys.argv[3:]:
-        months = split_to_months( year )
+    inc_months = sys.argv[3]
+
+    for year in sys.argv[4:]:
+        months = split_to_months( year, inc_months )
+        print months
 
         for start, end in months.items():
             start_date = year + start
@@ -283,6 +298,13 @@ if __name__ == '__main__':
                 continue
 
             urls = collect_urls( driver, start_date, end_date, error )
+            if not urls:
+                print "No urls collected: " + start_date + '...' + end_date
+                try:
+                    driver.quit()
+                except Exception, e:
+                    print repr(e)
+                continue
 
             print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
             print "Downloading content: " + start_date + '...' + end_date
@@ -299,6 +321,10 @@ if __name__ == '__main__':
                 continue
 
             if not login( driver, username, password, error ):
+                try:
+                    driver.quit()
+                except Exception, e:
+                    print repr(e)
                 continue
 
             for url in urls:
