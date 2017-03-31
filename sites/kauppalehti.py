@@ -50,7 +50,10 @@ def parse_from_archive(url, content):
 
     datetime_list = processor.collect_datetime( meta )
 
-    categories = [processor.collect_text( meta ).split(',')[1].strip()]
+    if ',' in meta.text:
+        categories = [processor.collect_text( meta ).split(',')[1].strip()]
+    else:
+        categories = [u'']
 
     author = processor.collect_text( article.find( class_ = 'signeeraus' ) )
 
