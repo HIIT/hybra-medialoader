@@ -22,6 +22,82 @@ from selenium.webdriver.support import expected_conditions as EC
 from pyvirtualdisplay import Display
 
 
+def collect_period(start_date, end_date, http_status, error):
+    print "Collecting period: " + start_date + '...' + end_date
+
+    pagination = 1
+    downloaded = 0
+
+    while True:
+
+        try:
+            print "Trying to start new browser instance on page " + str(pagination) + "..."
+            with Timeout(20):
+                driver = webdriver.Firefox()
+        except Exception, e:
+            print "Error in starting browser instance on page " + str(pagination) + ': ' + repr(e)
+            error.write("Error in starting browser instance on page " + str(pagination) + ': ' + repr(e) + '\n' )
+            continue
+
+        if not login( driver, username, password, error): continue
+
+        try:
+            driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
+
+        except Exception, e:
+            print "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
+            error.write( "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            continue
+
+        remove_ad(driver, 'ESM_Tarranurkka')
+        remove_ad(driver, 'ESM_Tikkeri')
+        remove_ad(driver, 'ESM_avaussivu')
+
+        try:
+            element = WebDriverWait(driver, 30).until(
+                EC.visibility_of_element_located((By.ID, 'neocontent'))
+                )
+
+        except Exception, e:
+            print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
+            error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            continue
+
+        content = driver.find_element_by_id('neocontent')
+
+        urls = collect_urls(content, start_date, end_date, pagination, error)
+
+        if not urls:
+            if check_pagination(content, pagination, error):
+                print "Period collected! Finishing..."
+                try:
+                    driver.quit()
+                except Exception, e:
+                    print repr(e)
+                break
+
+        print "Downloading content: " + start_date + '...' + end_date
+
+        for url in urls:
+
+            s = download( driver, url, raw_dir, error )
+
+            if s == 200:
+                downloaded += 1
+                print str(downloaded) + " stories downloaded from " + start_date + '...' + end_date
+
+            http_status[ s ] += 1
+
+        pagination += 20
+
+        try:
+            driver.quit()
+        except Exception, e:
+            print repr(e)
+
+    return http_status
+
+
 def login(driver, username, password, error):
     try:
         driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
@@ -47,83 +123,45 @@ def login(driver, username, password, error):
     return True
 
 
-def collect_urls(driver, start_date, end_date, error):
-    print "Collecting urls: " + start_date + '...' + end_date
-
-    urls = []
-    pagination = 1
-
+def remove_ad(driver, ad_id):
     try:
-        driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
+        ad = driver.find_element_by_id( ad_id )
+        ad_images = ad.find_elements_by_tag_name('img')
+        ad_images[0].click()
 
     except Exception, e:
-        print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
-        error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+        pass
+
+
+def collect_urls(content, start_date, end_date, pagination, error):
+    urls = []
+
+    tags = content.find_elements_by_tag_name('a')
+
+    if not tags:
+        error.write( "No urls found: " + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n')
         return urls
 
-    while True:
+    for tag in tags:
 
-        try:
-            element = WebDriverWait(driver, 30).until(
-                EC.visibility_of_element_located((By.ID, 'neocontent'))
-                )
+        url = get_url_from_element( tag )
 
-        except Exception, e:
-            print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
-            error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+        if not url:
+            print "Error in getting url: " + start_date + '...' + end_date + ', from = ' + str(pagination)
+            error.write( "Error in getting url: " + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n')
             continue
 
-        finally:
-            remove_ad(driver, 'ESM_Tarranurkka')
-            remove_ad(driver, 'ESM_Tikkeri')
-            remove_ad(driver, 'ESM_avaussivu')
+        if 'search' in url:
+            continue
 
-            content = driver.find_element_by_id('neocontent')
-
-            tags = content.find_elements_by_tag_name('a')
-
-            if not tags:
-                error.write( "No urls found: " + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n')
-
-            for tag in tags:
-
-                url = get_url_from_element( driver, tag )
-
-                if not url:
-                    print "Error in getting url: " + start_date + '...' + end_date + ', from = ' + str(pagination)
-                    error.write( "Error in getting url: " + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n')
-                    continue
-
-                if 'search' in url:
-                    continue
-
-                urls.append(url)
-
-            print str(len(urls)) + ' urls collected: ' + start_date + '...' + end_date
-
-            if check_pagination(content, pagination, error):
-                break
-
-            pagination += 20
-
-            try:
-                driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
-
-            except Exception, e:
-                print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
-                error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+        urls.append(url)
 
     save_urls( urls, start_date, end_date )
-
-    try:
-        driver.quit()
-    except Exception, e:
-        print repr(e)
 
     return urls
 
 
-def get_url_from_element( driver, tag ):
+def get_url_from_element( tag ):
     attempt = 1
     while True:
         try:
@@ -204,16 +242,6 @@ def download(driver, url, raw_dir, error):
             error.write( "Error in downloading content: " + repr(e) + ', url: ' + url + '\n')
 
 
-def remove_ad(driver, ad_id):
-    try:
-        ad = driver.find_element_by_id( ad_id )
-        ad_images = ad.find_elements_by_tag_name('img')
-        ad_images[0].click()
-
-    except Exception, e:
-        pass
-
-
 def split_to_months(year, inc_months):
 
     leap_years = ['1996', '2000', '2004', '2008', '2012', '2016']
@@ -288,62 +316,7 @@ if __name__ == '__main__':
 
             error = open( error_dir + 'error_' + start_date + '_' + end_date + '.log', 'w' )
 
-            try:
-                print "Trying to start new browser instance..."
-                with Timeout(20):
-                    driver = webdriver.Firefox()
-            except Exception, e:
-                print "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date
-                error.write( "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date + '\n')
-                continue
-
-            if not login( driver, username, password, error):
-                continue
-
-            urls = collect_urls( driver, start_date, end_date, error )
-            if not urls:
-                print "No urls collected: " + start_date + '...' + end_date
-                try:
-                    driver.quit()
-                except Exception, e:
-                    print repr(e)
-                continue
-
-            print str( len(urls) ) + " urls collected: " + start_date + '...' + end_date
-            print "Downloading content: " + start_date + '...' + end_date
-
-            downloaded = 0
-
-            try:
-                print "Trying to start new browser instance..."
-                with Timeout(20):
-                    driver = webdriver.Firefox()
-            except Exception, e:
-                print "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date
-                error.write( "Error in starting browser instance: " + repr(e) + ', date: ' + start_date + '...' + end_date + '\n')
-                continue
-
-            if not login( driver, username, password, error ):
-                try:
-                    driver.quit()
-                except Exception, e:
-                    print repr(e)
-                continue
-
-            for url in urls:
-
-                s = download( driver, url, raw_dir, error )
-
-                if s == 200:
-                    downloaded += 1
-                    print str(downloaded) + "/" + str(len(urls)) + " stories downloaded from " + start_date + '...' + end_date
-
-                http_status[ s ] += 1
-
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
+            http_status = collect_period( start_date, end_date, http_status, error )
 
     print 'Final status'
     for s, c in http_status.items():
