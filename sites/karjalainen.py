@@ -14,7 +14,7 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	article = soup.find( 'article' )
+	article = soup.find( id = 'sp-component' )
 	if article == None:
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
@@ -23,11 +23,11 @@ def parse( url ):
 	meta = article.find( class_ = 'category_date' )
 
 	categories = processor.collect_categories( meta.find_all( 'a' ) )
-	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
+	datetime_list = processor.collect_datetime( meta )
 	author = processor.collect_text( article.find( class_ = 'author_credits' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
-	text = processor.collect_text( article.find( class_ = 'itemFullText' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http://www.karjalainen.fi' )
+	text = processor.collect_text( article.find( class_ = 'itemIntroText' ) )
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'itemImage' ), 'http://www.karjalainen.fi' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'itemImageCaption' ) )
 
 	return processor.create_dictionary('Karjalainen', url, r.status_code, categories, datetime_list, author, title, u'', text, images, captions)

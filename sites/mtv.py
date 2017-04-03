@@ -20,6 +20,8 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'ad' ) )
+	processor.decompose_all( article.find_all( class_ = 'ad-container') )
+	processor.decompose_all( article.find_all( 'style') )
 	processor.decompose( article.find( id = 'fullWidthBottom' ) )
 
 	categories= processor.collect_categories( article.find_all( class_ = 'article-category' ) )
