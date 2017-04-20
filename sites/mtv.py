@@ -30,7 +30,7 @@ def parse( url ):
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'lead-paragraph' ) )
 	text = processor.collect_text( article.find( class_ = 'editorial' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:' )
+	images = processor.collect_images_by_parent( article.find_all( class_ = 'img-container' ), 'http:' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'figcaption' ) )
 
 	return processor.create_dictionary('Mtv', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
