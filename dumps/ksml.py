@@ -63,6 +63,8 @@ def collect_period(start_date, end_date, http_status, error):
             error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
             continue
 
+        time.sleep(2)
+
         content = driver.find_element_by_id('neocontent')
 
         urls = collect_urls(content, start_date, end_date, pagination, error)
@@ -170,6 +172,7 @@ def get_url_from_element( tag ):
             url = tag.get_attribute('href')
         except Exception, e:
             if attempt > 5:
+                print "Error in getting url from element: " + repr(e)
                 return ''
             attempt += 1
             continue
