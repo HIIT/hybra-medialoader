@@ -47,6 +47,10 @@ def collect_period(start_date, end_date, http_status, error):
         except Exception, e:
             print "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
             error.write( "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
             continue
 
         remove_ad(driver, 'ESM_Tarranurkka')
@@ -61,6 +65,10 @@ def collect_period(start_date, end_date, http_status, error):
         except Exception, e:
             print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
             error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
             continue
 
         time.sleep(2)
