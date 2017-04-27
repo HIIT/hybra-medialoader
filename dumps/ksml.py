@@ -39,7 +39,12 @@ def collect_period(start_date, end_date, http_status, error):
             error.write("Error in starting browser instance on page " + str(pagination) + ': ' + repr(e) + '\n' )
             continue
 
-        if not login( driver, username, password, error): continue
+        if not login( driver, username, password, error):
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
+            continue
 
         try:
             driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
