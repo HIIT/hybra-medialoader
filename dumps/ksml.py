@@ -32,7 +32,7 @@ def collect_period(start_date, end_date, http_status, error):
 
         try:
             print "Trying to start new browser instance on page " + str(pagination) + "..."
-            with Timeout(40):
+            with Timeout(240):
                 driver = webdriver.Firefox()
         except Exception, e:
             print "Error in starting browser instance on page " + str(pagination) + ': ' + repr(e)
