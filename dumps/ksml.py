@@ -32,7 +32,7 @@ def collect_period(start_date, end_date, http_status, error):
 
         try:
             print "Trying to start new browser instance on page " + str(pagination) + "..."
-            with Timeout(240):
+            with Timeout(20):
                 driver = webdriver.Firefox()
         except Exception, e:
             print "Error in starting browser instance on page " + str(pagination) + ': ' + repr(e)
@@ -40,10 +40,6 @@ def collect_period(start_date, end_date, http_status, error):
             continue
 
         if not login( driver, username, password, error):
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
             continue
 
         try:
@@ -52,10 +48,6 @@ def collect_period(start_date, end_date, http_status, error):
         except Exception, e:
             print "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
             error.write( "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
             continue
 
         remove_ad(driver, 'ESM_Tarranurkka')
@@ -70,10 +62,6 @@ def collect_period(start_date, end_date, http_status, error):
         except Exception, e:
             print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
             error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
             continue
 
         time.sleep(2)
