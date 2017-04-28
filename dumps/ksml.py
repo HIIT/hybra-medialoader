@@ -37,9 +37,17 @@ def collect_period(start_date, end_date, http_status, error):
         except Exception, e:
             print "Error in starting browser instance on page " + str(pagination) + ': ' + repr(e)
             error.write("Error in starting browser instance on page " + str(pagination) + ': ' + repr(e) + '\n' )
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
             continue
 
         if not login( driver, username, password, error):
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
             continue
 
         try:
@@ -48,6 +56,10 @@ def collect_period(start_date, end_date, http_status, error):
         except Exception, e:
             print "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
             error.write( "Error in collecting period: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
             continue
 
         remove_ad(driver, 'ESM_Tarranurkka')
@@ -55,13 +67,17 @@ def collect_period(start_date, end_date, http_status, error):
         remove_ad(driver, 'ESM_avaussivu')
 
         try:
-            element = WebDriverWait(driver, 30).until(
+            element = WebDriverWait(driver, 100).until(
                 EC.visibility_of_element_located((By.ID, 'neocontent'))
                 )
 
         except Exception, e:
             print "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination)
             error.write( "Error in collecting urls: " + repr(e) + ', date: ' + start_date + '...' + end_date + ', from = ' + str(pagination) + '\n' )
+            try:
+                driver.quit()
+            except Exception, e:
+                print repr(e)
             continue
 
         time.sleep(2)
