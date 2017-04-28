@@ -87,13 +87,20 @@ def collect_period(start_date, end_date, http_status, error):
         urls = collect_urls(content, start_date, end_date, pagination, error)
 
         if not urls:
-            if check_pagination(content, pagination, error):
+            finished = check_pagination(content, pagination, error)
+            if finished == True:
                 print "Period collected! Finishing..."
                 try:
                     driver.quit()
                 except Exception, e:
                     print repr(e)
                 break
+            elif finished == 'Error':
+                try:
+                    driver.quit()
+                except Exception, e:
+                    print repr(e)
+                continue
 
         print "Downloading content: " + start_date + '...' + end_date
 
@@ -206,7 +213,7 @@ def check_pagination(content, pagination, error):
     except Exception, e:
         print "Error in checking pagination: " + repr(e) + ', pagination: ' + str(pagination)
         error.write( "Error in checking pagination: " + repr(e) + ', pagination: ' + str(pagination) + '\n')
-        return False
+        return 'Error'
 
     if 'Seuraava' not in last_tag:
         return True
