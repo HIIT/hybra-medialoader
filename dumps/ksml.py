@@ -44,10 +44,6 @@ def collect_period(start_date, end_date, http_status, error):
             continue
 
         if not login( driver, username, password, error):
-            try:
-                driver.quit()
-            except Exception, e:
-                print repr(e)
             continue
 
         try:
