@@ -32,7 +32,7 @@ def collect_period(start_date, end_date, http_status, error):
 
         try:
             print "Trying to start new browser instance on page " + str(pagination) + "..."
-            with Timeout(20):
+            with Timeout(40):
                 driver = webdriver.Firefox()
         except Exception, e:
             print "Error in starting browser instance on page " + str(pagination) + ': ' + repr(e)
@@ -45,6 +45,8 @@ def collect_period(start_date, end_date, http_status, error):
 
         if not login( driver, username, password, error):
             continue
+
+        print "Login successful! Searching for period " + start_date + '...' + end_date + ' on page ' + str(pagination)
 
         try:
             driver.get( 'http://www.ksml.fi/arkisto/?tem=archive_lsearch5&dayfrom=' + start_date +'&dayto=' + end_date + '&from=' + str(pagination) )
@@ -123,7 +125,7 @@ def collect_period(start_date, end_date, http_status, error):
 def login(driver, username, password, error):
     try:
         print "Logging in..."
-        with Timeout(20):
+        with Timeout(60):
             driver.get('https://media.portal.worldoftulo.com/Login?continue=https%3A%2F%2Fbackend.worldoftulo.com%2Foauth2%2Fauth%3Fclient_id%3D56b9cb80a672017f61000001%26redirect_uri%3Dhttp%253A%252F%252Fwww.ksml.fi%252Ftulo_sso_redirect.jsp%26state%3Dhttp%253A%252F%252Fwww.ksml.fi%252F%2523%26response_type%3Dcode%26oid%3Dmedia%26accountOrigin%3DKE')
 
         username_elem = driver.find_element_by_id( 'Username' )
