@@ -345,6 +345,8 @@ if __name__ == '__main__':
 
             http_status = collect_period( start_date, end_date, http_status, error )
 
+    display.stop()
+
     print 'Final status'
     for s, c in http_status.items():
         print s, '\t', c
