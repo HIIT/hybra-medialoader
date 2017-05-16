@@ -28,7 +28,12 @@ def parse( url ):
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'field-name-field-summary' ) )
 	text = processor.collect_text( article.find( class_ = 'field-name-field-body' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
+
+	images = []
+	for img in processor.collect_images( article.find_all( 'img' ), 'src', ''):
+		if 'placeholder' not in img:
+			images.append(img)
+
 	captions = processor.collect_image_captions( article.find_all( class_ = 'file-image-description-caption' ) )
 
 	return processor.create_dictionary('Hyvä terveys', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
