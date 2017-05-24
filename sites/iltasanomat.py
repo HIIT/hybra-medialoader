@@ -30,7 +30,7 @@ def parse( url ):
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
 	text = processor.collect_text( article.find( class_ = 'body' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:')
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '')
 	captions = processor.collect_image_captions( article.find_all( itemprop = 'caption' ) )
 
 	return processor.create_dictionary('Iltasanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)

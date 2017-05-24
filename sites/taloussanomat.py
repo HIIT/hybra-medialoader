@@ -24,10 +24,10 @@ def parse( url ):
 	categories = processor.collect_categories( soup.find( class_ = 'section-title' ) )
 	datetime_list = processor.collect_datetime( article.find( 'time' ) )
 	author = processor.collect_text( article.find( class_ = 'byline' ) )
-	title = processor.collect_text( article.find( itemprop = 'headline name' ) )
+	title = processor.collect_text( article.find( class_ = 'article-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
 	text = processor.collect_text( article.find( class_ = 'body' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary('Taloussanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
