@@ -29,7 +29,7 @@ def parse( url ):
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ), True )
 	text = processor.collect_text( article.find( class_ = 'content' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
 	captions = processor.collect_image_captions( article.find_all( class_ = 'featured-image' ) )
 
 	return processor.create_dictionary('Kd-lehti', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
