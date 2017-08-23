@@ -30,14 +30,17 @@ def parse( url ):
 	author = processor.collect_text( article.find( class_ = 'author' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
 	ingress = processor.collect_text( article.find( class_ = 'article-ingress' ) )
+
 	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
+	images_filt = filter( lambda img: 'data:image' not in img, images )
+
 	captions = processor.collect_image_captions( article.find_all( itemprop = 'caption' ), True )
 
 	processor.decompose_all( article.find_all( class_ = 'embedded-image' ) )
 
 	text = processor.collect_text( article.find( class_ = 'body' ), False )
 
-	return processor.create_dictionary('Helsingin Sanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	return processor.create_dictionary('Helsingin Sanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images_filt, captions)
 
 if __name__ == '__main__':
 
