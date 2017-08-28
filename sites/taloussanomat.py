@@ -27,7 +27,7 @@ def parse( url ):
 	title = processor.collect_text( article.find( class_ = 'article-title' ) )
 	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
 	text = processor.collect_text( article.find( class_ = 'body' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
+	images = processor.collect_images( article.find_all( 'img' ), 'src', 'http:' )
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
 	return processor.create_dictionary('Taloussanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
