@@ -20,6 +20,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'related-links' ) )
+	processor.decompose_all( article.find_all( class_ = 'article-ad-block' ) )
 
 	categories = processor.collect_categories( soup.find( class_ = 'section-title' ) )
 	datetime_list = processor.collect_datetime( article.find( 'time' ) )

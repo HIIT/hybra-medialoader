@@ -21,6 +21,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose_all( article.find_all( class_ = 'print-url' ) )
+	processor.decompose_all( article.find_all( class_ = 'article-ad-block' ) )
 
 	category = url.split('/')[3]
 	categories = [category.capitalize().encode('utf8')]

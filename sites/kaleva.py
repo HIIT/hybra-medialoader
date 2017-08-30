@@ -20,6 +20,7 @@ def parse( url ):
 
 	processor.decompose_all( article.find_all( 'script' ) )
 	processor.decompose( article.find( class_ = 'article__related' ) )
+	processor.decompose_all( article.find_all( class_ = 'smartblock--juttusivu-markkinointi' ) )
 
 	meta = article.find( class_ = 'news__meta' )
 

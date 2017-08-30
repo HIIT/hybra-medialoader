@@ -24,6 +24,7 @@ def parse( url ):
 	processor.decompose_all( article.find_all( 'aside' ) )
 	processor.decompose( article.find( class_ = 'pagehitcounter' ) )
 	processor.decompose( article.find( class_ = 'article-paywall' ) )
+	processor.decompose_all( article.find_all( class_ = 'article-ad-block' ) )
 
 	categories = processor.collect_categories( article.find_all( class_ = 'section-name' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'article-metasection' ) )
