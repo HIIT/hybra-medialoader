@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'aamuset'
-url = 'http://www.aamuset.fi/naista-puhutaan/politiikka/yrttiaho-kanteli-oikeuskanslerille-nato-sopimuksesta'
+url = 'http://www.aamuset.fi/teemat/3638212/Lipasti+teki+Paavo+Nurmesta+tragikoomisen'
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
