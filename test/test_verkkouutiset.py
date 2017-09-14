@@ -9,7 +9,7 @@ path = os.path.abspath('.')
 sys.path.append(path)
 
 domain = 'verkkouutiset'
-url = 'http://www.verkkouutiset.fi/talous/ollirehn_balticconnector-55105'
+url = 'https://www.verkkouutiset.fi/elina-lepomaki-vastaan-li-andersson-paljonko-hyvatuloisia-voi-verottaa/'
 
 out = 'test/parser_out.txt'
 module = importlib.import_module( 'sites.' + domain )
