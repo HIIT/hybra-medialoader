@@ -14,25 +14,29 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	article = soup.find( class_ = 'full-article' )
+	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	processor.decompose_all( article.find_all( 'script' ) )
 
-	categories = processor.collect_categories( article.find_all( class_ = 'meta-category' ) )
 	datetime_list = processor.collect_datetime_objects( article.find_all( 'time' ), 'datetime' )
-	author = processor.collect_text( article.find( itemprop = 'author' ) )
-	title = processor.collect_text( article.find( itemprop = 'name headline' ) )
-	ingress = processor.collect_text( article.find( class_ = 'ingress' ) )
-	images = processor.collect_images( article.find_all( 'img' ), 'data-src', '' )
-	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
-	processor.decompose_all( article.find_all( class_ ='flexslider') )
+	author = processor.collect_text( article.find( class_ = 'posted-on' ) )
+	author = author.replace( ' |', '' )
 
-	text = processor.collect_text( article.find( class_ = 'articlepart-1' ) )
+	processor.decompose( article.find( class_ = 'entry-meta' ) )
 
-	return processor.create_dictionary('Verkkouutiset', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
+	title = processor.collect_text( article.find( class_ = 'entry-title' ) )
+
+	ingress = processor.collect_text( article.find( class_ = 'entry-content__ingress' ) )
+	processor.decompose( article.find( class_ = 'entry-content__ingress' ) )
+
+	images = processor.collect_images( article.find_all( 'img' ), 'src', '' )
+	captions = processor.collect_image_captions( article.find_all( class_ = 'entry-header__caption' ) )
+	text = processor.collect_text( article.find( class_ = 'entry-content' ) )
+
+	return processor.create_dictionary('Verkkouutiset', url, r.status_code, [u''], datetime_list, author, title, ingress, text, images, captions)
 
 if __name__ == '__main__':
 	parse("http://www.verkkouutiset.fi/talous/ammattisijoittajan_neuvot-33352", file('verkkouutiset.txt', 'w'))
