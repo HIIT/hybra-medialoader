@@ -14,7 +14,7 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	article = soup.find( class_ = 'sc-feryYK fGYTpb' )
+	article = soup.find( class_ = 'sc-cJOK iSzzsB' )
 	if article == None:
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
@@ -23,8 +23,8 @@ def parse( url ):
 	categories = processor.collect_categories( [article.find( class_ = 'sc-bGbJRg fjsUfa' )] )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'sc-likbZx fZfPtD' ) )
 	title = processor.collect_text( article.find( 'h1' ) )
-	ingress = processor.collect_text( article.find( class_ = 'sc-gbOuXE dCDvyT' ) )
-	text = processor.collect_text( article.find( class_ = 'sc-fyjhYU lmkwHD' ) )
+	ingress = processor.collect_text( article.find( 'h3' ) )
+	text = processor.collect_text( article.find( class_ = 'sc-fyjhYU' ) )
 	images = processor.collect_images( [article.find( 'img' )], 'src', '')
 	captions = processor.collect_image_captions( article.find_all( 'figcaption' ) )
 
