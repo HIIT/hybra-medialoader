@@ -19,6 +19,7 @@ def parse( url ):
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	processor.decompose_all( article.find_all( 'blockquote' ) )
+	processor.decompose( article.find( class_ = 'sticky-inner-wrapper' ) )
 
 	categories_list = soup.find( class_ = 'breadcrumb' ).find_all( 'li' )[1:-1]
 	categories = processor.collect_categories( categories_list )
@@ -43,7 +44,7 @@ def parse( url ):
 	processor.decompose( article.find('header') )
 	processor.decompose( article.find('footer') )
 
-	text = processor.collect_text( article ).replace('0 0 0 0 ', '')
+	text = processor.collect_text( article )
 
 	return processor.create_dictionary('Kouvolan sanomat', url, r.status_code, categories, datetime_list, author, title, ingress, text, images, captions)
 
