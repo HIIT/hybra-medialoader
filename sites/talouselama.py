@@ -29,7 +29,7 @@ def parse( url ):
 
 	text_section = article.find( 'section' )
 	ingress = processor.collect_text( text_section.find( 'h3' ) )
-	text_container = text_section.contents[0].contents[4]
+	text_container = text_section.contents[0].contents[5]
 	text = processor.collect_text( text_container )
 
 	images = processor.collect_images( [article.find( 'img' )], 'src', '')
