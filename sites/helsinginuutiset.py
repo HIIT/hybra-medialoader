@@ -38,4 +38,4 @@ def parse( url ):
 
 if __name__ == '__main__':
 
-	parse("http://www.helsinginuutiset.fi/artikkeli/275544-nyt-lentaa-loka-sipila-kerasi-paskalain-turvin-kymmenia-miljoonia", file('helsinginuutiset.txt', 'w'))
+	parse("http://www.helsinginuutiset.fi/artikkeli/433833-arvio-15-000-ihmista-saa-tana-vuonna-tyopaikan-kunnasta-tarvetta-etenkin")
