@@ -19,11 +19,17 @@ def parse( url ):
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
 	processor.decompose_all( article.find_all( 'script' ) )
-	processor.decompose( article.find( class_ = 'author' ).find( class_ = 'img' ) )
+
+	author = article.find( class_ = 'author' )
+	if author != None:
+		author = processor.collect_text( author.find( 'h3' ) )
+		processor.decompose( author.find( class_ = 'img' ) )
+	else:
+		author = u''
 
 	categories = processor.collect_categories( article.find_all( class_ = 'field-name-field-department-tref' ) )
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ) )
-	author = processor.collect_text( article.find( class_ = 'author' ).find( 'h3' ) )
+
 	title = processor.collect_text( article.find( class_ = 'field-name-title' ) )
 	text = processor.collect_text( article.find( class_ = 'field field-name-body' ) )
 	images = processor.collect_images_by_parent( article.find_all( class_ = 'img' ), '' )

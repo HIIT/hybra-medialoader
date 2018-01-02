@@ -26,8 +26,11 @@ def parse( url ):
 	datetime_list = processor.collect_datetime( article.find( class_ = 'field-name-post-date' ) )
 
 	author = article.find( class_ = 'author' )
-	processor.decompose( author.find( class_ = 'img' ) )
-	author = processor.collect_text( author.find( 'h3' ) )
+	if author != None:
+		processor.decompose( author.find( class_ = 'img' ) )
+		author = processor.collect_text( author.find( 'h3' ) )
+	else:
+		author = u''
 
 	title = processor.collect_text( article.find( 'h1' ) )
 	text = processor.collect_text( article.find( class_ = 'field field-name-body' ) )

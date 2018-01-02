@@ -14,7 +14,7 @@ def parse( url ):
 	r.encoding = 'UTF-8'
 	soup = BeautifulSoup( r.text, "html.parser" )
 
-	article = soup.find( id = 'yle__article--testCaseA' )
+	article = soup.find( 'article' )
 	if article == None:
 		return processor.create_dictionary('', url, r.status_code, [u''], [u''], u'', u'', u'', u'', [u''], [u''])
 
