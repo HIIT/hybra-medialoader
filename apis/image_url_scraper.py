@@ -1,3 +1,7 @@
+# Mostly based on multiprocessing image downloader by Amit Upreti
+# github.com/amitupreti/image_downloader_multiprocessing_python
+
+
 from multiprocessing.pool import ThreadPool
 import json
 import requests
@@ -7,17 +11,7 @@ import re
 from tqdm import tqdm
 from functools import partial
 
-#def index_labeler(index):
-#    if index < 10:
-#        prefix = "000" + str(index)
-#    elif index < 100:
-#        prefix = "00" + str(index)
-#    elif index < 1000:
-#        prefix = "0" + str(index)
-#    else:
-#        prefix = str(index)
-#
-#    return prefix
+
 
 def get_image(url, name):
     img_data = requests.get(url).content
