@@ -24,8 +24,8 @@ def make_request( base_url, app_id, app_key, limit = 1000, offset = 0):
     request = requests.get( api_request )
 
     if request.status_code >= 400:
-        print request.status_code
-        print request.text
+        print(request.status_code)
+        print(request.text)
 
     return request
 
@@ -52,7 +52,7 @@ def parse(news_items):
         ## Note: this loses information about the timezone
 
         datetime_list = [ data.get( 'datePublished', u'' ), data.get( 'dateContentModified', u'' ) ]
-        datetime_list = map( processor.strip_datetime_object, datetime_list )
+        datetime_list = list( map( processor.strip_datetime_object, datetime_list ) )
 
         title = data.get( 'headline' ).get( 'full', u'' )
         ingress = data.get( 'lead', u'' )
@@ -89,7 +89,7 @@ def resort_pickles( raw_dir ):
 
     for d in os.listdir( raw_dir ):
 
-        data = pickle.load( open( raw_dir + d ) )
+        data = pickle.load( open( raw_dir + d , "rb") )
 
         time_format = '%Y-%m-%d %H:%M:%S'
 
@@ -113,12 +113,12 @@ def resort_pickles( raw_dir ):
                 time = max( datetime_list )
 
                 destination = 'yle_' + domain + '_' + str( time.year ) + '_' + str( time.month )
-                data['datetime_list'] = map( str, data['datetime_list'] ) ## transform dateties to string
+                data['datetime_list'] = list (map( str, data['datetime_list'] ) ) ## transform dateties to string
 
                 store[ destination ].append( data ) ## TODO: potentially just directly write to file, if we run out of memory
 
-            except Exception, e: ## sometimes not all data things are there, and thus let's prepeare for it
-                print e
+            except Exception as e: ## sometimes not all data things are there, and thus let's prepeare for it
+                print(e)
 
     return store
 
@@ -141,24 +141,25 @@ def api_download( base_url, app_id, app_secret, max_iterations = 1000, item_limi
         news_items = make_request( base_url, app_id, app_secret, limit = item_limit, offset = i * item_limit )
 
         news_items = parse( news_items )
-
         j = 0
 
         for news_item in news_items:
 
-            with open( raw_dir + str(i) + '_' + str(j) + '.pickle', 'w' ) as f:
+            with open( raw_dir + str(i) + '_' + str(j) + '.pickle', 'wb' ) as f:
                 pickle.dump(news_item, f)
 
                 j = j + 1
 
         i = i + 1
 
-        print str(i) + ' out of ' + str(max_iterations)
+        print(str(i) + ' out of ' + str(max_iterations))
 
         ## Break if max number of iterations has been reached
         ## or if the response from the API contains fewer elements than the limit
-        if (max_iterations > 0 and i == max_iterations) or (len(news_items < item_limit)):
+        if (max_iterations > 0 and i == max_iterations) or (len(news_items) < item_limit):
             break
+
+
 
 if __name__ == '__main__':
 
@@ -170,7 +171,7 @@ if __name__ == '__main__':
         args = parser.parse_args()
         keys = json.load( open( args.key ), strict = False )
     except:
-        print 'Can not read keys'
+        print('Can not read keys')
         quit()
 
     raw_dir = 'data-raw/' ## where pickles are stored
@@ -187,4 +188,5 @@ if __name__ == '__main__':
     store = resort_pickles( raw_dir )
 
     for filename, data in store.items():
-        json.dump( data , open( data_dir + filename + '.json', 'w' ) )
+
+        json.dump( data , open( data_dir + filename + '.json', 'w' ), indent = 2)
